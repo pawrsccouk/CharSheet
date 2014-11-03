@@ -39,12 +39,12 @@ class XPGain : NSManagedObject, XMLClient {
     }
     
     func updateFromXML(element: DDXMLElement, error:NSErrorPointer) -> Bool {
-        if !XMLSupport.validateElementName(element.name(), expectedName: elementXP_ENTRY, error: error) { return false }
-        for attrNode in (element.attributes() as [DDXMLNode]) {
-            let nodeName = attrNode.name()
+        if !XMLSupport.validateElementName(element.name, expectedName: elementXP_ENTRY, error: error) { return false }
+        for attrNode in (element.attributes as [DDXMLNode]) {
+            let nodeName = attrNode.name
             if      nodeName == attributeAMOUNT { self.amount = XMLSupport.numberFromNode(attrNode) }
-            else if nodeName == attributeREASON { self.reason = attrNode.stringValue() }
-            else { return XMLSupport.setError(error, format: "Unrecognised XP entry attribute: %@", arguments: attrNode.name())
+            else if nodeName == attributeREASON { self.reason = attrNode.stringValue }
+            else { return XMLSupport.setError(error, format: "Unrecognised XP entry attribute: %@", arguments: attrNode.name)
             }
         }
         return true

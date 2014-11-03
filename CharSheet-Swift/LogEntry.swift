@@ -58,15 +58,15 @@ class LogEntry : NSManagedObject, XMLClient {
     
     
     func updateFromXML(element: DDXMLElement, error: NSErrorPointer) -> Bool {
-        if !XMLSupport.validateElementName(element.name(), expectedName: elementLOG_ENTRY, error: error) { return false }
-        for attrNode in (element.attributes() as [DDXMLNode]) {
-            let nodeName = attrNode.name()
-            if      nodeName  == attributeDATE_TIME { self.dateTime = fullDateFormatter.dateFromString(attrNode.stringValue())! }
-            else if nodeName  == attributeSUMMARY   { self.summary  = attrNode.stringValue() }
-            else { return XMLSupport.setError(error, format: "Unrecognised log entry attribute: %@", arguments: attrNode.name()) }
+        if !XMLSupport.validateElementName(element.name, expectedName: elementLOG_ENTRY, error: error) { return false }
+        for attrNode in (element.attributes as [DDXMLNode]) {
+            let nodeName = attrNode.name
+            if      nodeName  == attributeDATE_TIME { self.dateTime = fullDateFormatter.dateFromString(attrNode.stringValue)! }
+            else if nodeName  == attributeSUMMARY   { self.summary  = attrNode.stringValue }
+            else { return XMLSupport.setError(error, format: "Unrecognised log entry attribute: %@", arguments: attrNode.name) }
         }
         
-        self.change = element.stringValue()
+        self.change = element.stringValue
         return true
     }
     

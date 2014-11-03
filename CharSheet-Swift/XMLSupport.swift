@@ -41,7 +41,7 @@ class XMLSupport {
     typealias CreateFunc = () -> XMLClient
     
     class func dataFromNodes(parent: DDXMLElement, createFunc: CreateFunc, error:NSErrorPointer) -> NSOrderedSet? {
-        var xmlChildren: [DDXMLElement] = parent.children() as [DDXMLElement]
+        var xmlChildren: [DDXMLElement] = parent.children as [DDXMLElement]
         var newLogs = NSMutableOrderedSet(capacity: xmlChildren.count)
         for element: DDXMLElement in xmlChildren  {
             let newEntry: XMLClient = createFunc()
@@ -68,7 +68,7 @@ class XMLSupport {
     }
     
     class func numberFromNode(node: DDXMLNode) -> NSNumber {
-        var v: NSString = node.stringValue()
+        var v: NSString = node.stringValue
         return NSNumber(integer:v.integerValue)
     }
 
