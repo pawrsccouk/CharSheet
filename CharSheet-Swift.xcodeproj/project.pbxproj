@@ -8,13 +8,29 @@
 
 /* Begin PBXBuildFile section */
 		5725DE721A0415CD00343E5F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE711A0415CD00343E5F /* AppDelegate.swift */; };
-		5725DE751A0415CD00343E5F /* CharSheet_Swift.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE731A0415CD00343E5F /* CharSheet_Swift.xcdatamodeld */; };
 		5725DE771A0415CD00343E5F /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE761A0415CD00343E5F /* MasterViewController.swift */; };
 		5725DE791A0415CD00343E5F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE781A0415CD00343E5F /* DetailViewController.swift */; };
 		5725DE7C1A0415CD00343E5F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7A1A0415CD00343E5F /* Main.storyboard */; };
 		5725DE7E1A0415CD00343E5F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7D1A0415CD00343E5F /* Images.xcassets */; };
 		5725DE811A0415CD00343E5F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7F1A0415CD00343E5F /* LaunchScreen.xib */; };
 		5725DE8D1A0415CD00343E5F /* CharSheet_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE8C1A0415CD00343E5F /* CharSheet_SwiftTests.swift */; };
+		5725DE981A046F5900343E5F /* CharSheet.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE961A046F5900343E5F /* CharSheet.xcdatamodeld */; };
+		5725DEA91A046FF800343E5F /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE9C1A046FF800343E5F /* DDXMLElementAdditions.m */; };
+		5725DEAA1A046FF800343E5F /* NSString+DDXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE9F1A046FF800343E5F /* NSString+DDXML.m */; };
+		5725DEAB1A046FF800343E5F /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEA21A046FF800343E5F /* DDXMLDocument.m */; };
+		5725DEAC1A046FF800343E5F /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEA41A046FF800343E5F /* DDXMLElement.m */; };
+		5725DEAD1A046FF800343E5F /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEA61A046FF800343E5F /* DDXMLNode.m */; };
+		5725DEAF1A04703900343E5F /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5725DEAE1A04703900343E5F /* libxml2.dylib */; };
+		5725DEB71A0473EC00343E5F /* CharSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB01A0473EC00343E5F /* CharSheet.swift */; };
+		5725DEBC1A0473EC00343E5F /* Stat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB51A0473EC00343E5F /* Stat.swift */; };
+		5725DEC01A047D5100343E5F /* XMLSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEBF1A047D5100343E5F /* XMLSupport.swift */; };
+		5725DEC31A0493F100343E5F /* Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEC21A0493F100343E5F /* Misc.swift */; };
+		5725DEC41A04A1D000343E5F /* Skill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB31A0473EC00343E5F /* Skill.swift */; };
+		5725DEC51A04AFF800343E5F /* Specialty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB41A0473EC00343E5F /* Specialty.swift */; };
+		5725DEC61A04E30F00343E5F /* LogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB21A0473EC00343E5F /* LogEntry.swift */; };
+		5725DEC71A04E95A00343E5F /* XPGain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB61A0473EC00343E5F /* XPGain.swift */; };
+		5725DEC81A07679900343E5F /* DieRoll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB11A0473EC00343E5F /* DieRoll.swift */; };
+		5725DECA1A07878600343E5F /* MutableSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEC91A07878600343E5F /* MutableSet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,7 +47,6 @@
 		5725DE6C1A0415CD00343E5F /* CharSheet-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CharSheet-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5725DE701A0415CD00343E5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5725DE711A0415CD00343E5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		5725DE741A0415CD00343E5F /* CharSheet_Swift.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CharSheet_Swift.xcdatamodel; sourceTree = "<group>"; };
 		5725DE761A0415CD00343E5F /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
 		5725DE781A0415CD00343E5F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		5725DE7B1A0415CD00343E5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -40,6 +55,31 @@
 		5725DE861A0415CD00343E5F /* CharSheet-SwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CharSheet-SwiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5725DE8B1A0415CD00343E5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5725DE8C1A0415CD00343E5F /* CharSheet_SwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharSheet_SwiftTests.swift; sourceTree = "<group>"; };
+		5725DE971A046F5900343E5F /* CharSheet.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CharSheet.xcdatamodel; sourceTree = "<group>"; };
+		5725DE9B1A046FF800343E5F /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElementAdditions.h; sourceTree = "<group>"; };
+		5725DE9C1A046FF800343E5F /* DDXMLElementAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElementAdditions.m; sourceTree = "<group>"; };
+		5725DE9E1A046FF800343E5F /* NSString+DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DDXML.h"; sourceTree = "<group>"; };
+		5725DE9F1A046FF800343E5F /* NSString+DDXML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+DDXML.m"; sourceTree = "<group>"; };
+		5725DEA01A046FF800343E5F /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXML.h; sourceTree = "<group>"; };
+		5725DEA11A046FF800343E5F /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLDocument.h; sourceTree = "<group>"; };
+		5725DEA21A046FF800343E5F /* DDXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLDocument.m; sourceTree = "<group>"; };
+		5725DEA31A046FF800343E5F /* DDXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElement.h; sourceTree = "<group>"; };
+		5725DEA41A046FF800343E5F /* DDXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElement.m; sourceTree = "<group>"; };
+		5725DEA51A046FF800343E5F /* DDXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLNode.h; sourceTree = "<group>"; };
+		5725DEA61A046FF800343E5F /* DDXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLNode.m; sourceTree = "<group>"; };
+		5725DEA81A046FF800343E5F /* DDXMLPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLPrivate.h; sourceTree = "<group>"; };
+		5725DEAE1A04703900343E5F /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		5725DEB01A0473EC00343E5F /* CharSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharSheet.swift; sourceTree = "<group>"; };
+		5725DEB11A0473EC00343E5F /* DieRoll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DieRoll.swift; sourceTree = "<group>"; };
+		5725DEB21A0473EC00343E5F /* LogEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogEntry.swift; sourceTree = "<group>"; };
+		5725DEB31A0473EC00343E5F /* Skill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Skill.swift; sourceTree = "<group>"; };
+		5725DEB41A0473EC00343E5F /* Specialty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Specialty.swift; sourceTree = "<group>"; };
+		5725DEB51A0473EC00343E5F /* Stat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stat.swift; sourceTree = "<group>"; };
+		5725DEB61A0473EC00343E5F /* XPGain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XPGain.swift; sourceTree = "<group>"; };
+		5725DEBF1A047D5100343E5F /* XMLSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLSupport.swift; sourceTree = "<group>"; };
+		5725DEC11A047F3500343E5F /* Bridging_Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Bridging_Header.h; path = ../Bridging_Header.h; sourceTree = "<group>"; };
+		5725DEC21A0493F100343E5F /* Misc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
+		5725DEC91A07878600343E5F /* MutableSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableSet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5725DEAF1A04703900343E5F /* libxml2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +104,8 @@
 		5725DE631A0415CC00343E5F = {
 			isa = PBXGroup;
 			children = (
+				5725DEAE1A04703900343E5F /* libxml2.dylib */,
+				5725DE991A046FF800343E5F /* KissXML */,
 				5725DE6E1A0415CD00343E5F /* CharSheet-Swift */,
 				5725DE891A0415CD00343E5F /* CharSheet-SwiftTests */,
 				5725DE6D1A0415CD00343E5F /* Products */,
@@ -81,13 +124,15 @@
 		5725DE6E1A0415CD00343E5F /* CharSheet-Swift */ = {
 			isa = PBXGroup;
 			children = (
+				5725DE961A046F5900343E5F /* CharSheet.xcdatamodeld */,
 				5725DE711A0415CD00343E5F /* AppDelegate.swift */,
+				5725DEBE1A04740A00343E5F /* Model */,
 				5725DE761A0415CD00343E5F /* MasterViewController.swift */,
 				5725DE781A0415CD00343E5F /* DetailViewController.swift */,
 				5725DE7A1A0415CD00343E5F /* Main.storyboard */,
 				5725DE7D1A0415CD00343E5F /* Images.xcassets */,
 				5725DE7F1A0415CD00343E5F /* LaunchScreen.xib */,
-				5725DE731A0415CD00343E5F /* CharSheet_Swift.xcdatamodeld */,
+				5725DEC11A047F3500343E5F /* Bridging_Header.h */,
 				5725DE6F1A0415CD00343E5F /* Supporting Files */,
 			);
 			path = "CharSheet-Swift";
@@ -116,6 +161,67 @@
 				5725DE8B1A0415CD00343E5F /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5725DE991A046FF800343E5F /* KissXML */ = {
+			isa = PBXGroup;
+			children = (
+				5725DE9A1A046FF800343E5F /* Additions */,
+				5725DE9D1A046FF800343E5F /* Categories */,
+				5725DEA01A046FF800343E5F /* DDXML.h */,
+				5725DEA11A046FF800343E5F /* DDXMLDocument.h */,
+				5725DEA21A046FF800343E5F /* DDXMLDocument.m */,
+				5725DEA31A046FF800343E5F /* DDXMLElement.h */,
+				5725DEA41A046FF800343E5F /* DDXMLElement.m */,
+				5725DEA51A046FF800343E5F /* DDXMLNode.h */,
+				5725DEA61A046FF800343E5F /* DDXMLNode.m */,
+				5725DEA71A046FF800343E5F /* Private */,
+			);
+			name = KissXML;
+			path = "CharSheet-Swift/KissXML";
+			sourceTree = "<group>";
+		};
+		5725DE9A1A046FF800343E5F /* Additions */ = {
+			isa = PBXGroup;
+			children = (
+				5725DE9B1A046FF800343E5F /* DDXMLElementAdditions.h */,
+				5725DE9C1A046FF800343E5F /* DDXMLElementAdditions.m */,
+			);
+			path = Additions;
+			sourceTree = "<group>";
+		};
+		5725DE9D1A046FF800343E5F /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				5725DE9E1A046FF800343E5F /* NSString+DDXML.h */,
+				5725DE9F1A046FF800343E5F /* NSString+DDXML.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		5725DEA71A046FF800343E5F /* Private */ = {
+			isa = PBXGroup;
+			children = (
+				5725DEA81A046FF800343E5F /* DDXMLPrivate.h */,
+			);
+			path = Private;
+			sourceTree = "<group>";
+		};
+		5725DEBE1A04740A00343E5F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5725DEB01A0473EC00343E5F /* CharSheet.swift */,
+				5725DEB11A0473EC00343E5F /* DieRoll.swift */,
+				5725DEB21A0473EC00343E5F /* LogEntry.swift */,
+				5725DEB31A0473EC00343E5F /* Skill.swift */,
+				5725DEB41A0473EC00343E5F /* Specialty.swift */,
+				5725DEB51A0473EC00343E5F /* Stat.swift */,
+				5725DEC21A0493F100343E5F /* Misc.swift */,
+				5725DEB61A0473EC00343E5F /* XPGain.swift */,
+				5725DEBF1A047D5100343E5F /* XMLSupport.swift */,
+				5725DEC91A07878600343E5F /* MutableSet.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -218,10 +324,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5725DEBC1A0473EC00343E5F /* Stat.swift in Sources */,
+				5725DEAD1A046FF800343E5F /* DDXMLNode.m in Sources */,
+				5725DECA1A07878600343E5F /* MutableSet.swift in Sources */,
 				5725DE721A0415CD00343E5F /* AppDelegate.swift in Sources */,
-				5725DE751A0415CD00343E5F /* CharSheet_Swift.xcdatamodeld in Sources */,
+				5725DEC51A04AFF800343E5F /* Specialty.swift in Sources */,
+				5725DE981A046F5900343E5F /* CharSheet.xcdatamodeld in Sources */,
 				5725DE771A0415CD00343E5F /* MasterViewController.swift in Sources */,
+				5725DEC31A0493F100343E5F /* Misc.swift in Sources */,
+				5725DEB71A0473EC00343E5F /* CharSheet.swift in Sources */,
+				5725DEC41A04A1D000343E5F /* Skill.swift in Sources */,
+				5725DEAA1A046FF800343E5F /* NSString+DDXML.m in Sources */,
+				5725DEAC1A046FF800343E5F /* DDXMLElement.m in Sources */,
+				5725DEAB1A046FF800343E5F /* DDXMLDocument.m in Sources */,
+				5725DEC01A047D5100343E5F /* XMLSupport.swift in Sources */,
+				5725DEC81A07679900343E5F /* DieRoll.swift in Sources */,
+				5725DEC61A04E30F00343E5F /* LogEntry.swift in Sources */,
 				5725DE791A0415CD00343E5F /* DetailViewController.swift in Sources */,
+				5725DEC71A04E95A00343E5F /* XPGain.swift in Sources */,
+				5725DEA91A046FF800343E5F /* DDXMLElementAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,9 +467,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"HEADER_SEARCH_PATHS[arch=*]" = /usr/include/libxml2;
 				INFOPLIST_FILE = "CharSheet-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = Bridging_Header.h;
 			};
 			name = Debug;
 		};
@@ -356,9 +479,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"HEADER_SEARCH_PATHS[arch=*]" = /usr/include/libxml2;
 				INFOPLIST_FILE = "CharSheet-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = Bridging_Header.h;
 			};
 			name = Release;
 		};
@@ -415,6 +540,7 @@
 				5725DE921A0415CD00343E5F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5725DE931A0415CD00343E5F /* Build configuration list for PBXNativeTarget "CharSheet-SwiftTests" */ = {
 			isa = XCConfigurationList;
@@ -423,17 +549,18 @@
 				5725DE951A0415CD00343E5F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		5725DE731A0415CD00343E5F /* CharSheet_Swift.xcdatamodeld */ = {
+		5725DE961A046F5900343E5F /* CharSheet.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				5725DE741A0415CD00343E5F /* CharSheet_Swift.xcdatamodel */,
+				5725DE971A046F5900343E5F /* CharSheet.xcdatamodel */,
 			);
-			currentVersion = 5725DE741A0415CD00343E5F /* CharSheet_Swift.xcdatamodel */;
-			path = CharSheet_Swift.xcdatamodeld;
+			currentVersion = 5725DE971A046F5900343E5F /* CharSheet.xcdatamodel */;
+			path = CharSheet.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
