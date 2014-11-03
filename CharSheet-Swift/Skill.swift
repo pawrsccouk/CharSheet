@@ -121,25 +121,25 @@ class Skill : NSManagedObject, XMLClient {
     }
 
     func updateFromXML(element: DDXMLElement, error:NSErrorPointer) -> Bool {
-        if !XMLSupport.validateElementName(element.name(), expectedName: elementSKILL, error: error) { return false }
+        if !XMLSupport.validateElementName(element.name, expectedName: elementSKILL, error: error) { return false }
         
-        for attrNode in (element.attributes() as [DDXMLNode]) {
-            let nodeName = attrNode.name()
-            if      nodeName == attributeNAME  { self.name  = attrNode.stringValue() }
+        for attrNode in (element.attributes as [DDXMLNode]) {
+            let nodeName = attrNode.name
+            if      nodeName == attributeNAME  { self.name  = attrNode.stringValue }
             else if nodeName == attributeVALUE { self.value = XMLSupport.numberFromNode(attrNode) }
             else if nodeName == attributeTICKS { self.ticks = XMLSupport.numberFromNode(attrNode) }
             else { return XMLSupport.setError(error, format: "Unrecognised attribute %@ in skill", arguments: nodeName) }
         }
         
-        if element.childCount() != 1 { NSLog("Warning: Skill has more than one child. Should be just one: %@", elementSPECIALTIES) }
-        if(element.childCount() > 0) {
-            for specGroup in (element.children() as [DDXMLElement]) {
-                if specGroup.name() == elementSPECIALTIES {
+        if element.childCount != 1 { NSLog("Warning: Skill has more than one child. Should be just one: %@", elementSPECIALTIES) }
+        if(element.childCount > 0) {
+            for specGroup in (element.children as [DDXMLElement]) {
+                if specGroup.name == elementSPECIALTIES {
                     var specialties = XMLSupport.dataFromNodes(specGroup, createFunc: { addSpecialty(self.managedObjectContext!) }, error: error)
                     if specialties == nil { return false }
                     self.specialties = specialties?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
                 }
-                else { return XMLSupport.setError(error, format:"Unrecognised child %@ of skill element.", arguments:specGroup.name()) }
+                else { return XMLSupport.setError(error, format:"Unrecognised child %@ of skill element.", arguments:specGroup.name) }
             }
         }
         return true

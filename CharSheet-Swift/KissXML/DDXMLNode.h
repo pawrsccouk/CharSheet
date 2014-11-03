@@ -93,17 +93,13 @@ enum {
 
 #pragma mark --- Properties ---
 
-- (DDXMLNodeKind)kind;
-
-- (void)setName:(NSString *)name;
-- (NSString *)name;
+@property (nonatomic, readonly) DDXMLNodeKind kind;
+@property (nonatomic, copy) NSString *name;
 
 //- (void)setObjectValue:(id)value;
 //- (id)objectValue;
 
-- (void)setStringValue:(NSString *)string;
-//- (void)setStringValue:(NSString *)string resolvingEntities:(BOOL)resolve;
-- (NSString *)stringValue;
+@property (nonatomic, copy) NSString *stringValue;
 
 #pragma mark --- Tree Navigation ---
 
@@ -113,28 +109,27 @@ enum {
 
 - (DDXMLDocument *)rootDocument;
 
-- (DDXMLNode *)parent;
-- (NSUInteger)childCount;
-- (NSArray *)children;
+@property (nonatomic, readonly) DDXMLNode *parent;
+@property (nonatomic, readonly) NSUInteger childCount;
+@property (nonatomic, readonly) NSArray *children;
 - (DDXMLNode *)childAtIndex:(NSUInteger)index;
 
-- (DDXMLNode *)previousSibling;
-- (DDXMLNode *)nextSibling;
+@property (nonatomic, readonly) DDXMLNode *previousSibling;
+@property (nonatomic, readonly) DDXMLNode *nextSibling;
 
-- (DDXMLNode *)previousNode;
-- (DDXMLNode *)nextNode;
+@property (nonatomic, readonly) DDXMLNode *previousNode;
+@property (nonatomic, readonly) DDXMLNode *nextNode;
 
 - (void)detach;
 
-- (NSString *)XPath;
+@property (nonatomic, readonly) NSString *XPath;
 
 #pragma mark --- QNames ---
 
-- (NSString *)localName;
-- (NSString *)prefix;
+@property (nonatomic, readonly) NSString *localName;
+@property (nonatomic, readonly) NSString *prefix;
 
-- (void)setURI:(NSString *)URI;
-- (NSString *)URI;
+@property (nonatomic, copy) NSString *URI;
 
 + (NSString *)localNameForName:(NSString *)name;
 + (NSString *)prefixForName:(NSString *)name;
@@ -142,8 +137,8 @@ enum {
 
 #pragma mark --- Output ---
 
-- (NSString *)description;
-- (NSString *)XMLString;
+@property (nonatomic, readonly) NSString *description;
+@property (nonatomic, readonly) NSString *XMLString;
 - (NSString *)XMLStringWithOptions:(NSUInteger)options;
 //- (NSString *)canonicalXMLStringPreservingComments:(BOOL)comments;
 

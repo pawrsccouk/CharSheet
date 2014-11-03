@@ -42,11 +42,11 @@ class Specialty : NSManagedObject, XMLClient {
     }
     
     func updateFromXML(element: DDXMLElement, error:NSErrorPointer) -> Bool {
-        if !XMLSupport.validateElementName(element.name(), expectedName: elementSPECIALTY, error: error) { return false }
-        for attrNode in (element.attributes()  as [DDXMLNode]) {
-            if      attrNode.name() == attributeNAME  { self.name  = attrNode.stringValue() }
-            else if attrNode.name() == attributeVALUE {  self.value = XMLSupport.numberFromNode(attrNode) }
-            else { return XMLSupport.setError(error, format:"Attribute %@ unrecognised in %@", arguments: attrNode.name(), elementSPECIALTY) }
+        if !XMLSupport.validateElementName(element.name, expectedName: elementSPECIALTY, error: error) { return false }
+        for attrNode in (element.attributes  as [DDXMLNode]) {
+            if      attrNode.name == attributeNAME  { self.name  = attrNode.stringValue }
+            else if attrNode.name == attributeVALUE {  self.value = XMLSupport.numberFromNode(attrNode) }
+            else { return XMLSupport.setError(error, format:"Attribute %@ unrecognised in %@", arguments: attrNode.name, elementSPECIALTY) }
         }
         return true
     }

@@ -335,11 +335,11 @@ func appendSkill() -> Skill {
 
 
     func setAttributeFromXML(this: CharSheet, node: DDXMLNode) -> Bool {
-        if let nodeName = node.name() {
-            if      attributeNAME       == nodeName { this.name       = node.stringValue() }
-            else if attributeGENDER     == nodeName { this.gender     = node.stringValue() }
-            else if attributeGAME       == nodeName { this.game       = node.stringValue() }
-            else if attributePLAYER     == nodeName { this.player     = node.stringValue() }
+        if let nodeName = node.name {
+            if      attributeNAME       == nodeName { this.name       = node.stringValue }
+            else if attributeGENDER     == nodeName { this.gender     = node.stringValue }
+            else if attributeGAME       == nodeName { this.game       = node.stringValue }
+            else if attributePLAYER     == nodeName { this.player     = node.stringValue }
             else if attributeLEVEL      == nodeName { this.level      = XMLSupport.numberFromNode(node) }
             else if attributeEXPERIENCE == nodeName { this.experience = XMLSupport.numberFromNode(node) }
             else { return false } // Error - attribute not recognised.
@@ -348,30 +348,30 @@ func appendSkill() -> Skill {
     }
 
     func updateStatsFromXML(this: CharSheet, element: DDXMLElement, error: NSErrorPointer) -> Bool {
-        for statElement in (element.children() as [DDXMLElement]) {
+        for statElement in (element.children as [DDXMLElement]) {
             var nameAttr = statElement.attributeForName(attributeNAME)
             if !(nameAttr != nil) { return XMLSupport.setError(error, format: "Attribute %@ not found in stat %@", arguments: attributeNAME, statElement) }
             
-            var stat = this.statByName(nameAttr.stringValue())
-            if stat == nil { return XMLSupport.setError(error, format: "Unrecognised stat %@", arguments: nameAttr.name()) }
+            var stat = this.statByName(nameAttr.stringValue)
+            if stat == nil { return XMLSupport.setError(error, format: "Unrecognised stat %@", arguments: nameAttr.name) }
             if !stat!.updateFromXML(statElement, error:error) { return false }
         }
         return true
     }
     
     func updateFromXML(element: DDXMLElement, error: NSErrorPointer) -> Bool {
-        if !XMLSupport.validateElementName(element.name(), expectedName: elementCHAR_SHEET, error: error) { return false }
+        if !XMLSupport.validateElementName(element.name, expectedName: elementCHAR_SHEET, error: error) { return false }
         
-        for attrNode in (element.attributes() as [DDXMLNode]) {
+        for attrNode in (element.attributes as [DDXMLNode]) {
             if !setAttributeFromXML(self, node: attrNode) {
-                return XMLSupport.setError(error, format: "XML Attribute %@ not recognised in %@", arguments: attrNode.name(), elementCHAR_SHEET)
+                return XMLSupport.setError(error, format: "XML Attribute %@ not recognised in %@", arguments: attrNode.name, elementCHAR_SHEET)
             }
         }
         
         // Stats will have already been created, so just find each stat and update it.
         // Otherwise create a collection of the appropriate element and then replace the existing collection with it.
-        for node in (element.children() as [DDXMLElement]) {
-            if let nodeName = node.name() {
+        for node in (element.children as [DDXMLElement]) {
+            if let nodeName = node.name {
                 if nodeName == elementSTATS {
                     if(!updateStatsFromXML(self, element: node, error: error)) { return false }
                 }
@@ -392,7 +392,7 @@ func appendSkill() -> Skill {
                 }
                     // Notes are stored as an element as it is too big for an attribute.
                 else if nodeName == elementNOTES {
-                    self.notes = node.stringValue()
+                    self.notes = node.stringValue
                 }
                 else { return XMLSupport.setError(error, format: "XML entity %@ not recognised as child of %@", arguments:nodeName, elementCHAR_SHEET) }
             }

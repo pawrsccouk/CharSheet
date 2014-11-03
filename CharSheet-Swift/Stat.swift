@@ -42,10 +42,10 @@ class Stat : NSManagedObject, XMLClient {
     }
     
     func updateFromXML(element: DDXMLElement, error: NSErrorPointer) -> Bool {
-        if !XMLSupport.validateElementName(element.name(), expectedName: elementStat, error:error) {
+        if !XMLSupport.validateElementName(element.name, expectedName: elementStat, error:error) {
             return false
         }
-        for attrNode in element.attributes() {
+        for attrNode in element.attributes {
             if attrNode.isEqualToString(attributeName)       { self.name  = attrNode.stringValue  }
             else if attrNode.isEqualToString(attributeValue) { self.value = attrNode.integerValue }
             else {
