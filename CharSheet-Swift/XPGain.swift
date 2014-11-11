@@ -12,7 +12,7 @@ import Foundation
 class XPGain : NSManagedObject, XMLClient {
     
     // MARK: - Properties - CoreData
-    @NSManaged var amount: NSNumber, reason: String, parent: CharSheet?
+    @NSManaged var amount: Int16, reason: String?, parent: CharSheet!
     
     override func awakeFromInsert() -> Void {
         super.awakeFromInsert()
@@ -31,20 +31,20 @@ class XPGain : NSManagedObject, XMLClient {
     
     func asXML() -> DDXMLElement {
         var this    = DDXMLElement.elementWithName(elementXP_ENTRY) as DDXMLElement
-        var amount  = DDXMLNode.attributeWithName(attributeAMOUNT, stringValue:self.amount.stringValue) as DDXMLNode
-        var reason  = DDXMLNode.attributeWithName(attributeREASON, stringValue:self.reason) as DDXMLNode
+        var amount  = DDXMLNode.attributeWithName(attributeAMOUNT, stringValue: self.amount.description) as DDXMLNode
+        var reason  = DDXMLNode.attributeWithName(attributeREASON, stringValue: self.reason) as DDXMLNode
         this.addAttribute(amount)
         this.addAttribute(reason)
         return this
     }
     
-    func updateFromXML(element: DDXMLElement, error:NSErrorPointer) -> Bool {
-        if !XMLSupport.validateElementName(element.name, expectedName: elementXP_ENTRY, error: error) { return false }
+    func updateFromXML(element: DDXMLElement, inout error:NSError?) -> Bool {
+        if !XMLSupport.validateElementName(element.name, expectedName: elementXP_ENTRY, error: &error) { return false }
         for attrNode in (element.attributes as [DDXMLNode]) {
             let nodeName = attrNode.name
-            if      nodeName == attributeAMOUNT { self.amount = XMLSupport.numberFromNode(attrNode) }
+            if      nodeName == attributeAMOUNT { self.amount = Int16(attrNode.stringValue.toInt() ?? 0) }
             else if nodeName == attributeREASON { self.reason = attrNode.stringValue }
-            else { return XMLSupport.setError(error, format: "Unrecognised XP entry attribute: %@", arguments: attrNode.name)
+            else { return XMLSupport.setError(&error, text: "Unrecognised XP entry attribute: \(attrNode.name)")
             }
         }
         return true

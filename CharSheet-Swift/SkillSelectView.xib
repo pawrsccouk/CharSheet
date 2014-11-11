@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment version="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ListSelectController"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <viewController id="xPF-Dp-Vkv" customClass="SkillSelectController" customModule="CharSheet_Swift" customModuleProvider="target">
+            <layoutGuides>
+                <viewControllerLayoutGuide type="top" id="7eS-sX-0L2"/>
+                <viewControllerLayoutGuide type="bottom" id="kUd-XH-qhH"/>
+            </layoutGuides>
+            <view key="view" contentMode="scaleToFill" id="1">
+                <rect key="frame" x="0.0" y="64" width="540" height="556"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <subviews>
+                    <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3">
+                        <rect key="frame" x="20" y="37" width="500" height="216"/>
+                        <connections>
+                            <outlet property="dataSource" destination="xPF-Dp-Vkv" id="7kL-oY-mkr"/>
+                            <outlet property="delegate" destination="xPF-Dp-Vkv" id="9a8-7k-l1e"/>
+                        </connections>
+                    </pickerView>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Skill" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="17">
+                        <rect key="frame" x="20" y="8" width="500" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Specialty" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="23">
+                        <rect key="frame" x="20" y="261" width="500" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="34">
+                        <rect key="frame" x="20" y="290" width="500" height="216"/>
+                        <connections>
+                            <outlet property="dataSource" destination="xPF-Dp-Vkv" id="1XS-Wa-ovN"/>
+                            <outlet property="delegate" destination="xPF-Dp-Vkv" id="WCL-K3-zTX"/>
+                        </connections>
+                    </pickerView>
+                </subviews>
+                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="3" secondAttribute="trailing" constant="20" symbolic="YES" id="7"/>
+                    <constraint firstItem="3" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="10"/>
+                    <constraint firstItem="17" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="18"/>
+                    <constraint firstItem="3" firstAttribute="top" secondItem="17" secondAttribute="bottom" constant="8" symbolic="YES" id="21"/>
+                    <constraint firstItem="23" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="25"/>
+                    <constraint firstItem="23" firstAttribute="top" secondItem="3" secondAttribute="bottom" constant="8" symbolic="YES" id="27"/>
+                    <constraint firstAttribute="trailing" secondItem="17" secondAttribute="trailing" constant="20" symbolic="YES" id="30"/>
+                    <constraint firstAttribute="trailing" secondItem="23" secondAttribute="trailing" constant="20" symbolic="YES" id="32"/>
+                    <constraint firstItem="34" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="36"/>
+                    <constraint firstItem="34" firstAttribute="top" secondItem="23" secondAttribute="bottom" constant="8" symbolic="YES" id="37"/>
+                    <constraint firstAttribute="trailing" secondItem="34" secondAttribute="trailing" constant="20" symbolic="YES" id="40"/>
+                    <constraint firstItem="kUd-XH-qhH" firstAttribute="top" secondItem="34" secondAttribute="bottom" constant="50" id="PDi-LA-yNL"/>
+                    <constraint firstItem="17" firstAttribute="top" secondItem="7eS-sX-0L2" secondAttribute="bottom" constant="20" symbolic="YES" id="TwC-Sz-yAO"/>
+                </constraints>
+            </view>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+            <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="skillPicker" destination="3" id="whB-sO-Yth"/>
+                <outlet property="specialtyPicker" destination="34" id="Ovo-4j-LF7"/>
+            </connections>
+        </viewController>
+    </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
+</document>

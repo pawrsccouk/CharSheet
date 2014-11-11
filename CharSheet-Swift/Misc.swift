@@ -9,7 +9,7 @@
 import Foundation
 //#import "DDXML.h"
 
-typealias Callback             = () -> Void
+typealias VoidCallback         = () -> Void
 typealias SimpleBlockPredicate = (AnyObject) -> Bool
 typealias ArrayTransformBlock  = (AnyObject) -> AnyObject
 typealias ArrayReduceBlock     = (AnyObject, AnyObject) -> AnyObject

@@ -109,7 +109,7 @@
 		return nil;
 	}
 	
-	DDXMLElement *result = [doc rootElement];
+	DDXMLElement *result = (DDXMLElement*)[doc rootElement];
 	[result detach];
 	
 	return result;

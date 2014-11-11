@@ -10,7 +10,6 @@
 		5725DE721A0415CD00343E5F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE711A0415CD00343E5F /* AppDelegate.swift */; };
 		5725DE771A0415CD00343E5F /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE761A0415CD00343E5F /* MasterViewController.swift */; };
 		5725DE791A0415CD00343E5F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE781A0415CD00343E5F /* DetailViewController.swift */; };
-		5725DE7C1A0415CD00343E5F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7A1A0415CD00343E5F /* Main.storyboard */; };
 		5725DE7E1A0415CD00343E5F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7D1A0415CD00343E5F /* Images.xcassets */; };
 		5725DE811A0415CD00343E5F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7F1A0415CD00343E5F /* LaunchScreen.xib */; };
 		5725DE8D1A0415CD00343E5F /* CharSheet_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE8C1A0415CD00343E5F /* CharSheet_SwiftTests.swift */; };
@@ -31,6 +30,32 @@
 		5725DEC71A04E95A00343E5F /* XPGain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB61A0473EC00343E5F /* XPGain.swift */; };
 		5725DEC81A07679900343E5F /* DieRoll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB11A0473EC00343E5F /* DieRoll.swift */; };
 		5725DECA1A07878600343E5F /* MutableSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEC91A07878600343E5F /* MutableSet.swift */; };
+		5725DED81A07935A00343E5F /* TicksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DED71A07935A00343E5F /* TicksView.swift */; };
+		577A81A71A07C73600DA1EC8 /* EditSkillCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A41A07C73600DA1EC8 /* EditSkillCellView.xib */; };
+		577A81A81A07C73600DA1EC8 /* SkillSelectView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A51A07C73600DA1EC8 /* SkillSelectView.xib */; };
+		577A81A91A07C73600DA1EC8 /* UseSkillCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A61A07C73600DA1EC8 /* UseSkillCellView.xib */; };
+		577A81B21A07C8F900DA1EC8 /* ActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81AB1A07C8F900DA1EC8 /* ActionSheet.swift */; };
+		577A81B31A07C8F900DA1EC8 /* CharSheetUseControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81AC1A07C8F900DA1EC8 /* CharSheetUseControl.swift */; };
+		577A81B41A07C8F900DA1EC8 /* EditSkillCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81AD1A07C8F900DA1EC8 /* EditSkillCell.swift */; };
+		577A81B51A07C8F900DA1EC8 /* StoryboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81AE1A07C8F900DA1EC8 /* StoryboardManager.swift */; };
+		577A81B61A07C8F900DA1EC8 /* StrictGridLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81AF1A07C8F900DA1EC8 /* StrictGridLayout.swift */; };
+		577A81B71A07C8F900DA1EC8 /* UseSkillCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81B01A07C8F900DA1EC8 /* UseSkillCell.swift */; };
+		577A81B81A07C8F900DA1EC8 /* UseStatLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81B11A07C8F900DA1EC8 /* UseStatLabel.swift */; };
+		577A81C51A08CFD700DA1EC8 /* CharSheetEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81B91A08CFD700DA1EC8 /* CharSheetEditViewController.swift */; };
+		577A81C61A08CFD700DA1EC8 /* CharSheetUseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81BA1A08CFD700DA1EC8 /* CharSheetUseViewController.swift */; };
+		577A81C71A08CFD700DA1EC8 /* DieRollResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81BB1A08CFD700DA1EC8 /* DieRollResultViewController.swift */; };
+		577A81C81A08CFD700DA1EC8 /* DieRollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81BC1A08CFD700DA1EC8 /* DieRollViewController.swift */; };
+		577A81C91A08CFD700DA1EC8 /* EditNotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81BD1A08CFD700DA1EC8 /* EditNotesViewController.swift */; };
+		577A81CA1A08CFD700DA1EC8 /* EditSkillViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81BE1A08CFD700DA1EC8 /* EditSkillViewController.swift */; };
+		577A81CB1A08CFD700DA1EC8 /* EditSpecialtyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81BF1A08CFD700DA1EC8 /* EditSpecialtyViewController.swift */; };
+		577A81CC1A08CFD700DA1EC8 /* EditXPGainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81C01A08CFD700DA1EC8 /* EditXPGainViewController.swift */; };
+		577A81CD1A08CFD700DA1EC8 /* EditXPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81C11A08CFD700DA1EC8 /* EditXPViewController.swift */; };
+		577A81CE1A08CFD700DA1EC8 /* LogEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81C21A08CFD700DA1EC8 /* LogEntryViewController.swift */; };
+		577A81CF1A08CFD700DA1EC8 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81C31A08CFD700DA1EC8 /* LogViewController.swift */; };
+		577A81D01A08CFD700DA1EC8 /* StatSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81C41A08CFD700DA1EC8 /* StatSelectViewController.swift */; };
+		577A81D31A091F8B00DA1EC8 /* SkillSelectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81D21A091F8B00DA1EC8 /* SkillSelectController.swift */; };
+		577A81D61A0B358300DA1EC8 /* Edit.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 577A81D41A0B358300DA1EC8 /* Edit.storyboard */; };
+		577A81D71A0B358300DA1EC8 /* MainUse.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 577A81D51A0B358300DA1EC8 /* MainUse.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,7 +74,6 @@
 		5725DE711A0415CD00343E5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5725DE761A0415CD00343E5F /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
 		5725DE781A0415CD00343E5F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
-		5725DE7B1A0415CD00343E5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5725DE7D1A0415CD00343E5F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5725DE801A0415CD00343E5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		5725DE861A0415CD00343E5F /* CharSheet-SwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CharSheet-SwiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,6 +104,32 @@
 		5725DEC11A047F3500343E5F /* Bridging_Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Bridging_Header.h; path = ../Bridging_Header.h; sourceTree = "<group>"; };
 		5725DEC21A0493F100343E5F /* Misc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
 		5725DEC91A07878600343E5F /* MutableSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableSet.swift; sourceTree = "<group>"; };
+		5725DED71A07935A00343E5F /* TicksView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicksView.swift; sourceTree = "<group>"; };
+		577A81A41A07C73600DA1EC8 /* EditSkillCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditSkillCellView.xib; sourceTree = "<group>"; };
+		577A81A51A07C73600DA1EC8 /* SkillSelectView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SkillSelectView.xib; sourceTree = "<group>"; };
+		577A81A61A07C73600DA1EC8 /* UseSkillCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UseSkillCellView.xib; sourceTree = "<group>"; };
+		577A81AB1A07C8F900DA1EC8 /* ActionSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSheet.swift; sourceTree = "<group>"; };
+		577A81AC1A07C8F900DA1EC8 /* CharSheetUseControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharSheetUseControl.swift; sourceTree = "<group>"; };
+		577A81AD1A07C8F900DA1EC8 /* EditSkillCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditSkillCell.swift; sourceTree = "<group>"; };
+		577A81AE1A07C8F900DA1EC8 /* StoryboardManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryboardManager.swift; sourceTree = "<group>"; };
+		577A81AF1A07C8F900DA1EC8 /* StrictGridLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrictGridLayout.swift; sourceTree = "<group>"; };
+		577A81B01A07C8F900DA1EC8 /* UseSkillCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UseSkillCell.swift; sourceTree = "<group>"; };
+		577A81B11A07C8F900DA1EC8 /* UseStatLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UseStatLabel.swift; sourceTree = "<group>"; };
+		577A81B91A08CFD700DA1EC8 /* CharSheetEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharSheetEditViewController.swift; sourceTree = "<group>"; };
+		577A81BA1A08CFD700DA1EC8 /* CharSheetUseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharSheetUseViewController.swift; sourceTree = "<group>"; };
+		577A81BB1A08CFD700DA1EC8 /* DieRollResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DieRollResultViewController.swift; sourceTree = "<group>"; };
+		577A81BC1A08CFD700DA1EC8 /* DieRollViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DieRollViewController.swift; sourceTree = "<group>"; };
+		577A81BD1A08CFD700DA1EC8 /* EditNotesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditNotesViewController.swift; sourceTree = "<group>"; };
+		577A81BE1A08CFD700DA1EC8 /* EditSkillViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditSkillViewController.swift; sourceTree = "<group>"; };
+		577A81BF1A08CFD700DA1EC8 /* EditSpecialtyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditSpecialtyViewController.swift; sourceTree = "<group>"; };
+		577A81C01A08CFD700DA1EC8 /* EditXPGainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditXPGainViewController.swift; sourceTree = "<group>"; };
+		577A81C11A08CFD700DA1EC8 /* EditXPViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditXPViewController.swift; sourceTree = "<group>"; };
+		577A81C21A08CFD700DA1EC8 /* LogEntryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogEntryViewController.swift; sourceTree = "<group>"; };
+		577A81C31A08CFD700DA1EC8 /* LogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
+		577A81C41A08CFD700DA1EC8 /* StatSelectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatSelectViewController.swift; sourceTree = "<group>"; };
+		577A81D21A091F8B00DA1EC8 /* SkillSelectController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkillSelectController.swift; sourceTree = "<group>"; };
+		577A81D41A0B358300DA1EC8 /* Edit.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Edit.storyboard; sourceTree = "<group>"; };
+		577A81D51A0B358300DA1EC8 /* MainUse.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainUse.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,14 +174,13 @@
 		5725DE6E1A0415CD00343E5F /* CharSheet-Swift */ = {
 			isa = PBXGroup;
 			children = (
-				5725DE961A046F5900343E5F /* CharSheet.xcdatamodeld */,
+				577A81D11A08CFEC00DA1EC8 /* Controllers */,
+				577A81AA1A07C74F00DA1EC8 /* Views */,
 				5725DE711A0415CD00343E5F /* AppDelegate.swift */,
 				5725DEBE1A04740A00343E5F /* Model */,
-				5725DE761A0415CD00343E5F /* MasterViewController.swift */,
 				5725DE781A0415CD00343E5F /* DetailViewController.swift */,
-				5725DE7A1A0415CD00343E5F /* Main.storyboard */,
 				5725DE7D1A0415CD00343E5F /* Images.xcassets */,
-				5725DE7F1A0415CD00343E5F /* LaunchScreen.xib */,
+				577A81AE1A07C8F900DA1EC8 /* StoryboardManager.swift */,
 				5725DEC11A047F3500343E5F /* Bridging_Header.h */,
 				5725DE6F1A0415CD00343E5F /* Supporting Files */,
 			);
@@ -210,18 +259,60 @@
 		5725DEBE1A04740A00343E5F /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				5725DE961A046F5900343E5F /* CharSheet.xcdatamodeld */,
 				5725DEB01A0473EC00343E5F /* CharSheet.swift */,
 				5725DEB11A0473EC00343E5F /* DieRoll.swift */,
 				5725DEB21A0473EC00343E5F /* LogEntry.swift */,
+				5725DEC21A0493F100343E5F /* Misc.swift */,
+				5725DEC91A07878600343E5F /* MutableSet.swift */,
 				5725DEB31A0473EC00343E5F /* Skill.swift */,
 				5725DEB41A0473EC00343E5F /* Specialty.swift */,
 				5725DEB51A0473EC00343E5F /* Stat.swift */,
-				5725DEC21A0493F100343E5F /* Misc.swift */,
 				5725DEB61A0473EC00343E5F /* XPGain.swift */,
 				5725DEBF1A047D5100343E5F /* XMLSupport.swift */,
-				5725DEC91A07878600343E5F /* MutableSet.swift */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		577A81AA1A07C74F00DA1EC8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				577A81AF1A07C8F900DA1EC8 /* StrictGridLayout.swift */,
+				577A81B01A07C8F900DA1EC8 /* UseSkillCell.swift */,
+				577A81B11A07C8F900DA1EC8 /* UseStatLabel.swift */,
+				577A81AB1A07C8F900DA1EC8 /* ActionSheet.swift */,
+				577A81AC1A07C8F900DA1EC8 /* CharSheetUseControl.swift */,
+				577A81AD1A07C8F900DA1EC8 /* EditSkillCell.swift */,
+				5725DED71A07935A00343E5F /* TicksView.swift */,
+				577A81A41A07C73600DA1EC8 /* EditSkillCellView.xib */,
+				577A81A51A07C73600DA1EC8 /* SkillSelectView.xib */,
+				577A81A61A07C73600DA1EC8 /* UseSkillCellView.xib */,
+				5725DE7F1A0415CD00343E5F /* LaunchScreen.xib */,
+				577A81D41A0B358300DA1EC8 /* Edit.storyboard */,
+				577A81D51A0B358300DA1EC8 /* MainUse.storyboard */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		577A81D11A08CFEC00DA1EC8 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				577A81B91A08CFD700DA1EC8 /* CharSheetEditViewController.swift */,
+				577A81BA1A08CFD700DA1EC8 /* CharSheetUseViewController.swift */,
+				577A81BB1A08CFD700DA1EC8 /* DieRollResultViewController.swift */,
+				577A81BC1A08CFD700DA1EC8 /* DieRollViewController.swift */,
+				577A81BD1A08CFD700DA1EC8 /* EditNotesViewController.swift */,
+				577A81BE1A08CFD700DA1EC8 /* EditSkillViewController.swift */,
+				577A81BF1A08CFD700DA1EC8 /* EditSpecialtyViewController.swift */,
+				577A81C01A08CFD700DA1EC8 /* EditXPGainViewController.swift */,
+				577A81C11A08CFD700DA1EC8 /* EditXPViewController.swift */,
+				577A81C21A08CFD700DA1EC8 /* LogEntryViewController.swift */,
+				577A81C31A08CFD700DA1EC8 /* LogViewController.swift */,
+				577A81D21A091F8B00DA1EC8 /* SkillSelectController.swift */,
+				577A81C41A08CFD700DA1EC8 /* StatSelectViewController.swift */,
+				5725DE761A0415CD00343E5F /* MasterViewController.swift */,
+			);
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -304,9 +395,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5725DE7C1A0415CD00343E5F /* Main.storyboard in Resources */,
+				577A81A81A07C73600DA1EC8 /* SkillSelectView.xib in Resources */,
+				577A81A91A07C73600DA1EC8 /* UseSkillCellView.xib in Resources */,
+				577A81D71A0B358300DA1EC8 /* MainUse.storyboard in Resources */,
 				5725DE811A0415CD00343E5F /* LaunchScreen.xib in Resources */,
+				577A81A71A07C73600DA1EC8 /* EditSkillCellView.xib in Resources */,
 				5725DE7E1A0415CD00343E5F /* Images.xcassets in Resources */,
+				577A81D61A0B358300DA1EC8 /* Edit.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,24 +420,45 @@
 			buildActionMask = 2147483647;
 			files = (
 				5725DEBC1A0473EC00343E5F /* Stat.swift in Sources */,
+				577A81D31A091F8B00DA1EC8 /* SkillSelectController.swift in Sources */,
+				577A81B71A07C8F900DA1EC8 /* UseSkillCell.swift in Sources */,
+				577A81B31A07C8F900DA1EC8 /* CharSheetUseControl.swift in Sources */,
 				5725DEAD1A046FF800343E5F /* DDXMLNode.m in Sources */,
 				5725DECA1A07878600343E5F /* MutableSet.swift in Sources */,
+				577A81CF1A08CFD700DA1EC8 /* LogViewController.swift in Sources */,
+				5725DED81A07935A00343E5F /* TicksView.swift in Sources */,
+				577A81C91A08CFD700DA1EC8 /* EditNotesViewController.swift in Sources */,
+				577A81B81A07C8F900DA1EC8 /* UseStatLabel.swift in Sources */,
+				577A81B41A07C8F900DA1EC8 /* EditSkillCell.swift in Sources */,
 				5725DE721A0415CD00343E5F /* AppDelegate.swift in Sources */,
 				5725DEC51A04AFF800343E5F /* Specialty.swift in Sources */,
 				5725DE981A046F5900343E5F /* CharSheet.xcdatamodeld in Sources */,
 				5725DE771A0415CD00343E5F /* MasterViewController.swift in Sources */,
 				5725DEC31A0493F100343E5F /* Misc.swift in Sources */,
+				577A81C71A08CFD700DA1EC8 /* DieRollResultViewController.swift in Sources */,
 				5725DEB71A0473EC00343E5F /* CharSheet.swift in Sources */,
+				577A81B21A07C8F900DA1EC8 /* ActionSheet.swift in Sources */,
 				5725DEC41A04A1D000343E5F /* Skill.swift in Sources */,
+				577A81C61A08CFD700DA1EC8 /* CharSheetUseViewController.swift in Sources */,
+				577A81CB1A08CFD700DA1EC8 /* EditSpecialtyViewController.swift in Sources */,
+				577A81B51A07C8F900DA1EC8 /* StoryboardManager.swift in Sources */,
 				5725DEAA1A046FF800343E5F /* NSString+DDXML.m in Sources */,
+				577A81D01A08CFD700DA1EC8 /* StatSelectViewController.swift in Sources */,
 				5725DEAC1A046FF800343E5F /* DDXMLElement.m in Sources */,
+				577A81C81A08CFD700DA1EC8 /* DieRollViewController.swift in Sources */,
 				5725DEAB1A046FF800343E5F /* DDXMLDocument.m in Sources */,
+				577A81C51A08CFD700DA1EC8 /* CharSheetEditViewController.swift in Sources */,
+				577A81CC1A08CFD700DA1EC8 /* EditXPGainViewController.swift in Sources */,
 				5725DEC01A047D5100343E5F /* XMLSupport.swift in Sources */,
 				5725DEC81A07679900343E5F /* DieRoll.swift in Sources */,
 				5725DEC61A04E30F00343E5F /* LogEntry.swift in Sources */,
+				577A81CD1A08CFD700DA1EC8 /* EditXPViewController.swift in Sources */,
+				577A81CA1A08CFD700DA1EC8 /* EditSkillViewController.swift in Sources */,
 				5725DE791A0415CD00343E5F /* DetailViewController.swift in Sources */,
+				577A81CE1A08CFD700DA1EC8 /* LogEntryViewController.swift in Sources */,
 				5725DEC71A04E95A00343E5F /* XPGain.swift in Sources */,
 				5725DEA91A046FF800343E5F /* DDXMLElementAdditions.m in Sources */,
+				577A81B61A07C8F900DA1EC8 /* StrictGridLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,14 +481,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		5725DE7A1A0415CD00343E5F /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				5725DE7B1A0415CD00343E5F /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		5725DE7F1A0415CD00343E5F /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

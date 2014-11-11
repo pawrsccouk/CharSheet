@@ -1,11 +1,11 @@
-////
-////  PWDieRoll.m
-////  CharSheet
-////
-////  Created by Patrick Wallace on 13/12/2012.
-////
-////  This holds the various stats and skills that make up a die roll, and then performs the rolling.
 //
+//  PWDieRoll.m
+//  CharSheet
+//
+//  Created by Patrick Wallace on 13/12/2012.
+//
+//  This holds the various stats and skills that make up a die roll, and then performs the rolling.
+
 import Foundation
 import CoreData
 
@@ -21,6 +21,7 @@ class DieRoll : NSObject {
     var skills: MutableOrderedSet<Skill> = MutableOrderedSet() {
         didSet {
             resetResults()
+            assert( skills.array.filter{ $0.name == nil }.isEmpty, "All skills must have a name." )
         }
     }
     var adds: Int = 0 {
@@ -34,20 +35,21 @@ class DieRoll : NSObject {
         }
     }
     
-    var extraD4s: Int = 0 {
+    // TODO: Implement extra D4s.
+    var extraD4s: Int16 = 0 {
         didSet {
             resetResults()
         }
     }
     
-    var charSheet: CharSheet
+    var charSheet: CharSheet!
 
     // MARK: Output Properties
     
     // These values are only available after the die roll.
-    var d6Rolls: [Int] = []
-    var dieRollsPerSkill: [String: [Int]] = [:]
-    var extraD4Rolls: [Int] = []
+    var d6Rolls: [Int16] = []
+    var dieRollsPerSkill: [String: [Int16]] = [:]
+    var extraD4Rolls: [Int16] = []
     
     
     var resultAsHTML: String {
@@ -58,12 +60,12 @@ class DieRoll : NSObject {
             
             // For the D6 rolls, first check for a botch and return immediately if so.
             if isBotch(d6Rolls) {
-                return String(format:"%@ + %@ (Botch!)",d6Rolls[0], d6Rolls[1])
+                return "\(d6Rolls[0]) + \(d6Rolls[1]) (Botch!)"
             }
             
             // Format the D6 rolls.
             assert(d6Rolls.count % 2 == 0, "Uneven number of d6 rolls")
-            var d6Total = 0
+            var d6Total = Int16(0)
             log.appendString(spacing)
             for var i = 0, c = d6Rolls.count; i < c; i += 2 {
                 let n1 = d6Rolls[i], n2 = d6Rolls[i+1]
@@ -71,52 +73,55 @@ class DieRoll : NSObject {
                 if i > 0 {
                     log.appendString(", ")
                 }
-                log.appendFormat("%@ + %@ %@", n1, n2, isDouble ? "(Double!)" : "")
+                let doubleStr = isDouble ? "(Double!)" : ""
+                log.appendString("\(n1) + \(n2) \(doubleStr)")
                 d6Total += n1 + n2
             }
-            log.appendFormat("&nbsp;&nbsp;= %d<br/>", d6Total)
+            log.appendString("&nbsp;&nbsp;= \(d6Total)<br/>")
             
             // Add the stat if necessary.
             if let s = stat {
-                log.appendFormat("Stats: <br/>%@%@ = %@<br/>", spacing, s.name, s.value)
+                log.appendString("Stats: <br/>\(spacing)\(s.name!) = \(s.value)<br/>")
             }
             // Now add the skill rolls.
             if skills.count > 0 {
                 log.appendString("Skills:<br/>")
                 
                 for skill in skills.array {
-                    var spec = specialties[skill.name]
-                    let rollsForSkill: [Int] = dieRollsPerSkill[skill.name] ?? []
-                    log.appendFormat("%@%@<br/>", spacing, formatSkillRoll(skill, rolls: rollsForSkill, spec: spec))
+                    let spec = specialties[skill.name!]
+                    
+                    let rollsForSkill: [Int16] = dieRollsPerSkill[skill.name!] ?? []
+                    let skillRollStr = formatSkillRoll(skill, rolls: rollsForSkill, spec: spec)
+                    log.appendString("\(spacing)\(skillRollStr)<br/>")
                 }
             }
             
             // Add any final adds.
             if(adds != 0) {
-                log.appendFormat("Adds:<br/>%@+ %d<br/>", spacing, adds)
+                log.appendString("Adds:<br/>\(spacing)+ \(adds)<br/>")
             }
             log.appendString("<br/><hr/>")
-            log.appendFormat("<b>Total = %d</b>", total)
+            log.appendString("<b>Total = \(total)</b>")
             log.appendString("</body></html>")
             return log
         }
     }
     
     
-    var total: Int {
+    var total: Int16 {
         get {
             if isBotch(d6Rolls) { return 0 }
             var total = d6Rolls.reduce(0) { $0 + $1 }
             
             if let s = stat {
-                total += s.value.integerValue
+                total += s.value
             }
             for skill in skills.array {
-                if let rolls = dieRollsPerSkill[skill.name] {
+                if let rolls = dieRollsPerSkill[skill.name!] {
                     total += rolls.reduce(0) { $0 + $1 }
                 }
-                if let spec = specialties[skill.name] {
-                    total += spec.value.integerValue
+                if let spec = specialties[skill.name!] {
+                    total += spec.value
                 }
             }
             total += adds
@@ -127,18 +132,32 @@ class DieRoll : NSObject {
     
     // MARK: - Housekeeping
     
-    init(charSheet: CharSheet) {
+    convenience init(charSheet: CharSheet) {
+        self.init()
         self.charSheet = charSheet
+        resetResults()
+    }
+    
+    override init() {
         super.init()
         resetResults()
     }
     
+    // MARK: Public API
+    
+    func addLogEntry() -> LogEntry {
+        var entry = charSheet.addLogEntry()
+        entry.summary = getSummary()
+        entry.change  = getLogDetail()
+        return entry;
+    }
     
     
+
     
-    // MARK: Methods
+    // MARK: Private API
     
-    func resetResults() {
+    private func resetResults() {
         d6Rolls = []
         dieRollsPerSkill = [:]
     }
@@ -146,8 +165,7 @@ class DieRoll : NSObject {
     
     
     
-    func sanitiseHTML(input: String) -> String
-    {
+    private func sanitiseHTML(input: String) -> String {
         var output = NSMutableString(capacity: countElements(input))
         for c in input {
             switch c {
@@ -164,19 +182,22 @@ class DieRoll : NSObject {
     
     
     
-    func formatSkillRoll(skill: Skill?, rolls: [Int], spec: Specialty?) -> String {
+    private func formatSkillRoll(skill: Skill, rolls: [Int16], spec: Specialty?) -> String {
         var skillTotal = rolls.reduce(0) { n1, n2 in n1 + n2}
-        var specStr    = "", finalTotal = 0
+        var specStr    = "", finalTotal = Int16(0)
         if let specialty = spec {
-            specStr = String(format:"(+ %d)", specialty.value.integerValue)
-            finalTotal += specialty.value.integerValue
+            specStr = String(format:"(+ %d)", specialty.value)
+            finalTotal += specialty.value
         }
         finalTotal += skillTotal
-        return String(format:"%@ (%d) = %@ %@ = %d", sanitiseHTML(skill?.name ?? ""), rolls.count, (rolls as NSArray).componentsJoinedByString(" + "), specStr, finalTotal)
+        let skillName = skill.name!, rollsText = (rolls.map{$0.description} as NSArray).componentsJoinedByString(" + ")
+        return String(format:"%@ (%d) = %@ %@ = %d", sanitiseHTML(skillName ?? "No name"), rolls.count, rollsText, specStr, finalTotal)
     }
     
-    func isBotch(d6Rolls: [Int]) -> Bool {
-        assert(countElements(d6Rolls) == 2, "Invalid no. of d6")
+    
+    
+    private func isBotch(d6Rolls: [Int16]) -> Bool {
+        assert(countElements(d6Rolls) >= 2, "Not enough d6")
         return d6Rolls[0] + d6Rolls[1] == 3
     }
     
@@ -186,12 +207,12 @@ class DieRoll : NSObject {
     let spacing = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
     
     // Return the summary of a die roll for the logs.
-    func getSummary() -> String {
+    private func getSummary() -> String {
         var statStr  = "<No stat>"
         if let statName = self.stat?.shortName {
             statStr = statName
         }
-        var skillNames: NSArray = skills.array.map{ obj in (obj as Skill).name }
+        var skillNames: NSArray = skills.array.map{ obj in (obj as Skill).name! }
         var skillStr = skillNames.componentsJoinedByString("/")
         return NSString(format:"%@ + %@", statStr, skillStr)
     }
@@ -199,51 +220,41 @@ class DieRoll : NSObject {
     
     
     // Return the detail text of a die roll for the logs.
-    func getLogDetail() -> String {
+    private func getLogDetail() -> String {
         
         func summariseSkillRoll(skill: Skill) -> String {
             
-            var d4Rolls: NSArray = []
-            if let dieRollsForSkill = dieRollsPerSkill[skill.name] {
+            var d4Rolls: [Int16] = []
+            if let dieRollsForSkill = dieRollsPerSkill[skill.name!] {
                 d4Rolls = dieRollsForSkill
             }
-            var d4rollStr = d4Rolls.componentsJoinedByString("+")
-            var specValue = 0
-            if let spec = specialties[skill.name] {
-                specValue = spec.value.integerValue
+            var d4rollStr = (d4Rolls.map{$0.description} as NSArray).componentsJoinedByString("+")
+            var specValue: Int16 = 0
+            if let spec = specialties[skill.name!] {
+                specValue = spec.value
             }
-            return String(format:"%@: %@ (+%@)", skill.name, d4Rolls, specValue)
+            return "\(skill.name!): \(d4Rolls) (+\(specValue))"
             
         }
         
-        var statStr = (stat != nil) ? String(format:"Stat: %@=%@", stat!.name, stat!.value) : "Stat: None";
-        var d6str   = String(format:"D6 Rolls: %@", (d6Rolls as NSArray).componentsJoinedByString(" + "))
-        var skillResults: NSArray = skills.array.map(summariseSkillRoll)
-        var skillStr = skillResults.componentsJoinedByString("\n")
+        let statStr = (stat != nil) ? "Stat: \(stat!.name!)=\(stat!.value)" : "Stat: None"
+        let d6s     = (d6Rolls.map{ $0.description } as NSArray).componentsJoinedByString(" + ")
+        let d6str   = "D6 Rolls: \(d6s)"
+        let skillResults: NSArray = skills.array.map(summariseSkillRoll)
+        let skillStr = skillResults.componentsJoinedByString("\n")
         
         return String(format:"%@\n%@\n%@\nAdds:%d\nTotal: %d", d6str, statStr, skillStr, adds, total)
     }
     
-    
-    
-    
-    func addLogEntry() -> LogEntry {
-        var entry = charSheet.addLogEntry()
-        entry.summary = getSummary()
-        entry.change  = getLogDetail()
-        return entry;
-    }
-    
-    
-    
-    func rollD6(doublesReroll: Bool) -> [Int] {
-        var results: [Int] = []
+
+    private func rollD6(doublesReroll: Bool) -> [Int16] {
+        var results: [Int16] = []
         var firstRoll = true
-        var n1: Int, n2: Int
+        var n1 = Int16(0), n2 = Int16(0)
         
         do {
-            n1 = (Int(rand()) % 6) + 1
-            n2 = (Int(rand()) % 6) + 1
+            n1 = Int16(rand() % 6) + 1
+            n2 = Int16(rand() % 6) + 1
             results.append(n1)
             results.append(n2)
             
@@ -254,15 +265,15 @@ class DieRoll : NSObject {
             firstRoll = false
         } while doublesReroll && n1 == n2
         
-        return results;
+        return results
     }
     
     
     
     
-    func rollD4(numToRoll: Int) -> [Int] {
-        var results: [Int] = []
-        for var i = 0, c = numToRoll; i < c; ++i {
+    private func rollD4(numToRoll: Int16) -> [Int16] {
+        var results: [Int16] = []
+        for var i: Int16 = 0, c: Int16 = numToRoll; i < c; ++i {
             results.append((Int(rand()) % 4) + 1)
         }
         return results
@@ -279,9 +290,9 @@ class DieRoll : NSObject {
         d6Rolls += rollD6(true)
         // D4 rolls.
         for skill in self.skills.array {
-            var skillExtraD4 = charSheet.extraDiceForSkill(skill as Skill)
-            var d4Results = rollD4(skill.value.integerValue + skillExtraD4)
-            dieRollsPerSkill[skill.name] = d4Results
+            let skillExtraD4: Int16 = charSheet.extraDiceForSkill(skill as Skill)
+            let d4Results = rollD4(Int16(skill.value) + Int16(skillExtraD4))
+            dieRollsPerSkill[skill.name!] = d4Results
         }
         // Fixed values (stat & specialties) don't need to be handled here.
     }

@@ -14,7 +14,7 @@ class LogEntry : NSManagedObject, XMLClient {
     
     // MARK: CoreData dynamic properties.
     
-    @NSManaged var dateTime: NSDate, summary: String, change: String, parent: CharSheet!
+    @NSManaged var dateTime: NSDate, summary: String?, change: String?, parent: CharSheet!
     
     override func awakeFromInsert() {
         super.awakeFromInsert()
@@ -57,13 +57,13 @@ class LogEntry : NSManagedObject, XMLClient {
     
     
     
-    func updateFromXML(element: DDXMLElement, error: NSErrorPointer) -> Bool {
-        if !XMLSupport.validateElementName(element.name, expectedName: elementLOG_ENTRY, error: error) { return false }
+    func updateFromXML(element: DDXMLElement, inout error: NSError?) -> Bool {
+        if !XMLSupport.validateElementName(element.name, expectedName: elementLOG_ENTRY, error: &error) { return false }
         for attrNode in (element.attributes as [DDXMLNode]) {
             let nodeName = attrNode.name
             if      nodeName  == attributeDATE_TIME { self.dateTime = fullDateFormatter.dateFromString(attrNode.stringValue)! }
             else if nodeName  == attributeSUMMARY   { self.summary  = attrNode.stringValue }
-            else { return XMLSupport.setError(error, format: "Unrecognised log entry attribute: %@", arguments: attrNode.name) }
+            else { return XMLSupport.setError(&error, text: "Unrecognised log entry attribute: \(attrNode.name)") }
         }
         
         self.change = element.stringValue

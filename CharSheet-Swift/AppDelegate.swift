@@ -13,37 +13,30 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
     var window: UIWindow?
+    var masterViewController: MasterViewController!
 
+    // MARK: - ApplicationDelegate
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        let splitViewController = self.window!.rootViewController as UISplitViewController
-        let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as UINavigationController
-        navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
-        splitViewController.delegate = self
-
-        let masterNavigationController = splitViewController.viewControllers[0] as UINavigationController
-        let controller = masterNavigationController.topViewController as MasterViewController
-        controller.managedObjectContext = self.managedObjectContext
+        
+        wireUpMasterAndDetailViews()
+        
+        // If we have been given a URL, make sure we can access it. Return false to abort program startup if the URL is invalid.
+        if let options = launchOptions {
+            let launchURL = options[UIApplicationLaunchOptionsURLKey] as NSURL
+            if !launchURL.fileURL {
+                return false
+            }
+        }
+        
         return true
-    }
-
-    func applicationWillResignActive(application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    }
-
-    func applicationWillEnterForeground(application: UIApplication) {
-        // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    }
-
-    func applicationDidBecomeActive(application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        self.saveContext()
     }
 
     func applicationWillTerminate(application: UIApplication) {
@@ -52,7 +45,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         self.saveContext()
     }
 
-    // MARK: - Split view
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+        // Called when the application is started because someone clicked on or provided a document that we are registered to handle.
+        // In this case, it is triggered when the user opens a .charSheet attachment in an email.
+        // Import the data from the URL.
+        
+        if url.fileURL {
+            return masterViewController.importURL(url)
+        }
+        return false // Not a URL type we support.
+    }
+    
+    // MARK: - SplitViewControllerDelegate
 
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController!, ontoPrimaryViewController primaryViewController:UIViewController!) -> Bool {
         if let secondaryAsNavController = secondaryViewController as? UINavigationController {
@@ -75,7 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-        let modelURL = NSBundle.mainBundle().URLForResource("CharSheet_Swift", withExtension: "momd")!
+        let modelURL = NSBundle.mainBundle().URLForResource("CharSheet", withExtension: "momd")!
         return NSManagedObjectModel(contentsOfURL: modelURL)!
     }()
 
@@ -83,7 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
         // Create the coordinator and store
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("CharSheet_Swift.sqlite")
+        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("CharSheet.sqlite")
         var error: NSError? = nil
         var failureReason = "There was an error creating or loading the application's saved data."
         if coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil, error: &error) == nil {
@@ -93,7 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
             dict[NSLocalizedFailureReasonErrorKey] = failureReason
             dict[NSUnderlyingErrorKey] = error
-            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
+            error = NSError(domain: "CharSheet CoreData", code: 9999, userInfo: dict)
             // Replace this with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog("Unresolved error \(error), \(error!.userInfo)")
@@ -127,6 +131,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             }
         }
     }
+    
+    // MARK: - Private methods
+    
+    
+    private func wireUpMasterAndDetailViews() {
+        
+        // Get the objects the storyboard has created, and connect them together.
+        
+        let splitViewController = window!.rootViewController as UISplitViewController
+        let detailNavigationController = splitViewController.viewControllers[1] as UINavigationController
+        
+        let charSheetUseViewController = detailNavigationController.viewControllers[0] as CharSheetUseViewController
+        splitViewController.delegate = charSheetUseViewController
+        
+        charSheetUseViewController.saveAllData = { self.saveContext() }
+        
+        let masterNavigationController = splitViewController.viewControllers[0] as UINavigationController
+        masterViewController = masterNavigationController.viewControllers[0] as MasterViewController
+        masterViewController.managedObjectContext = managedObjectContext!
+    }
+
 
 }
 

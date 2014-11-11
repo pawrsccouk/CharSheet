@@ -16,7 +16,7 @@ func addSpecialty(managedObjectContext: NSManagedObjectContext) -> Specialty
 
 class Skill : NSManagedObject, XMLClient {
 
-    @NSManaged var name: NSString, ticks: NSNumber, value: NSNumber, parent: CharSheet!, specialties: NSMutableOrderedSet!
+    @NSManaged var name: NSString?, ticks: Int16, value: Int16, parent: CharSheet!, specialties: NSMutableOrderedSet!
 
     override func awakeFromInsert() -> Void {
         super.awakeFromInsert()
@@ -28,6 +28,7 @@ class Skill : NSManagedObject, XMLClient {
     func appendSpecialty() -> Specialty
     {
         var newSpec = addSpecialty(self.managedObjectContext!)
+        newSpec.parent = self
         self.specialties.addObject(newSpec)
         return newSpec
         
@@ -61,14 +62,16 @@ class Skill : NSManagedObject, XMLClient {
     }
 
 
-    func specialtiesAsString() -> NSString {
-        var str = NSMutableString()
+    var specialtiesAsString: String {
+        // TODO: Change the algorithm so we don't have to manipulate the string afterwards.
+        var str = "", first = true
         for spec in (self.specialties.array as [Specialty]) {
-                str.appendFormat("%@ +%@; ", spec.name, spec.value)
-        }
-        // Remove the final "; "
-        if str.length > 2 {
-            str.replaceCharactersInRange(NSMakeRange(str.length - 2, 2), withString:"")
+            if first {
+                str += "\(spec.name!) +\(spec.value)"
+                first = false
+            } else {
+                str += "; \(spec.name!) +\(spec.value)"
+            }
         }
         return str
     }
@@ -80,15 +83,15 @@ class Skill : NSManagedObject, XMLClient {
 
 
 
-    func addTick() -> Bool {
-        if self.ticks.integerValue >= 19 {
+    func addTick() /*-> Bool*/ {
+        if self.ticks >= 19 {
             self.ticks = 0
-            self.value = self.value.integerValue + 1
-            return true
+            self.value = self.value + 1
+            //return true
         }
         else {
-            self.ticks = self.ticks.integerValue + 1
-            return false
+            self.ticks = self.ticks + 1
+            //return false
         }
     }
     
@@ -108,8 +111,8 @@ class Skill : NSManagedObject, XMLClient {
         var this = DDXMLElement.elementWithName(elementSKILL) as DDXMLElement
         
         var name  = DDXMLNode.attributeWithName(attributeNAME , stringValue:self.name) as DDXMLNode
-        var value = DDXMLNode.attributeWithName(attributeVALUE, stringValue:self.value.stringValue) as DDXMLNode
-        var ticks = DDXMLNode.attributeWithName(attributeTICKS, stringValue:self.ticks.stringValue) as DDXMLNode
+        var value = DDXMLNode.attributeWithName(attributeVALUE, stringValue:self.value.description) as DDXMLNode
+        var ticks = DDXMLNode.attributeWithName(attributeTICKS, stringValue:self.ticks.description) as DDXMLNode
         this.addAttribute(name)
         this.addAttribute(value)
         this.addAttribute(ticks)
@@ -120,26 +123,26 @@ class Skill : NSManagedObject, XMLClient {
         return this
     }
 
-    func updateFromXML(element: DDXMLElement, error:NSErrorPointer) -> Bool {
-        if !XMLSupport.validateElementName(element.name, expectedName: elementSKILL, error: error) { return false }
+    func updateFromXML(element: DDXMLElement, inout error:NSError?) -> Bool {
+        if !XMLSupport.validateElementName(element.name, expectedName: elementSKILL, error: &error) { return false }
         
         for attrNode in (element.attributes as [DDXMLNode]) {
             let nodeName = attrNode.name
             if      nodeName == attributeNAME  { self.name  = attrNode.stringValue }
-            else if nodeName == attributeVALUE { self.value = XMLSupport.numberFromNode(attrNode) }
-            else if nodeName == attributeTICKS { self.ticks = XMLSupport.numberFromNode(attrNode) }
-            else { return XMLSupport.setError(error, format: "Unrecognised attribute %@ in skill", arguments: nodeName) }
+            else if nodeName == attributeVALUE { self.value = Int16(attrNode.stringValue.toInt() ?? 0) }
+            else if nodeName == attributeTICKS { self.ticks = Int16(attrNode.stringValue.toInt() ?? 0) }
+            else { return XMLSupport.setError(&error, text: "Unrecognised attribute \(nodeName) in skill") }
         }
         
         if element.childCount != 1 { NSLog("Warning: Skill has more than one child. Should be just one: %@", elementSPECIALTIES) }
         if(element.childCount > 0) {
             for specGroup in (element.children as [DDXMLElement]) {
                 if specGroup.name == elementSPECIALTIES {
-                    var specialties = XMLSupport.dataFromNodes(specGroup, createFunc: { addSpecialty(self.managedObjectContext!) }, error: error)
+                    var specialties = XMLSupport.dataFromNodes(specGroup, createFunc: { addSpecialty(self.managedObjectContext!) }, error: &error)
                     if specialties == nil { return false }
                     self.specialties = specialties?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
                 }
-                else { return XMLSupport.setError(error, format:"Unrecognised child %@ of skill element.", arguments:specGroup.name) }
+                else { return XMLSupport.setError(&error, text:"Unrecognised child \(specGroup.name) of skill element.") }
             }
         }
         return true

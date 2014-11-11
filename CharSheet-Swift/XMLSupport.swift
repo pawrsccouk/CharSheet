@@ -14,7 +14,7 @@ import Foundation
 protocol XMLClient {
     
     // Update the object data from the XML element given. Call recursively for child objects.
-    func updateFromXML(element: DDXMLElement, error: NSErrorPointer) -> Bool
+    func updateFromXML(element: DDXMLElement, inout error: NSError?) -> Bool
     
     // Output the object (and it's children) as an XML element for inclusion in an XML tree.
     func asXML() -> DDXMLElement
@@ -28,24 +28,32 @@ class XMLSupport {
     // Function used to return from a test with an error. Returns false, so you can use it as
     // if test-failed { return XMLError(&error, "Test failed with error condition %@", errorCondition) }
     
-    class func setError(error: NSErrorPointer, format: String, arguments: AnyObject...) -> Bool {
-        var errorText = String(format:format, arguments)
-        let domainXML_IMPORT = "CharSheet XML Import"
-        if error != nil {
-            let errorInfo = NSDictionary(object:errorText, forKey:NSHelpAnchorErrorKey)
-            error.memory = NSError(domain:domainXML_IMPORT, code:0, userInfo:errorInfo)
-        }
+//    class func setError(error: NSErrorPointer, format: String, arguments: AnyObject...) -> Bool {
+//        var errorText = String(format:format, arguments)
+//        let domainXML_IMPORT = "CharSheet XML"
+//        if error != nil {
+//            let errorInfo = NSDictionary(object:errorText, forKey:NSHelpAnchorErrorKey)
+//            error.memory = NSError(domain:domainXML_IMPORT, code:0, userInfo:errorInfo)
+//        }
+//        return false
+//    }
+   
+    
+    class func setError(inout error: NSError?, text: String) -> Bool {
+        let domainXML_IMPORT = "CharSheet XML"
+        let errorInfo = NSDictionary(object:text, forKey:NSHelpAnchorErrorKey)
+        error = NSError(domain:domainXML_IMPORT, code:0, userInfo:errorInfo)
         return false
     }
-    
+
     typealias CreateFunc = () -> XMLClient
     
-    class func dataFromNodes(parent: DDXMLElement, createFunc: CreateFunc, error:NSErrorPointer) -> NSOrderedSet? {
+    class func dataFromNodes(parent: DDXMLElement, createFunc: CreateFunc, inout error:NSError?) -> NSOrderedSet? {
         var xmlChildren: [DDXMLElement] = parent.children as [DDXMLElement]
         var newLogs = NSMutableOrderedSet(capacity: xmlChildren.count)
         for element: DDXMLElement in xmlChildren  {
             let newEntry: XMLClient = createFunc()
-            if !newEntry.updateFromXML(element, error:error) {
+            if !newEntry.updateFromXML(element, error: &error) {
                 return nil
             }
             newLogs.addObject(newEntry.asObject)
@@ -58,19 +66,20 @@ class XMLSupport {
     // If the name doesn't exist, or doesn't match the expected name, sets error and returns false.
     // Otherwise returns true.
     
-    class func validateElementName(name: String?, expectedName: String, error: NSErrorPointer) -> Bool {
+    class func validateElementName(name: String?, expectedName: String, inout error: NSError?) -> Bool {
         if let s: String = name {
             if (s == expectedName) {
                 return true
             }
         }
-        return XMLSupport.setError(error, format:"Element %@ unrecognised. Should be %@", arguments: name ?? "[nil]", expectedName)
+        let n = name ?? "[nil]"
+        return XMLSupport.setError(&error, text:"Element \(n) unrecognised. Should be \(expectedName)")
     }
     
-    class func numberFromNode(node: DDXMLNode) -> NSNumber {
-        var v: NSString = node.stringValue
-        return NSNumber(integer:v.integerValue)
-    }
+//    class func numberFromNode(node: DDXMLNode) -> NSNumber {
+//        var v: NSString = node.stringValue
+//        return NSNumber(integer:v.integerValue)
+//    }
 
 
 }
