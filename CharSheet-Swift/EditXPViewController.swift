@@ -51,7 +51,7 @@ class EditXPViewController : UITableViewController, UITableViewDataSource, UITab
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let editXPGainViewController = segue.destinationViewController as EditXPGainViewController
+        let editXPGainViewController = segue.destinationViewController as! EditXPGainViewController
         editXPGainViewController.completionBlock = { self.tableView.reloadData() }
         
         if segue.identifier == "AddNewXPGainView" {
@@ -61,7 +61,7 @@ class EditXPViewController : UITableViewController, UITableViewDataSource, UITab
         else if segue.identifier == "EditExistingXPGainView" {
             if let cell = sender as? UITableViewCell {
                 if let selectedIndexPath = tableView.indexPathForCell(cell) {
-                    editXPGainViewController.xpGain = charSheet.xp[selectedIndexPath.row] as XPGain
+                    editXPGainViewController.xpGain = charSheet.xp[selectedIndexPath.row] as? XPGain
                 }
                 else {
                     assert(false, "Cell \(cell) not found in CharSheet.xp. ")
@@ -85,9 +85,11 @@ class EditXPViewController : UITableViewController, UITableViewDataSource, UITab
         let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) as? UITableViewCell ?? UITableViewCell()
         
         if let xpGain = charSheet.xp[indexPath.item] as? XPGain {
-            cell.textLabel.text = xpGain.reason
-            if let detailTextLabel = cell.detailTextLabel {
-                detailTextLabel.text = xpGain.amount.description
+            if let l = cell.textLabel {
+                l.text = xpGain.reason
+            }
+            if let l = cell.detailTextLabel {
+                l.text = xpGain.amount.description
             }
         } else {
             assert(false, "No XP gain object at index \(indexPath)")
@@ -108,7 +110,9 @@ class EditXPViewController : UITableViewController, UITableViewDataSource, UITab
     
     override  func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         if let detailTextLabel = cell.detailTextLabel {
-            cell.textLabel.font = detailTextLabel.font
+            if let textLabel = cell.textLabel {
+                textLabel.font = detailTextLabel.font
+            }
         }
     }
     

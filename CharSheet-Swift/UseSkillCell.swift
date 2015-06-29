@@ -33,13 +33,14 @@ class UseSkillCell : UICollectionViewCell {
                     s.addObserver(self, forKeyPath:"value"      , options:.New, context:nil)
                     s.addObserver(self, forKeyPath:"specialties", options:.New, context:nil)
                     
-                    setLabelViaTag(.Name       , value: s.name ?? "")
+                    setLabelViaTag(.Name       , value: s.name as? String ?? "")
                     setLabelViaTag(.Value      , value: s.value.description)
                     setLabelViaTag(.Specialties, value: s.specialtiesAsString)
                     
-                    if var ticksView = self.viewWithTag(CellTags.Ticks.rawValue) {
-                        assert(ticksView.isKindOfClass(TicksView), "View \(ticksView) is not a TicksView object")
-                        (ticksView as TicksView).skill = s
+					assert(self.viewWithTag(CellTags.Ticks.rawValue)?.isKindOfClass(TicksView) ?? false,
+						"View \(self.viewWithTag(CellTags.Ticks.rawValue)) is not a TicksView object")
+                    if let tv = self.viewWithTag(CellTags.Ticks.rawValue) as? TicksView {
+                        tv.skill = s
                     }
                     else {
                         assert(false, "TicksView not found")
@@ -58,9 +59,9 @@ class UseSkillCell : UICollectionViewCell {
         
         if arrayOfViews.count >= 1 {
             
-            var content = arrayOfViews[0] as UIView
-            self.contentView.addSubview(content)
-            
+			if let content = arrayOfViews[0] as? UIView {
+				self.contentView.addSubview(content)
+			}
             self.selectedBackgroundView = UIView(frame:frame)
             self.selectedBackgroundView.backgroundColor = UIColor(red:0.25, green:0.25, blue:0.75, alpha:0.25)
         }
@@ -75,8 +76,8 @@ class UseSkillCell : UICollectionViewCell {
         let view = viewWithTag(tag.rawValue)
         assert(view != nil)
         if let v = view {
-            if v.isKindOfClass(UILabel) { (v as UILabel).text = value }
-            else if v.isKindOfClass(UITextView) { (v as UITextView).text = value }
+            if v.isKindOfClass(UILabel) { (v as! UILabel).text = value }
+            else if v.isKindOfClass(UITextView) { (v as! UITextView).text = value }
             else {
                 assert(false, "View \(v) found, should be text view or label.")
             }
@@ -84,7 +85,7 @@ class UseSkillCell : UICollectionViewCell {
     }
 
     override func observeValueForKeyPath(keyPath: String, ofObject object:AnyObject, change:[NSObject: AnyObject], context:UnsafeMutablePointer<Void>) {
-        if      keyPath == "name"        { setLabelViaTag(.Name       , value: skill.name ?? "") }
+        if      keyPath == "name"        { setLabelViaTag(.Name       , value: skill.name as? String ?? "") }
         else if keyPath == "value"       { setLabelViaTag(.Value      , value: skill.value.description) }
         else if keyPath == "specialties" { setLabelViaTag(.Specialties, value: skill.specialtiesAsString) }
     }

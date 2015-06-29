@@ -24,7 +24,11 @@ class ActionSheet : NSObject, UIActionSheetDelegate
         return resDict
     }
     
-    init(title: String, buttonTitlesAndBlocks titlesAndBlocks: BlockDict, cancelButtonTitle cancelTitle: String?, destructiveButtonTitle destructiveTitle: String?) {
+    init(title                                 : String,
+		buttonTitlesAndBlocks  titlesAndBlocks : BlockDict,
+		cancelButtonTitle      cancelTitle     : String?,
+		destructiveButtonTitle destructiveTitle: String?) {
+
         buttonTitlesAndBlocks  = ActionSheet.copyDict(titlesAndBlocks)
         destructiveButtonTitle = destructiveTitle
         cancelButtonTitle      = cancelTitle
@@ -54,13 +58,28 @@ class ActionSheet : NSObject, UIActionSheetDelegate
         }
     }
     
-    convenience init(title: String, confirmButtonTitle: String, confirmBlock: Block, cancelButtonTitle: NSString, cancelBlock: Block) {
-        self.init(title: title, buttonTitlesAndBlocks: [confirmButtonTitle : confirmBlock, cancelButtonTitle : cancelBlock], cancelButtonTitle: cancelButtonTitle, destructiveButtonTitle: nil)
+    convenience init(title: String,
+		confirmButtonTitle: String,
+		confirmBlock      : Block,
+		cancelButtonTitle : String,
+		cancelBlock       : Block) {
+
+        self.init(title           : title,
+			buttonTitlesAndBlocks : [confirmButtonTitle: confirmBlock, cancelButtonTitle: cancelBlock],   cancelButtonTitle : cancelButtonTitle,
+			destructiveButtonTitle: nil)
     }
     
-    
-    convenience init(title: String, destructiveButtonTitle: String, destructiveBlock: Block, cancelButtonTitle: String, cancelBlock: Block) {
-        self.init(title: title, buttonTitlesAndBlocks: [destructiveButtonTitle : destructiveBlock, cancelButtonTitle : cancelBlock], cancelButtonTitle:cancelButtonTitle, destructiveButtonTitle:destructiveButtonTitle)
+
+    convenience init(title    : String,
+		destructiveButtonTitle: String,
+		destructiveBlock      : Block,
+		cancelButtonTitle     : String,
+		cancelBlock           : Block) {
+
+        self.init(title           : title,
+			buttonTitlesAndBlocks : [destructiveButtonTitle: destructiveBlock, cancelButtonTitle: cancelBlock],
+			cancelButtonTitle     : cancelButtonTitle,
+			destructiveButtonTitle: destructiveButtonTitle)
     }
     
     func showFromBarButtonItem(barButtonItem: UIBarButtonItem, animated: Bool) {
@@ -73,7 +92,8 @@ class ActionSheet : NSObject, UIActionSheetDelegate
         // If the user didn't specify a cancel handler, the system can trigger a cancel anyway under some conditions
         // e.g. user clicks outside the popover on an iPad. In that case the system should return the cancel index, but it
         // actually returns -1. Handle both these conditions.
-        if( (buttonIndex == -1) || ( (cancelButtonTitle == nil) && (buttonIndex == actionSheet.cancelButtonIndex)) ) {
+        if( (buttonIndex == -1)
+			|| ( (cancelButtonTitle == nil) && (buttonIndex == actionSheet.cancelButtonIndex)) ) {
             return
         }
         

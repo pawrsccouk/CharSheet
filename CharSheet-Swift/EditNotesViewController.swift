@@ -46,7 +46,7 @@ class EditNotesViewController : UIViewController {
         registerForKeyboardNotifications()
     }
     
-    
+
     
     @IBAction func editDone(sender: AnyObject?) {
     
@@ -76,31 +76,29 @@ class EditNotesViewController : UIViewController {
     
     
     
-    func keyboardWasShown(aNotification: NSNotification) {
-        if let userInfo = aNotification.userInfo {
-            let keyboardStartFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as NSValue
-            let kbSize = view.convertRect(keyboardStartFrame.CGRectValue(), fromView:nil).size
-            
-            // If active text view is hidden by keyboard, move it so it is visible
-            if let superView = view.superview {
-                var mainRect = superView.frame, fieldRect = mainRect
-                fieldRect.size.height -= kbSize.height
-                
-                if activeView == notesTextView {
-                    // Move the active text view above the keyboard, and change the height so it fills the screen space above it.
-                    // Take a copy so we can restore it when the keyboard disappears.
-                    if let av = activeView {
-                        oldViewFrame = av.frame
-                        av.frame = fieldRect
-                    }
-                }
-            }
-        }
-    }
-    
-    
-    
-    
+	func keyboardWasShown(aNotification: NSNotification) {
+		if let userInfo = aNotification.userInfo
+			, keyboardStartFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue {
+				let kbSize = view.convertRect(keyboardStartFrame.CGRectValue(), fromView:nil).size
+
+				// If active text view is hidden by keyboard, move it so it is visible
+				if let superView = view.superview {
+					var mainRect = superView.frame, fieldRect = mainRect
+					fieldRect.size.height -= kbSize.height
+
+					// Move the active text view above the keyboard, and change the height so it fills the screen space above it.
+					// Take a copy so we can restore it when the keyboard disappears.
+					if activeView == notesTextView, let av = activeView {
+						oldViewFrame = av.frame
+						av.frame = fieldRect
+					}
+				}
+		}
+	}
+
+
+
+
     func keyboardWillBeHidden(aNotification: NSNotification) {
         if activeView == notesTextView {
             activeView!.frame = oldViewFrame

@@ -259,9 +259,31 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Health:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="57g-V5-TcE">
+                                <rect key="frame" x="386" y="95" width="55" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="82T-8c-Xg3">
+                                <rect key="frame" x="515" y="91" width="177" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="177" id="7T3-lg-6AB"/>
+                                    <constraint firstAttribute="height" constant="30" id="zfX-bm-HC8"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Health">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="setHealth:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="j1C-fN-4GI"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="57g-V5-TcE" firstAttribute="leading" secondItem="Nss-6G-Qdr" secondAttribute="leading" id="0DR-9a-oGU"/>
                             <constraint firstItem="ecm-FB-BfG" firstAttribute="top" secondItem="MIP-4D-g3s" secondAttribute="bottom" constant="8" symbolic="YES" id="13i-Re-O5q"/>
                             <constraint firstItem="Llb-PP-Nmq" firstAttribute="leading" secondItem="mMK-fN-ijC" secondAttribute="trailing" constant="8" symbolic="YES" id="28w-Ng-On2"/>
                             <constraint firstItem="qIE-Hb-yph" firstAttribute="top" secondItem="DBA-AS-y4Q" secondAttribute="bottom" symbolic="YES" id="3vU-zn-4CE"/>
@@ -280,6 +302,7 @@
                             <constraint firstItem="VnE-g2-sAd" firstAttribute="top" secondItem="MkC-Uv-N6M" secondAttribute="bottom" constant="8" symbolic="YES" id="G7b-hZ-63g"/>
                             <constraint firstItem="lHd-po-YLq" firstAttribute="top" secondItem="0zq-RI-JuM" secondAttribute="bottom" constant="8" symbolic="YES" id="IDX-hs-C7v"/>
                             <constraint firstItem="8Tk-F2-1Rm" firstAttribute="top" secondItem="Y9Z-QI-VGW" secondAttribute="bottom" constant="8" symbolic="YES" id="IJM-dF-Yms"/>
+                            <constraint firstItem="57g-V5-TcE" firstAttribute="top" secondItem="Nss-6G-Qdr" secondAttribute="bottom" constant="8" symbolic="YES" id="IoM-Hh-DHM"/>
                             <constraint firstItem="MkC-Uv-N6M" firstAttribute="leading" secondItem="ecm-FB-BfG" secondAttribute="trailing" constant="8" symbolic="YES" id="JE3-Jf-sQT"/>
                             <constraint firstItem="ggR-HF-94P" firstAttribute="leading" secondItem="ozs-4h-2Z1" secondAttribute="leading" constant="20" symbolic="YES" id="KKd-XW-0wM"/>
                             <constraint firstItem="VnE-g2-sAd" firstAttribute="leading" secondItem="YQv-gJ-dx2" secondAttribute="trailing" constant="8" symbolic="YES" id="Ki3-n0-t80"/>
@@ -308,8 +331,10 @@
                             <constraint firstItem="Llb-PP-Nmq" firstAttribute="top" secondItem="MIP-4D-g3s" secondAttribute="bottom" constant="8" symbolic="YES" id="pJf-fb-QFp"/>
                             <constraint firstItem="mMK-fN-ijC" firstAttribute="top" secondItem="MIP-4D-g3s" secondAttribute="bottom" constant="20" symbolic="YES" id="pUR-Cg-uRa"/>
                             <constraint firstItem="Qdh-Y8-Alo" firstAttribute="top" secondItem="VnE-g2-sAd" secondAttribute="bottom" constant="8" symbolic="YES" id="qbf-PG-EQG"/>
+                            <constraint firstItem="82T-8c-Xg3" firstAttribute="top" secondItem="Qdh-Y8-Alo" secondAttribute="bottom" constant="4" id="sca-TY-rG7"/>
                             <constraint firstItem="5dh-wG-k7c" firstAttribute="top" secondItem="VLm-oP-mZU" secondAttribute="bottom" constant="8" symbolic="YES" id="uOi-8L-qYF"/>
-                            <constraint firstItem="MkC-Uv-N6M" firstAttribute="top" secondItem="MIP-4D-g3s" secondAttribute="bottom" constant="20" symbolic="YES" id="wnC-0y-eE8"/>
+                            <constraint firstItem="Qdh-Y8-Alo" firstAttribute="leading" secondItem="82T-8c-Xg3" secondAttribute="leading" id="vYe-tS-lqP"/>
+                            <constraint firstItem="MkC-Uv-N6M" firstAttribute="top" secondItem="MIP-4D-g3s" secondAttribute="bottom" constant="8" symbolic="YES" id="wnC-0y-eE8"/>
                             <constraint firstItem="eWY-Ps-284" firstAttribute="leading" secondItem="5dh-wG-k7c" secondAttribute="trailing" constant="15" id="xiM-Nc-r7Z"/>
                             <constraint firstItem="Nss-6G-Qdr" firstAttribute="leading" secondItem="eWY-Ps-284" secondAttribute="trailing" constant="203" id="y7V-eC-qjt"/>
                             <constraint firstItem="qIE-Hb-yph" firstAttribute="leading" secondItem="ozs-4h-2Z1" secondAttribute="leading" id="y87-v3-mG0"/>
@@ -336,6 +361,7 @@
                         <outlet property="perceptionBtn" destination="lHd-po-YLq" id="vnQ-Sw-Rnj"/>
                         <outlet property="playerLabel" destination="Llb-PP-Nmq" id="N1m-Dj-Vse"/>
                         <outlet property="rangedAddsLabel" destination="Qdh-Y8-Alo" id="yMe-Cp-PbJ"/>
+                        <outlet property="setHealthBtn" destination="82T-8c-Xg3" id="zgD-Zr-wfM"/>
                         <outlet property="skillsCollectionView" destination="DBA-AS-y4Q" id="Gf9-7i-MCd"/>
                         <outlet property="speedBtn" destination="0zq-RI-JuM" id="s74-ag-WLH"/>
                         <outlet property="strengthBtn" destination="ene-V1-JM4" id="6AL-l3-CqQ"/>

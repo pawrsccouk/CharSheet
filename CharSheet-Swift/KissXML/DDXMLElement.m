@@ -25,6 +25,8 @@
 
 @implementation DDXMLElement
 
+@dynamic children;
+
 /**
  * Returns a DDXML wrapper object for the given primitive node.
  * The given node MUST be non-NULL and of the proper type.

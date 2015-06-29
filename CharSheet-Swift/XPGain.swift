@@ -25,27 +25,33 @@ class XPGain : NSManagedObject, XMLClient {
     var asObject: NSObject { get { return self } }
     
     // XML entity and attribute tags for this object.
-    let elementXP_ENTRY   = "xpEntry"
-    let attributeAMOUNT   = "amount"
-    let attributeREASON   = "reason"
+    private enum Element: String { case XP_ENTRY = "xpEntry" }
+    private enum Attribute: String { case AMOUNT = "amount", REASON = "reason" }
     
     func asXML() -> DDXMLElement {
-        var this    = DDXMLElement.elementWithName(elementXP_ENTRY) as DDXMLElement
-        var amount  = DDXMLNode.attributeWithName(attributeAMOUNT, stringValue: self.amount.description) as DDXMLNode
-        var reason  = DDXMLNode.attributeWithName(attributeREASON, stringValue: self.reason) as DDXMLNode
-        this.addAttribute(amount)
-        this.addAttribute(reason)
+        func attribute(name: Attribute, value: String) -> DDXMLNode {
+			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
+		}
+        let this    = DDXMLElement.elementWithName(Element.XP_ENTRY.rawValue) as! DDXMLElement
+        this.addAttribute( attribute( .AMOUNT, self.amount.description) )
+        this.addAttribute( attribute( .REASON, self.reason!) )
         return this
     }
     
     func updateFromXML(element: DDXMLElement, inout error:NSError?) -> Bool {
-        if !XMLSupport.validateElementName(element.name, expectedName: elementXP_ENTRY, error: &error) { return false }
-        for attrNode in (element.attributes as [DDXMLNode]) {
-            let nodeName = attrNode.name
-            if      nodeName == attributeAMOUNT { self.amount = Int16(attrNode.stringValue.toInt() ?? 0) }
-            else if nodeName == attributeREASON { self.reason = attrNode.stringValue }
-            else { return XMLSupport.setError(&error, text: "Unrecognised XP entry attribute: \(attrNode.name)")
+        if !XMLSupport.validateElementName(element.name, expectedName: Element.XP_ENTRY.rawValue, error: &error) {
+				return false
+		}
+        for attrNode in (element.attributes as! [DDXMLNode]) {
+            if let nodeName = Attribute(rawValue: attrNode.name) {
+                switch nodeName {
+                case .AMOUNT : self.amount = Int16(attrNode.stringValue.toInt() ?? 0)
+                case .REASON : self.reason = attrNode.stringValue
+                }
             }
+            else {
+				return XMLSupport.setError(&error, text: "Unrecognised XP entry attribute: \(attrNode.name)")
+			}
         }
         return true
     }

@@ -49,7 +49,7 @@ class LogViewController : UITableViewController, UITableViewDataSource {
         if segue.identifier == "LogEntryPopover" {
             // Find the selected log entry. SENDER is the object that triggered the segue (in this case, the table view cell that was clicked on).
             if let cell = sender as? UITableViewCell {
-                let logEntryViewController = segue.destinationViewController as LogEntryViewController
+                let logEntryViewController = segue.destinationViewController as! LogEntryViewController
                 assert(cell.isKindOfClass(UITableViewCell), "Sender \(cell) must be a table view cell.")
                 
                 if let selectedRow = tableView.indexPathForCell(cell) {
@@ -85,8 +85,12 @@ class LogViewController : UITableViewController, UITableViewDataSource {
         
         if var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as? UITableViewCell {
             let entry = sortedLogs[indexPath.row] as LogEntry
-            cell.textLabel.text = dateFormatter.stringFromDate(entry.dateTime)
-            cell.detailTextLabel?.text = entry.summary
+            if let l = cell.textLabel {
+                l.text = dateFormatter.stringFromDate(entry.dateTime)
+            }
+            if let l = cell.detailTextLabel {
+                l.text = entry.summary
+            }
             return cell
         }
         assert(false, "TableViewCell not found for identifier \(cellIdentifier)")

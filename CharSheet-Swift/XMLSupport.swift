@@ -11,6 +11,7 @@ import Foundation
 
 // Protocol for objects that load and save via XML.
 
+//@objc
 protocol XMLClient {
     
     // Update the object data from the XML element given. Call recursively for child objects.
@@ -20,6 +21,7 @@ protocol XMLClient {
     func asXML() -> DDXMLElement
     
     // The object cast to an NSObject (so that it can go in an NSArray)
+    // TODO: If I mark the protocol as @objc, can I then just cast it?
     var asObject: NSObject{ get }
 }
 
@@ -41,7 +43,7 @@ class XMLSupport {
     
     class func setError(inout error: NSError?, text: String) -> Bool {
         let domainXML_IMPORT = "CharSheet XML"
-        let errorInfo = NSDictionary(object:text, forKey:NSHelpAnchorErrorKey)
+		let errorInfo = [NSHelpAnchorErrorKey: text]
         error = NSError(domain:domainXML_IMPORT, code:0, userInfo:errorInfo)
         return false
     }
@@ -49,7 +51,7 @@ class XMLSupport {
     typealias CreateFunc = () -> XMLClient
     
     class func dataFromNodes(parent: DDXMLElement, createFunc: CreateFunc, inout error:NSError?) -> NSOrderedSet? {
-        var xmlChildren: [DDXMLElement] = parent.children as [DDXMLElement]
+        var xmlChildren: [DDXMLElement] = parent.children as! [DDXMLElement]
         var newLogs = NSMutableOrderedSet(capacity: xmlChildren.count)
         for element: DDXMLElement in xmlChildren  {
             let newEntry: XMLClient = createFunc()

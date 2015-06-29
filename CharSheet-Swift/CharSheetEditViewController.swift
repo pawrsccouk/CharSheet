@@ -114,13 +114,10 @@ class CharSheetEditViewController : UIViewController, UITableViewDelegate, UITab
         if segue.identifier == "AddSkillPopup" {
             
             // Connect the Edit Skill view controller to the skill it is editing.
-            
-            let addSkillNavigationController = segue.destinationViewController as UINavigationController
-            let editSkillViewController = addSkillNavigationController.childViewControllers[0] as EditSkillViewController
-            
-            let newSkill = charSheet.appendSkill()
-            editSkillViewController.skill = newSkill
-            editSkillViewController.completionCallback = { self.skillsTableView.reloadData() }
+            let asnc = segue.destinationViewController as! UINavigationController
+            let esc = asnc.childViewControllers[0] as! EditSkillViewController
+            esc.skill = charSheet.appendSkill()
+            esc.completionCallback = { self.skillsTableView.reloadData() }
         }
     }
     
@@ -205,17 +202,15 @@ class CharSheetEditViewController : UIViewController, UITableViewDelegate, UITab
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID, forIndexPath: indexPath) as EditSkillCell
-        //assert(cell != nil, "No cell for edit skill identifier \(CELL_ID).")   // Must always be valid as we've registered the class already.
-        
-        let skill = charSheet.skills[indexPath.row] as Skill
-        cell.name = skill.name!
+        let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID, forIndexPath: indexPath) as! EditSkillCell
+        let skill = charSheet.skills[indexPath.row] as! Skill
+        cell.name = skill.name as! String
         cell.value = skill.value
         cell.specialties = skill.specialtiesAsString
         cell.editingAccessoryType = .DetailDisclosureButton
         return cell
     }
-    
+
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return charSheet.skills.count
     }
@@ -244,19 +239,17 @@ class CharSheetEditViewController : UIViewController, UITableViewDelegate, UITab
     
     func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
         
-        let editStoryboard = UIStoryboard(name: "Edit", bundle: NSBundle.mainBundle())
-        let editSkillNavigationController = editStoryboard.instantiateViewControllerWithIdentifier("EditSkillNavigationController") as UINavigationController
+        let esb = UIStoryboard(name: "Edit", bundle: NSBundle.mainBundle())
+		let navId = "EditSkillNavigationController"
+        let esnc = esb.instantiateViewControllerWithIdentifier(navId) as! UINavigationController
         
-        //    NSArray *nibObjects = [[NSBundle mainBundle] loadNibNamed:@"PWEditSkillView" owner:self options:nil];
-        //    UINavigationController *editSkillNavigationController = nibObjects[0];
-        let editSkillViewController = editSkillNavigationController.childViewControllers[0] as EditSkillViewController
-        //wireUpEditSkillController:editSkillViewController withSkill:[self.charSheet.skills objectAtIndex:indexPath.row]];
-        editSkillViewController.skill = charSheet.skills[indexPath.row] as Skill
+        let editSkillViewController = esnc.childViewControllers[0] as! EditSkillViewController
+        editSkillViewController.skill = charSheet.skills[indexPath.row] as! Skill
         editSkillViewController.completionCallback = { self.skillsTableView.reloadData() }
-        editSkillNavigationController.modalPresentationStyle = .FormSheet
-        editSkillNavigationController.modalTransitionStyle = .CrossDissolve
+        esnc.modalPresentationStyle = .FormSheet
+        esnc.modalTransitionStyle = .CrossDissolve
         if let navc = navigationController {
-            navc.presentViewController(editSkillNavigationController, animated: true, completion:nil)
+            navc.presentViewController(esnc, animated: true, completion:nil)
         }
     }
     

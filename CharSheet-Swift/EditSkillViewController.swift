@@ -81,8 +81,8 @@ class EditSkillViewController : UIViewController, UITableViewDataSource, UITable
         // Ensure this is not called until the Interface Builder items have been set.
         if nameTextField == nil { return }
         
-        navigationItem.title = skill.name ?? "New skill"
-        nameTextField.text   = skill.name ?? ""
+        navigationItem.title = skill.name as? String ?? "New skill"
+        nameTextField.text   = skill.name as? String ?? ""
         valueTextField.text  = skill.value.description
         ticksTextField.text  = skill.ticks.description
         valueStepper.value   = Double(skill.value)
@@ -95,7 +95,7 @@ class EditSkillViewController : UIViewController, UITableViewDataSource, UITable
         
         if segue.identifier == "PushEditSpecialty" {
             let newSpecialty = self.skill.appendSpecialty()
-            let editSpecialtyViewController = segue.destinationViewController as EditSpecialtyViewController
+            let editSpecialtyViewController = segue.destinationViewController as! EditSpecialtyViewController
             editSpecialtyViewController.specialty = newSpecialty
         }
     }
@@ -117,8 +117,10 @@ class EditSkillViewController : UIViewController, UITableViewDataSource, UITable
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) -> UITableViewCell {
         
         let cell = specialtiesTableView.dequeueReusableCellWithIdentifier(CELL_ID) as? UITableViewCell ?? UITableViewCell(style: .Value1, reuseIdentifier: CELL_ID)
-        let spec = skill.specialties.objectAtIndex(indexPath.row) as Specialty
-        cell.textLabel.text = spec.name
+        let spec = skill.specialties.objectAtIndex(indexPath.row) as! Specialty
+        if let l = cell.textLabel {
+            l.text = spec.name as? String
+        }
         if let label = cell.detailTextLabel {
             label.text = spec.value.description
         }
@@ -145,10 +147,11 @@ class EditSkillViewController : UIViewController, UITableViewDataSource, UITable
     func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
         
         let editStoryboard = UIStoryboard(name: "Edit", bundle: NSBundle.mainBundle())
-        let editSpecialtyViewController = editStoryboard.instantiateViewControllerWithIdentifier("EditSpecialtyViewController") as EditSpecialtyViewController
-        editSpecialtyViewController.specialty = skill.specialties[indexPath.row] as Specialty
+		let cntrId = "EditSpecialtyViewController"
+        let esvc = editStoryboard.instantiateViewControllerWithIdentifier(cntrId) as! EditSpecialtyViewController
+        esvc.specialty = skill.specialties[indexPath.row] as! Specialty
         if let navc = navigationController {
-            navc.pushViewController(editSpecialtyViewController, animated: true)
+            navc.pushViewController(esvc, animated: true)
         }
     }
 

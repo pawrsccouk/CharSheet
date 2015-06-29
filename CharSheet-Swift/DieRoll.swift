@@ -88,9 +88,9 @@ class DieRoll : NSObject {
                 log.appendString("Skills:<br/>")
                 
                 for skill in skills.array {
-                    let spec = specialties[skill.name!]
+                    let spec = specialties[skill.name as! String]
                     
-                    let rollsForSkill: [Int16] = dieRollsPerSkill[skill.name!] ?? []
+                    let rollsForSkill: [Int16] = dieRollsPerSkill[skill.name as! String] ?? []
                     let skillRollStr = formatSkillRoll(skill, rolls: rollsForSkill, spec: spec)
                     log.appendString("\(spacing)\(skillRollStr)<br/>")
                 }
@@ -103,7 +103,7 @@ class DieRoll : NSObject {
             log.appendString("<br/><hr/>")
             log.appendString("<b>Total = \(total)</b>")
             log.appendString("</body></html>")
-            return log
+            return log.description
         }
     }
     
@@ -117,10 +117,10 @@ class DieRoll : NSObject {
                 total += s.value
             }
             for skill in skills.array {
-                if let rolls = dieRollsPerSkill[skill.name!] {
+                if let rolls = dieRollsPerSkill[skill.name as! String] {
                     total += rolls.reduce(0) { $0 + $1 }
                 }
-                if let spec = specialties[skill.name!] {
+                if let spec = specialties[skill.name as! String] {
                     total += spec.value
                 }
             }
@@ -166,7 +166,7 @@ class DieRoll : NSObject {
     
     
     private func sanitiseHTML(input: String) -> String {
-        var output = NSMutableString(capacity: countElements(input))
+        var output = NSMutableString(capacity: count(input))
         for c in input {
             switch c {
             case "<" : output.appendString("&lt;" )
@@ -176,7 +176,7 @@ class DieRoll : NSObject {
             default  : output.appendString("\(c)")
             }
         }
-        return output
+        return output as String
     }
     
     
@@ -191,13 +191,14 @@ class DieRoll : NSObject {
         }
         finalTotal += skillTotal
         let skillName = skill.name!, rollsText = (rolls.map{$0.description} as NSArray).componentsJoinedByString(" + ")
-        return String(format:"%@ (%d) = %@ %@ = %d", sanitiseHTML(skillName ?? "No name"), rolls.count, rollsText, specStr, finalTotal)
+        return String(format:"%@ (%d) = %@ %@ = %d",
+			sanitiseHTML(skillName as? String ?? "No name"), rolls.count, rollsText, specStr, finalTotal)
     }
     
     
     
     private func isBotch(d6Rolls: [Int16]) -> Bool {
-        assert(countElements(d6Rolls) >= 2, "Not enough d6")
+        assert(count(d6Rolls) >= 2, "Not enough d6")
         return d6Rolls[0] + d6Rolls[1] == 3
     }
     
@@ -214,7 +215,7 @@ class DieRoll : NSObject {
         }
         var skillNames: NSArray = skills.array.map{ obj in (obj as Skill).name! }
         var skillStr = skillNames.componentsJoinedByString("/")
-        return NSString(format:"%@ + %@", statStr, skillStr)
+        return "\(statStr) + \(skillStr)"
     }
     
     
@@ -225,12 +226,12 @@ class DieRoll : NSObject {
         func summariseSkillRoll(skill: Skill) -> String {
             
             var d4Rolls: [Int16] = []
-            if let dieRollsForSkill = dieRollsPerSkill[skill.name!] {
+            if let dieRollsForSkill = dieRollsPerSkill[skill.name as! String] {
                 d4Rolls = dieRollsForSkill
             }
             var d4rollStr = (d4Rolls.map{$0.description} as NSArray).componentsJoinedByString("+")
             var specValue: Int16 = 0
-            if let spec = specialties[skill.name!] {
+            if let spec = specialties[skill.name as! String] {
                 specValue = spec.value
             }
             return "\(skill.name!): \(d4Rolls) (+\(specValue))"
@@ -292,7 +293,7 @@ class DieRoll : NSObject {
         for skill in self.skills.array {
             let skillExtraD4: Int16 = charSheet.extraDiceForSkill(skill as Skill)
             let d4Results = rollD4(Int16(skill.value) + Int16(skillExtraD4))
-            dieRollsPerSkill[skill.name!] = d4Results
+            dieRollsPerSkill[skill.name as! String] = d4Results
         }
         // Fixed values (stat & specialties) don't need to be handled here.
     }

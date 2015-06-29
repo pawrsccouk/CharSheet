@@ -14,12 +14,22 @@ class CharSheet : NSManagedObject, XMLClient {
     // MARK: Properties - Core Data
 
     @NSManaged var age: Int16
-    @NSManaged var level: Int16, experience: Int32
-    @NSManaged var game: String?, gender: String?, name: String?, notes: String?, player: String?
+    @NSManaged var level: Int16
+    @NSManaged var experience: Int32
+    @NSManaged var woundsPhysical: Int16
+    @NSManaged var woundsSubdual: Int16
+    @NSManaged var game: String?
+    @NSManaged var gender: String?
+    @NSManaged var name: String?
+    @NSManaged var notes: String?
+    @NSManaged var player: String?
     @NSManaged var skills: NSMutableOrderedSet, xp: NSMutableOrderedSet
     @NSManaged var logs: NSMutableSet, stats: NSMutableSet
     
     // MARK: Properties - Derived
+    
+//    var woundsPhysical: Int16 = 0
+//    var woundsSubdual: Int16 = 0
     
     // These are calculated values from the other stats.
     var meleeAdds: Int {
@@ -32,9 +42,17 @@ class CharSheet : NSManagedObject, XMLClient {
     
     // Sorted copy of the log entries, sorted by date & time.
     var sortedLogs: [LogEntry] {
-        return logs.sortedArrayUsingDescriptors([NSSortDescriptor(key: "dateTime", ascending: true)]).map{ $0 as LogEntry }
+        return logs
+			.sortedArrayUsingDescriptors([NSSortDescriptor(key: "dateTime", ascending: true)])
+			.map{ $0 as! LogEntry }
     }
 
+    // Returns a string indicating the character's health in both physical and subdual, as a fraction of their CON.
+    var health: String {
+        let conValue = constitution.value, physHealth = conValue - woundsPhysical, subdHealth = conValue - woundsSubdual
+        return "P: \(physHealth) / \(conValue), S: \(subdHealth) / \(conValue)"
+    }
+    
     
     var strength:     Stat { get { return statByName("Strength"    )! } }
     var dexterity:    Stat { get { return statByName("Dexterity"   )! } }
@@ -46,19 +64,23 @@ class CharSheet : NSManagedObject, XMLClient {
     var luck:         Stat { get { return statByName("Luck"        )! } }
     
     // Array of all stats attached, in alphabetical order.
-    var allStats: [Stat] {
-        get { return stats.allObjects.map{ obj in obj as Stat }.sorted{ stat1, stat2 in
-            stat1.name!.compare(stat2.name!) == NSComparisonResult.OrderedAscending } }
-    }
-    
+	var allStats: [Stat] {
+		get {
+			return (stats.allObjects as! [Stat])
+			.map{ $0 as Stat }
+			.sorted{ $0.name!.compare($1.name!) == NSComparisonResult.OrderedAscending}}
+	}
+
     // Set of all stat names, in alphabetical order.
     var statNames: NSOrderedSet {
-        get { return NSOrderedSet(array: allStats.map { obj in obj.name! }) }
+        get {
+			return NSOrderedSet(array: allStats.map { $0.name! })
+		}
     }
     
     func statByName(name: String) -> Stat? {
         let stat = self.allStats.filter{ $0.name == name }
-        return stat.isEmpty ? nil : stat.first
+        return stat.first
     }
 
 
@@ -77,18 +99,19 @@ class CharSheet : NSManagedObject, XMLClient {
             if self.fault { return super.description }
             var desc = NSMutableString()
             desc.appendFormat("<%p: %@>", self, (self.allStats as NSArray).componentsJoinedByString(", "))
-            return desc
+            return (desc as String)
         }
     }
-    
-    class func createStat(parent: CharSheet, name: String) -> Stat {
-        var newStat = NSEntityDescription.insertNewObjectForEntityForName("Stat", inManagedObjectContext: parent.managedObjectContext!) as Stat
-        newStat.name = name
-        newStat.value = 0
-        newStat.parent = parent
-        return newStat
-    }
-    
+
+	class func createStat(parent: CharSheet, name: String) -> Stat {
+		let newStat = NSEntityDescription.insertNewObjectForEntityForName("Stat",
+			inManagedObjectContext: parent.managedObjectContext!) as! Stat
+		newStat.name = name
+		newStat.value = 0
+		newStat.parent = parent
+		return newStat
+	}
+
     override func awakeFromInsert() {
         super.awakeFromInsert()
         let objects = [
@@ -101,71 +124,39 @@ class CharSheet : NSManagedObject, XMLClient {
             CharSheet.createStat(self, name: "Perception"),
             CharSheet.createStat(self, name: "Luck")
         ]
-        //let myStats = NSSet(objects: objects)
-        self.stats.removeAllObjects()
-        self.stats.addObjectsFromArray(objects)
+        stats.removeAllObjects()
+        stats.addObjectsFromArray(objects)
+        woundsPhysical = 0
+        woundsSubdual = 0
     }
 
 
-//-(void)logStatsWithContext:(NSString *)context
-//{
-//    PW_CD_Log(@"BEGIN %@: %@", [self class], context);
-//    PW_CD_Log(@"%@", [self.allStats componentsJoinedByString:@"\n"]);
-//    PW_CD_Log(@"END %@: %@", [self class], context);
-//}
-//
-//
-//
-//
-//
-//
-// MARK:  - Core Data Collection bugfixes
-//    // Bug in Core Data: Add/Remove/Update don't work for the NSOrderedSet objects created.
-//    // Work-around = Copy all the data into a new set, append your extra item and assign it to the set item.
-//    // Core Data should automatically note this and send update notifications.
-//
-//
-// Skills
+    // Skills
   
     func removeSkillAtIndex(index: Int) {
-        var skill = self.skills[index] as Skill
-        self.skills.removeObject(skill)
-        self.managedObjectContext?.deleteObject(skill)
-        //
-        //        // Work around Core Data bug in removeSkillsObject
-        //    NSMutableOrderedSet *newSkills = [NSMutableOrderedSet orderedSetWithOrderedSet:self.skills];
-        //    [newSkills removeObjectAtIndex:index];
-        //    self.skills = newSkills;
-        //
+		if let skill = self.skills[index] as? Skill {
+			self.skills.removeObject(skill)
+			self.managedObjectContext?.deleteObject(skill)
+		}
     }
 
     func addSkill(managedObjectContext: NSManagedObjectContext) -> Skill {
-        return NSEntityDescription.insertNewObjectForEntityForName("Skill", inManagedObjectContext:managedObjectContext) as Skill
+        return NSEntityDescription.insertNewObjectForEntityForName("Skill", inManagedObjectContext:managedObjectContext) as! Skill
     }
 
     func appendSkill() -> Skill {
         var newSkill = addSkill(self.managedObjectContext!)
-        
-        //    NSMutableOrderedSet* tempSet = [NSMutableOrderedSet orderedSetWithOrderedSet:self.skills];
-        //    [tempSet addObject:newSkill];
-        //    self.skills = tempSet;
         newSkill.parent = self
         self.skills.addObject(newSkill)
         return newSkill
     }
 
-    //-(void)moveSkillFromIndex:(NSInteger)sourceIndex toIndex:(NSInteger)destIndex
-    //{
-    //        //   Bug in Core Data - addXXObject don't work for ordered data items.
-    //    NSMutableOrderedSet *newSet = [NSMutableOrderedSet orderedSetWithOrderedSet:self.skills];
-    //    [newSet moveObjectsAtIndexes:[NSIndexSet indexSetWithIndex:sourceIndex] toIndex:destIndex];
-    //    self.skills = newSet;
-    //}
 
     // Log Entries
 
     func addLogEntry() -> LogEntry {
-        var entry = NSEntityDescription.insertNewObjectForEntityForName("LogEntry", inManagedObjectContext:self.managedObjectContext!) as LogEntry
+        let entry = NSEntityDescription.insertNewObjectForEntityForName("LogEntry",
+			inManagedObjectContext:self.managedObjectContext!) as! LogEntry
         entry.parent  = self
         self.logs.addObject(entry)
         return entry
@@ -176,13 +167,11 @@ class CharSheet : NSManagedObject, XMLClient {
         entry.parent = nil
     }
 
-    //
-    //
     // XP Gains
-    //
-    //
+
     func addXPGain(context: NSManagedObjectContext) -> XPGain {
-        return NSEntityDescription.insertNewObjectForEntityForName("XPGain", inManagedObjectContext:context) as XPGain
+        return NSEntityDescription.insertNewObjectForEntityForName("XPGain",
+			inManagedObjectContext:context) as! XPGain
     }
 
     // Create a new xp entry and append it to the list. Returns the new xp.
@@ -190,35 +179,21 @@ class CharSheet : NSManagedObject, XMLClient {
         var xpGain = addXPGain(self.managedObjectContext!)
         xpGain.parent  = self
         self.xp.addObject(xpGain)
-        //    NSMutableOrderedSet* tempSet = [NSMutableOrderedSet orderedSetWithOrderedSet:self.xp];
-        //    [tempSet addObject:xpGain];
-        //    self.xp = tempSet;
         return xpGain
     }
 
         // Remove the xp entry at the given index. It will be destroyed at the next commit.
-    func removeXPGainAtIndex(index: Int) {
-        var xpGain = self.xp[index] as XPGain
-        self.xp.removeObject(xpGain)
-        xpGain.parent = nil
-        //        // Work around Core Data bug in removeSkillsObject
-        //    NSMutableOrderedSet *newXP = [NSMutableOrderedSet orderedSetWithOrderedSet:self.xp];
-        //    [newXP removeObjectAtIndex:index];
-        //    self.xp = newXP;
-        
-        self.managedObjectContext!.deleteObject(xpGain)
-    }
-    
-    
-    // Re-order two xp entries in the list.
-    //-(void)moveXPGainFromIndex:(NSInteger)sourceIndex toIndex:(NSInteger)destIndex
-    //{
-    //    NSMutableOrderedSet *newSet = [NSMutableOrderedSet orderedSetWithOrderedSet:self.xp];
-    //    [newSet moveObjectsAtIndexes:[NSIndexSet indexSetWithIndex:sourceIndex] toIndex:destIndex];
-    //    self.xp = newSet;
-    //}
+	func removeXPGainAtIndex(index: Int) {
+		if let xpGain = self.xp[index] as? XPGain {
+			self.xp.removeObject(xpGain)
+			xpGain.parent = nil
+			self.managedObjectContext!.deleteObject(xpGain)
+		}
+	}
 
-    
+
+
+
     // MARK: - Misc
 
 
@@ -248,31 +223,34 @@ class CharSheet : NSManagedObject, XMLClient {
         }
     }
 
-    // Checks if parameter NAME already exists as the name of any other character.
-    func nameAlreadyExists(name: String) -> Bool  {
-        var request = NSFetchRequest()
-        request.entity = NSEntityDescription.entityForName("CharSheet", inManagedObjectContext:managedObjectContext!)
-        request.predicate = NSPredicate(format:"(name == %@)  AND (self != %@)", name, self)
-        
-        var error = NSErrorPointer()
-        if var array = managedObjectContext!.executeFetchRequest(request, error:error) {
-            return array.isEmpty
-        }
-        else {  // Deal with error. Log it and assume the name already exists for safety's sake.
-            if let err = error.memory {
-                NSLog("nameAlreadyExists: Fetch returned error: %@ / %@", err, err.userInfo ?? "nil")
-            } else {
-                NSLog("nameAlreadyExists: Fetch failed with an unknown error")
-            }
-            return true
-        }
-    }
 
 
     // Called after importing a character from XML, to avoid overwriting an existing character.
     // If the new character has the same name as an existing one, then append the import date to it.
     // e.g. "John Smith - Imported 23/11/2013 11:14pm" so the user can compare it to the existing version and delete whichever they prefer.
-    func renameIfNecessary() {
+    private func renameIfNecessary() {
+        
+        // Checks if parameter NAME already exists as the name of any other character.
+        func nameAlreadyExists(name: String) -> Bool  {
+            var request = NSFetchRequest()
+            request.entity = NSEntityDescription.entityForName("CharSheet", inManagedObjectContext:managedObjectContext!)
+            request.predicate = NSPredicate(format:"(name == %@)  AND (self != %@)", name, self)
+            
+            var error = NSErrorPointer()
+            if var array = managedObjectContext!.executeFetchRequest(request, error:error) {
+                return array.isEmpty
+            }
+            else {  // Deal with error. Log it and assume the name already exists for safety's sake.
+                if let err = error.memory {
+                    NSLog("nameAlreadyExists: Fetch returned error: %@ / %@", err, err.userInfo ?? "nil")
+                } else {
+                    NSLog("nameAlreadyExists: Fetch failed with an unknown error")
+                }
+                return true
+            }
+        }
+        
+        
         if name == nil { name = "Unknown" }
         if nameAlreadyExists(name!) {
             var dateFormatter = NSDateFormatter()
@@ -287,116 +265,134 @@ class CharSheet : NSManagedObject, XMLClient {
 
     var asObject: NSObject { get { return self } }
     
-    private let elementCHAR_SHEET   = "charSheet" ,  elementSTATS      = "stats"
-    private let elementSKILLS       = "skills"    ,  elementLOGS       = "logs"
-    private let elementNOTES        = "notes"     ,  elementXP_GAINS   = "xp_gains"
-    private let attributeNAME       = "name"      ,  attributeGENDER   = "gender"
-    private let attributeGAME       = "game"     //, attributeNOTES    = "notes"
-    private let attributePLAYER     = "player"    ,  attributeLEVEL    = "level"
-    private let attributeEXPERIENCE = "experience"
-
-    func addXMLAttribute(element: DDXMLElement, attrName: String, attrValue: String)
-    {
-        let attr = DDXMLNode.attributeWithName(attrName, stringValue:attrValue) as DDXMLNode
-        element.addAttribute(attr)
+    private enum Element: String {
+        case CHAR_SHEET = "charSheet", STATS = "stats", SKILLS = "skills", LOGS = "logs", NOTES = "notes", XP_GAINS = "xp_gains"
     }
-
-    func saveChildrenAsXML(parent: DDXMLElement, elementName: String, collection: NSArray) {
-        var element = DDXMLElement.elementWithName(elementName) as DDXMLElement
-        parent.addChild(element)
-        collection.enumerateObjectsUsingBlock { obj, index, stop in element.addChild(obj.asXML()) }
+    
+    private enum Attribute: String {
+        case NAME  = "name", SEX = "gender", GAME  = "game", PLAYER = "player", LEVEL = "level" , EXPERIENCE = "experience"
     }
+    
+
 
     func asXML() -> DDXMLElement {
-        var this = DDXMLElement.elementWithName(elementCHAR_SHEET) as DDXMLElement
-        addXMLAttribute(this, attrName: attributeNAME      , attrValue: self.name   ?? "Unknown")
-        addXMLAttribute(this, attrName: attributeGENDER    , attrValue: self.gender ?? "Unknown")
-        addXMLAttribute(this, attrName: attributeGAME      , attrValue: self.game   ?? "Unknown")
-        addXMLAttribute(this, attrName: attributePLAYER    , attrValue: self.player ?? "Unknown")
-        addXMLAttribute(this, attrName: attributeLEVEL     , attrValue: self.level.description     )
-        addXMLAttribute(this, attrName: attributeEXPERIENCE, attrValue: self.experience.description)
         
-        saveChildrenAsXML(this, elementName: elementSTATS   , collection: self.stats.allObjects)
-        saveChildrenAsXML(this, elementName: elementLOGS    , collection: self.logs.allObjects )
-        saveChildrenAsXML(this, elementName: elementSKILLS  , collection: self.skills.array    )
-        saveChildrenAsXML(this, elementName: elementXP_GAINS, collection: self.xp.array        )
+        func addXMLAttribute(element: DDXMLElement, attrName: Attribute, attrValue: String) {
+            let attr = DDXMLNode.attributeWithName(attrName.rawValue, stringValue:attrValue) as! DDXMLNode
+            element.addAttribute(attr)
+        }
+        
+        func saveChildrenAsXML(parent: DDXMLElement, elementName: Element, collection: NSArray) {
+            var element = DDXMLElement.elementWithName(elementName.rawValue) as! DDXMLElement
+            parent.addChild(element)
+            collection.enumerateObjectsUsingBlock { obj, index, stop in element.addChild(obj.asXML()) }
+        }
+       
+        var this = DDXMLElement.elementWithName(Element.CHAR_SHEET.rawValue) as! DDXMLElement
+        addXMLAttribute(this, .NAME      , self.name   ?? "Unknown")
+        addXMLAttribute(this, .SEX       , self.gender ?? "Unknown")
+        addXMLAttribute(this, .GAME      , self.game   ?? "Unknown")
+        addXMLAttribute(this, .PLAYER    , self.player ?? "Unknown")
+        addXMLAttribute(this, .LEVEL     , self.level.description     )
+        addXMLAttribute(this, .EXPERIENCE, self.experience.description)
+        
+        saveChildrenAsXML(this, .STATS   , self.stats.allObjects)
+        saveChildrenAsXML(this, .LOGS    , self.logs.allObjects )
+        saveChildrenAsXML(this, .SKILLS  , self.skills.array    )
+        saveChildrenAsXML(this, .XP_GAINS, self.xp.array        )
         
         // Store notes as a separate element as it's too big to go as an attribute.
-        var elemNotes = DDXMLElement.elementWithName(elementNOTES, stringValue:self.notes) as DDXMLElement
+        var elemNotes = DDXMLElement.elementWithName(Element.NOTES.rawValue, stringValue:self.notes) as! DDXMLElement
         this.addChild(elemNotes)
         
         return this
     }
 
 
-
-    func setAttributeFromXML(this: CharSheet, node: DDXMLNode) -> Bool {
-        if let nodeName = node.name {
-            if      attributeNAME       == nodeName { this.name       = node.stringValue }
-            else if attributeGENDER     == nodeName { this.gender     = node.stringValue }
-            else if attributeGAME       == nodeName { this.game       = node.stringValue }
-            else if attributePLAYER     == nodeName { this.player     = node.stringValue }
-            else if attributeLEVEL      == nodeName { this.level      = Int16(node.stringValue.toInt() ?? 0) }
-            else if attributeEXPERIENCE == nodeName { this.experience = Int32(node.stringValue.toInt() ?? 0) }
-            else { return false } // Error - attribute not recognised.
-        }
-        return true
-    }
-
-    func updateStatsFromXML(this: CharSheet, element: DDXMLElement, inout error: NSError?) -> Bool {
-        for statElement in (element.children as [DDXMLElement]) {
-            var nameAttr = statElement.attributeForName(attributeNAME)
-            if !(nameAttr != nil) {
-                return XMLSupport.setError(&error, text: "Attribute \(attributeNAME) not found in stat \(statElement)")
-            }
-            
-            var stat = this.statByName(nameAttr.stringValue)
-            if stat == nil {
-                return XMLSupport.setError(&error, text: "Unrecognised stat \(nameAttr.name)")
-            }
-            if !stat!.updateFromXML(statElement, error: &error) { return false }
-        }
-        return true
-    }
     
     func updateFromXML(element: DDXMLElement, inout error: NSError?) -> Bool {
-        if !XMLSupport.validateElementName(element.name, expectedName: elementCHAR_SHEET, error: &error) { return false }
         
-        for attrNode in (element.attributes as [DDXMLNode]) {
-            if !setAttributeFromXML(self, node: attrNode) {
-                return XMLSupport.setError(&error, text: "XML Attribute \(attrNode.name) not recognised in \(elementCHAR_SHEET)" )
+        // Check the name of the XML node, and set the appropriate CharSheet attribute to its value.
+        // Returns true if successful, false if the attribute was not recognised.
+        func setAttributeFromXML(this: CharSheet, node: DDXMLNode) -> Bool {
+            if let attributeName = Attribute(rawValue: node.name) {
+                switch attributeName {
+                case .NAME       : this.name       = node.stringValue
+                case .SEX        : this.gender     = node.stringValue
+                case .GAME       : this.game       = node.stringValue
+                case .PLAYER     : this.player     = node.stringValue
+                case .LEVEL      : this.level      = Int16(node.stringValue.toInt() ?? 0)
+                case .EXPERIENCE : this.experience = Int32(node.stringValue.toInt() ?? 0)
+                }
+                return true
+            }
+            return false // Error - attribute not recognised.
+        }
+        
+        
+        // Checks the name of the XML element provided against the name of each of the char sheet's stats.
+        // If it matches, call the stat's updateFromXML method passing in the element and return true, otherwise return false and set error.
+        func updateStatsFromXML(this: CharSheet, element: DDXMLElement, inout error: NSError?) -> Bool {
+            for statElement in (element.children as! [DDXMLElement]) {
+                var nameAttr = statElement.attributeForName(Attribute.NAME.rawValue)
+                if !(nameAttr != nil) {
+                    return XMLSupport.setError(&error,
+						text: "Attribute \(Attribute.NAME) not found in stat \(statElement)")
+                }
+                
+                var stat = this.statByName(nameAttr.stringValue)
+                if stat == nil {
+                    return XMLSupport.setError(&error, text: "Unrecognised stat \(nameAttr.name)")
+                }
+                if !stat!.updateFromXML(statElement, error: &error) { return false }
+            }
+            return true
+        }
+        if !XMLSupport.validateElementName(element.name, expectedName: Element.CHAR_SHEET.rawValue, error: &error) { return false
+		}
+        
+        
+        // Set each attribute.
+        for attrNode in (element.attributes as! [DDXMLNode]) {
+            if !setAttributeFromXML(self, attrNode) {
+                return XMLSupport.setError(&error, text: "XML Attribute \(attrNode.name) not recognised in \(Element.CHAR_SHEET)" )
             }
         }
         
         // Stats will have already been created, so just find each stat and update it.
         // Otherwise create a collection of the appropriate element and then replace the existing collection with it.
-        for node in (element.children as [DDXMLElement]) {
-            if let nodeName = node.name {
-                if nodeName == elementSTATS {
-                    if(!updateStatsFromXML(self, element: node, error: &error)) { return false }
-                }
-                else if nodeName == elementLOGS {
+        for node in (element.children as! [DDXMLElement]) {
+            if let elementName = Element(rawValue: node.name) {
+                switch elementName {
+                case .STATS: if(!updateStatsFromXML(self, node, &error)) { return false }
+                
+                case .LOGS:
                     var newLogs = XMLSupport.dataFromNodes(node, createFunc: { self.addLogEntry() }, error: &error)
                     if newLogs == nil { return false }
                     self.logs = NSMutableSet(array: newLogs!.array)
-                }
-                else if nodeName == elementSKILLS {
+                
+                case .SKILLS:
                     var newSkills = XMLSupport.dataFromNodes(node, createFunc: { self.addSkill(self.managedObjectContext!) }, error: &error)
                     if newSkills == nil { return false }
                     self.skills = NSMutableOrderedSet(orderedSet:newSkills)
-                }
-                else if nodeName == elementXP_GAINS {
+                
+                case .XP_GAINS:
                     var newXPGains = XMLSupport.dataFromNodes(node, createFunc: { self.addXPGain(self.managedObjectContext!) }, error: &error)
                     if newXPGains == nil { return false }
                     self.xp = NSMutableOrderedSet(orderedSet:newXPGains)
-                }
+                
                     // Notes are stored as an element as it is too big for an attribute.
-                else if nodeName == elementNOTES {
-                    self.notes = node.stringValue
+                case .NOTES: self.notes = node.stringValue
+                    
+                case .CHAR_SHEET: return XMLSupport.setError(&error, text: "XML CharSheet entity cannot contain another CharSheet entity.")
                 }
-                else { return XMLSupport.setError(&error, text: "XML entity \(nodeName) not recognised as child of \(elementCHAR_SHEET)" ) }
+            }
+            else {
+                return XMLSupport.setError(&error, text: "XML entity \(node.name) not recognised as child of \(Element.CHAR_SHEET)" )
             }
         }
+        
+        renameIfNecessary()    // Rename the sheet to avoid name clashes with an already-existing one, if any.
         return true // Loaded successfully.
     }
 

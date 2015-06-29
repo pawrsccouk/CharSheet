@@ -40,45 +40,36 @@ class Stat : NSManagedObject, XMLClient {
     
     var asObject: NSObject { get { return self } }
     
-    private let elementSTAT = "stat", attributeNAME = "name", attributeVALUE = "value"
+    private enum Element: String { case STAT = "stat" }
+    private enum Attribute: String { case NAME = "name", VALUE = "value" }
     
     func asXML() -> DDXMLElement {
-        var this  = DDXMLElement(name: elementSTAT)
-        var name  = DDXMLNode.attributeWithName(attributeNAME, stringValue: self.name) as DDXMLNode
-        var value = DDXMLNode.attributeWithName(attributeVALUE, stringValue: self.value.description) as DDXMLNode
-        this.addAttribute(name)
-        this.addAttribute(value)
+        func attribute(name: Attribute, value: String) -> DDXMLNode {
+			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
+		}
+        let this  = DDXMLElement(name: Element.STAT.rawValue)
+        this.addAttribute( attribute(.NAME , self.name!) )
+        this.addAttribute( attribute(.VALUE, self.value.description) )
         return this
     }
     
     func updateFromXML(element: DDXMLElement, inout error: NSError?) -> Bool {
-        if !XMLSupport.validateElementName(element.name, expectedName: elementSTAT, error: &error) {
+        if !XMLSupport.validateElementName(element.name, expectedName: Element.STAT.rawValue, error: &error) {
             return false
         }
         for attrNode in element.attributes {
-            if attrNode.isEqualToString(attributeNAME)       { self.name  = attrNode.stringValue  }
-            else if attrNode.isEqualToString(attributeVALUE) { self.value = Int16(attrNode.integerValue) }
+            if let attrName = Attribute(rawValue: attrNode.name) {
+                switch attrName {
+                case .NAME:  self.name  = attrNode.stringValue
+                case .VALUE: self.value = Int16(attrNode.integerValue)
+                }
+            }
             else {
                 let n = attrNode.name ?? "[nil]"
-                return XMLSupport.setError(&error, text: "Attribute \(n) unrecognised in \(elementSTAT)")
+                return XMLSupport.setError(&error, text: "Attribute \(n) unrecognised in \(Element.STAT)")
             }
         }
-        return true;
+        return true
     }
 }
 
-//
-//-(BOOL)updateFromXML:(DDXMLElement *)element error:(NSError *__autoreleasing *)error
-//{
-//    if(! [element.name isEqualToString:elementSTAT])
-//        return PWXMLSetError(error, [NSString stringWithFormat:@"Element %@ unrecognised. Should be %@", element.name, elementSTAT]);
-//    for (DDXMLNode *attrNode in element.attributes) {
-//        if([attrNode.name isEqualToString:attributeNAME])        self.name  = [attrNode stringValue];
-//        else if([attrNode.name isEqualToString:attributeVALUE])  self.value = numberFromNode(attrNode);
-//        else return PWXMLSetError(error, [NSString stringWithFormat:@"Attribute %@ unrecognised in %@", attrNode.name, elementSTAT]);
-//    }
-//    return YES;
-//}
-//
-//
-//@end

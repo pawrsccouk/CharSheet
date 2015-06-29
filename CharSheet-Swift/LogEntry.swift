@@ -26,46 +26,44 @@ class LogEntry : NSManagedObject, XMLClient {
     // MARK: - PWXMLClient implementation
     
     // XML entity and attribute tags for this object.
-    let elementLOG_ENTRY   = "logEntry"
-    let attributeDATE_TIME = "dateTime"
-    let attributeSUMMARY   = "summary"
+    private enum Element: String { case LOG_ENTRY = "logEntry" }
+    private enum Attribute: String { case DATE_TIME = "dateTime", SUMMARY = "summary" }
     
     var asObject: NSObject { get { return self } }
     
-    private var _cachedFormatter: NSDateFormatter? = nil
-    var fullDateFormatter: NSDateFormatter {
-        get {
-            if _cachedFormatter == nil {
-                _cachedFormatter = NSDateFormatter()
-                _cachedFormatter!.dateStyle = .FullStyle
-                _cachedFormatter!.timeStyle = .FullStyle
-            }
-            return _cachedFormatter!
-        }
-    }
-    
-    
-    
+    lazy var fullDateFormatter: NSDateFormatter = {
+        let cachedFormatter = NSDateFormatter()
+        cachedFormatter.dateStyle = .FullStyle
+        cachedFormatter.timeStyle = .FullStyle
+        return cachedFormatter
+    }()
+
+
+
+
     func asXML() -> DDXMLElement {
-        var this    = DDXMLElement.elementWithName(elementLOG_ENTRY , stringValue:self.change) as DDXMLElement
-        var date    = DDXMLNode.attributeWithName(attributeDATE_TIME, stringValue:self.fullDateFormatter.stringFromDate(self.dateTime)) as DDXMLNode
-        var summary = DDXMLNode.attributeWithName(attributeSUMMARY  , stringValue:self.summary) as DDXMLNode
-        this.addAttribute(date)
-        this.addAttribute(summary)
+        func attribute(name: Attribute, value: String) -> DDXMLNode {
+			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode }
+        var this = DDXMLElement.elementWithName(Element.LOG_ENTRY.rawValue,
+			stringValue:self.change) as! DDXMLElement
+        this.addAttribute( attribute(.DATE_TIME, self.fullDateFormatter.stringFromDate(self.dateTime)) )
+        this.addAttribute( attribute(.SUMMARY  , self.summary!) )
         return this;
     }
     
     
     
     func updateFromXML(element: DDXMLElement, inout error: NSError?) -> Bool {
-        if !XMLSupport.validateElementName(element.name, expectedName: elementLOG_ENTRY, error: &error) { return false }
-        for attrNode in (element.attributes as [DDXMLNode]) {
-            let nodeName = attrNode.name
-            if      nodeName  == attributeDATE_TIME { self.dateTime = fullDateFormatter.dateFromString(attrNode.stringValue)! }
-            else if nodeName  == attributeSUMMARY   { self.summary  = attrNode.stringValue }
+        if !XMLSupport.validateElementName(element.name, expectedName: Element.LOG_ENTRY.rawValue, error: &error) { return false }
+        for attrNode in (element.attributes as! [DDXMLNode]) {
+            if let nodeName = Attribute(rawValue: attrNode.name) {
+                switch nodeName {
+                case .DATE_TIME: self.dateTime = fullDateFormatter.dateFromString(attrNode.stringValue)!
+                case .SUMMARY:   self.summary  = attrNode.stringValue
+                }
+            }
             else { return XMLSupport.setError(&error, text: "Unrecognised log entry attribute: \(attrNode.name)") }
         }
-        
         self.change = element.stringValue
         return true
     }

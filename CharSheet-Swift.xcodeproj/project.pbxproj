@@ -130,6 +130,7 @@
 		577A81D21A091F8B00DA1EC8 /* SkillSelectController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkillSelectController.swift; sourceTree = "<group>"; };
 		577A81D41A0B358300DA1EC8 /* Edit.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Edit.storyboard; sourceTree = "<group>"; };
 		577A81D51A0B358300DA1EC8 /* MainUse.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainUse.storyboard; sourceTree = "<group>"; };
+		57E9DB6C1A13C37000861CC4 /* CharSheet 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CharSheet 2.xcdatamodel"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -665,9 +666,10 @@
 		5725DE961A046F5900343E5F /* CharSheet.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				57E9DB6C1A13C37000861CC4 /* CharSheet 2.xcdatamodel */,
 				5725DE971A046F5900343E5F /* CharSheet.xcdatamodel */,
 			);
-			currentVersion = 5725DE971A046F5900343E5F /* CharSheet.xcdatamodel */;
+			currentVersion = 57E9DB6C1A13C37000861CC4 /* CharSheet 2.xcdatamodel */;
 			path = CharSheet.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -35,7 +35,7 @@ class SkillSelectController : UIViewController, UIPickerViewDataSource, UIPicker
     // Call to get a new skill select controller from the Nib file. Use in place of Alloc/Init.
     class func skillSelectControllerFromNib() -> SkillSelectController {
         let allObjects = NSBundle.mainBundle().loadNibNamed("SkillSelectView", owner: self, options: nil)
-        return allObjects[0] as SkillSelectController
+        return allObjects[0] as! SkillSelectController
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -175,13 +175,13 @@ class SkillSelectController : UIViewController, UIPickerViewDataSource, UIPicker
         
         if pickerView == skillPicker {
             var skill = self.skillsToPick[row]
-            return skill.name ?? "No name"
+            return skill.name as? String ?? "No name"
         }
         else if pickerView == specialtyPicker  {
             // First row should always be "None" and other rows follow in order after that.
             if row == 0 { return "None" }
             if let specialty = selectedSkill?.specialties[row - 1] as? Specialty {
-                return specialty.name ?? "No name"
+                return specialty.name as? String ?? "No name"
             }
         }
         return ""

@@ -25,7 +25,7 @@ class EditSpecialtyViewController : UIViewController {
     
     private func configureView() {
         if nameField == nil { return } // Don't populate the items until they have been wired up by the view controller.
-        nameField.text    = specialty.name
+        nameField.text    = specialty.name as! String
         valueField.text   = specialty.value.description
         stepperView.value = Double(specialty.value.description.toInt() ?? 0)
     }

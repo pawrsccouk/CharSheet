@@ -19,12 +19,15 @@ class StoryboardManager {
         return sharedPointer!
     }
     
-    var mainStoryboard: UIStoryboard {
-        get { return UIStoryboard(name:"MainUse", bundle: NSBundle.mainBundle()) }
+    private init() {
     }
     
-    var editStoryboard: UIStoryboard {
-        get { return UIStoryboard(name:"Edit", bundle:NSBundle.mainBundle()) }
-    }
+    lazy var mainStoryboard: UIStoryboard = {
+        return UIStoryboard(name:"MainUse", bundle: NSBundle.mainBundle())
+    }()
+    
+    lazy var editStoryboard: UIStoryboard = {
+        return UIStoryboard(name:"Edit", bundle:NSBundle.mainBundle())
+    }()
     
 }

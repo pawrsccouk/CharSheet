@@ -10,64 +10,64 @@ import Foundation
 
 // Type-safe wrappers around NSMutableSet and NSMutableOrderedSet for Swift.
 
-class MutableSet<T: AnyObject> {
-    private var _set: NSMutableSet
-    
-    init() {
-        _set = NSMutableSet()
-    }
-    
-    init(array: [T]) {
-        _set = NSMutableSet(array: array)
-    }
-    
-    func add(t: T) {
-        _set.addObject(t)
-    }
-    
-    func remove(t: T) {
-        _set.removeObject(t)
-    }
-    
-    func contains(t: T) -> Bool {
-        return _set.containsObject(t)
-    }
-    
-    func filter(prediate: (T) -> Bool) -> MutableSet<T> {
-        return MutableSet<T>(array: self.array.map{ $0 as T }.filter(prediate))
-    }
-    
-    
-    var array: [T] {
-        get { return _set.allObjects as [T] }
-    }
-    
-    var count: Int {
-        get { return _set.count }
-    }
-    
-    func mutableCopy() -> MutableSet<T> {
-        // Return a shallow copy of this object.
-        return MutableSet(array: self.array)
-    }
-
-    func addObjects(newItems: [T]) {
-        _set.addObjectsFromArray(newItems)
-    }
-}
-
-// Add an array of items to the existing set.
-func += <T: AnyObject> (inout set: MutableSet<T>, newItems: [T]) {
-    set.addObjects(newItems)
-}
-
-// Return a new set with the new items included.
-func + <T: AnyObject> (set: MutableSet<T>, newItems: [T]) -> MutableSet<T> {
-    let s = set.mutableCopy()
-    s.addObjects(newItems)
-    return s
-}
-
+//class MutableSet<T: AnyObject> {
+//    private var _set: NSMutableSet
+//    
+//    init() {
+//        _set = NSMutableSet()
+//    }
+//    
+//    init(array: [T]) {
+//        _set = NSMutableSet(array: array)
+//    }
+//    
+//    func add(t: T) {
+//        _set.addObject(t)
+//    }
+//    
+//    func remove(t: T) {
+//        _set.removeObject(t)
+//    }
+//    
+//    func contains(t: T) -> Bool {
+//        return _set.containsObject(t)
+//    }
+//    
+//    func filter(prediate: (T) -> Bool) -> MutableSet<T> {
+//        return MutableSet<T>(array: self.array.map{ $0 as T }.filter(prediate))
+//    }
+//    
+//    
+//    var array: [T] {
+//        get { return _set.allObjects as [T] }
+//    }
+//    
+//    var count: Int {
+//        get { return _set.count }
+//    }
+//    
+//    func mutableCopy() -> MutableSet<T> {
+//        // Return a shallow copy of this object.
+//        return MutableSet(array: self.array)
+//    }
+//
+//    func addObjects(newItems: [T]) {
+//        _set.addObjectsFromArray(newItems)
+//    }
+//}
+//
+//// Add an array of items to the existing set.
+//func += <T: AnyObject> (inout set: MutableSet<T>, newItems: [T]) {
+//    set.addObjects(newItems)
+//}
+//
+//// Return a new set with the new items included.
+//func + <T: AnyObject> (set: MutableSet<T>, newItems: [T]) -> MutableSet<T> {
+//    let s = set.mutableCopy()
+//    s.addObjects(newItems)
+//    return s
+//}
+//
 
 class MutableOrderedSet<T: AnyObject> {
     private var _set: NSMutableOrderedSet
@@ -99,7 +99,7 @@ class MutableOrderedSet<T: AnyObject> {
     }
     
     var array: [T] {
-        get { return _set.array as [T] }
+        get { return _set.array as! [T] }
     }
     
     var count: Int {
@@ -111,11 +111,11 @@ class MutableOrderedSet<T: AnyObject> {
     }
     
     func objectAtIndex(idx: Int) -> T {
-        return _set.objectAtIndex(idx) as T
+        return _set.objectAtIndex(idx) as! T
     }
     
     subscript(idx: Int) -> T {
-        return _set[idx] as T
+        return _set[idx] as! T
     }
     
     func addObjects(newObjects: [T])  {

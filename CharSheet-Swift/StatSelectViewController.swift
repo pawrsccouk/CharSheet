@@ -23,7 +23,9 @@ class StatSelectViewController : UITableViewController, UITableViewDataSource, U
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) ->UITableViewCell {
         // Mark the selected stat with a check.
         var cell = super.tableView(tableView, cellForRowAtIndexPath:indexPath)
-        cell.accessoryType = cell.textLabel.text == self.selectedStat ? .Checkmark : .None
+        if let l = cell.textLabel {
+            cell.accessoryType = l.text == self.selectedStat ? .Checkmark : .None
+        }
         return cell
     }
     
@@ -34,7 +36,7 @@ class StatSelectViewController : UITableViewController, UITableViewDataSource, U
         let oldStat = selectedStat
         if let selectedCell = tableView.cellForRowAtIndexPath(indexPath) {
             
-            selectedStat = selectedCell.textLabel.text ?? noStatText
+            selectedStat = selectedCell.textLabel?.text ?? noStatText
             tableView.reloadData()
             
             // Tell the parent that something changed.  Return nil instead of "None" for ease of detection.

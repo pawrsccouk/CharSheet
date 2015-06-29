@@ -18,6 +18,8 @@ class MasterViewController : UITableViewController, UITableViewDataSource, UITab
     
     // Call this to import a character sheet.
     // URL will be a filename, load this and decide whether it is a new character or replaces an existing one.
+    // TODO: This should be in the model somewhere, not in a view controller. 
+    // I need to create a class to represent "all the character sheets".
     func importURL(url: NSURL) -> Bool {
         
         // Data will be a character sheet in XML format.  Import it and create a character for it.
@@ -34,14 +36,13 @@ class MasterViewController : UITableViewController, UITableViewDataSource, UITab
         }
         
         error = nil
-        for sheetNode in document.rootElement.children as [DDXMLElement] {
+        for sheetNode in document.rootElement.children as! [DDXMLElement] {
             if sheetNode.name == "charSheet" {
                 if var newSheet = newCharacter(fetchedResultsController) {
                     if !newSheet.updateFromXML(sheetNode, error: &error) {
                         showAlertWithError(error, title: "Error importing character")
                         deleteCharSheet(newSheet)    // Remove the half-complete sheet from the data store.
                     }
-                    newSheet.renameIfNecessary()
                 } else {
                     XMLSupport.setError(&error, text: "CoreData failed to create a new CharSheet object.")
                     showAlertWithError(error, title: "Error importing character")
@@ -61,7 +62,7 @@ class MasterViewController : UITableViewController, UITableViewDataSource, UITab
         clearsSelectionOnViewWillAppear = false
         navigationItem.leftBarButtonItem = editButtonItem()
         
-        detailViewController = splitViewController?.viewControllers.last?.topViewController as CharSheetUseViewController
+        detailViewController = splitViewController?.viewControllers.last?.topViewController as! CharSheetUseViewController
         detailViewController.managedObjectContext = managedObjectContext
     }
  
@@ -135,7 +136,8 @@ class MasterViewController : UITableViewController, UITableViewDataSource, UITab
     func newCharacter(fetchedResultsController: NSFetchedResultsController) -> CharSheet? {
         let context  = fetchedResultsController.managedObjectContext
         let entCharacter = fetchedResultsController.fetchRequest.entity
-        var newCharacter = NSEntityDescription.insertNewObjectForEntityForName(entCharacter!.name!, inManagedObjectContext:context) as CharSheet
+        var newCharacter = NSEntityDescription.insertNewObjectForEntityForName(
+			entCharacter!.name!, inManagedObjectContext:context) as! CharSheet
         newCharacter.name = "New Character"
         return newCharacter
     }
@@ -182,8 +184,10 @@ class MasterViewController : UITableViewController, UITableViewDataSource, UITab
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle:UITableViewCellEditingStyle, forRowAtIndexPath indexPath:NSIndexPath) {
         if (editingStyle == .Delete) {
-            deleteCharSheet(fetchedResultsController.objectAtIndexPath(indexPath) as CharSheet)
-            saveData()
+			if let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as? CharSheet {
+				deleteCharSheet(sheet)
+				saveData()
+			}
         }
     }
     
@@ -192,8 +196,9 @@ class MasterViewController : UITableViewController, UITableViewDataSource, UITab
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath) {
-        var charSheet = fetchedResultsController.objectAtIndexPath(indexPath) as CharSheet
-        detailViewController.charSheet = charSheet
+		if let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as? CharSheet {
+			detailViewController.charSheet = sheet
+		}
     }
     
     //MARK: - Fetched results controller
@@ -247,30 +252,39 @@ class MasterViewController : UITableViewController, UITableViewDataSource, UITab
         }
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath) {
-        
-        switch(type) {
-        case .Insert:
-            tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Fade)
-            
-        case .Delete:
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-            
-        case .Update:
-            if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-                configureCell(cell, atIndexPath:indexPath)
-            }
-            
-        case .Move:
-            tableView.deleteRowsAtIndexPaths([indexPath],   withRowAnimation: .Fade)
-            tableView.insertRowsAtIndexPaths([newIndexPath],withRowAnimation: .Fade)
-        }
-    }
-    
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        tableView.endUpdates()
-    }
-    
+	func controller(  controller: NSFetchedResultsController,
+		didChangeObject anObject: AnyObject,
+		atIndexPath    indexPath: NSIndexPath?,
+		forChangeType       type: NSFetchedResultsChangeType,
+		newIndexPath            : NSIndexPath?) {
+
+			switch(type) {
+			case .Insert:
+				if let newIP = newIndexPath {
+					tableView.insertRowsAtIndexPaths([newIP], withRowAnimation: UITableViewRowAnimation.Fade)
+				}
+			case .Delete:
+				if let ip = indexPath {
+					tableView.deleteRowsAtIndexPaths([ip], withRowAnimation: UITableViewRowAnimation.Fade)
+				}
+			case .Update:
+				if let ip = indexPath, cell = tableView.cellForRowAtIndexPath(ip) {
+					configureCell(cell, atIndexPath:ip)
+				}
+
+			case .Move:
+				if let ip = indexPath, newIP = newIndexPath {
+					tableView.deleteRowsAtIndexPaths([ip],   withRowAnimation: UITableViewRowAnimation.Fade)
+					tableView.insertRowsAtIndexPaths([newIP],withRowAnimation: UITableViewRowAnimation.Fade)
+				}
+			}
+	}
+
+
+	func controllerDidChangeContent(controller: NSFetchedResultsController) {
+		tableView.endUpdates()
+	}
+
     // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
     //
     //    func controllerDidChangeContent(controller: NSFetchedResultsController) {
@@ -278,16 +292,15 @@ class MasterViewController : UITableViewController, UITableViewDataSource, UITab
     //        tableView.reloadData()
     //    }
 
-    func configureCell(cell: UITableViewCell, atIndexPath indexPath:NSIndexPath) {
-        let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as CharSheet
-        if let name = sheet.name {
-            cell.textLabel.text = name
-        }
-        if let label = cell.detailTextLabel {
-            if let game = sheet.game {
-                label.text = game
-            }
-        }
-    }
-    
+	func configureCell(cell: UITableViewCell, atIndexPath indexPath:NSIndexPath) {
+		if let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as? CharSheet {
+			if let name = sheet.name, l = cell.textLabel {
+				l.text = name
+			}
+			if let label = cell.detailTextLabel, game = sheet.game {
+				label.text = game
+			}
+		}
+	}
+
 }

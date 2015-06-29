@@ -66,18 +66,27 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
         skillsTable.editing = newEditing
     }
     
-    @IBAction func addSkill(sender: AnyObject?) {
-        var skillsToAdd = charSheet!.skills.array.map{$0 as Skill}.filter{ !self.dieRoll.skills.contains($0) }
-        
+	@IBAction func addSkill(sender: AnyObject?) {
+		var skillsToAdd = (charSheet!.skills.array)
+			.map { $0 as! Skill }
+			.filter{ !self.dieRoll.skills.contains($0) }
+
         // Quit early if there are no more skills we can add.
         if(skillsToAdd.count == 0) {
-            let alert = UIAlertController(title:"Add skill", message:"There are no more skills to add.", preferredStyle: .Alert)
-            let action = UIAlertAction(title: "Close", style: .Default, handler: nil)
+            let alert = UIAlertController(
+				title         : "Add skill",
+				message       : "There are no more skills to add.",
+				preferredStyle: .Alert)
+            let action = UIAlertAction(
+				title  : "Close",
+				style  : .Default,
+				handler: nil)
             presentViewController(alert, animated: true, completion: nil)
             return
         }
         
-        assert(skillSelectController == nil, "Skill select controller \(skillSelectController) should be nil when adding a skill")
+        assert(skillSelectController == nil,
+			"Skill select controller \(skillSelectController) should be nil when adding a skill")
         skillSelectController = SkillSelectController.skillSelectControllerFromNib()
         let controller = skillSelectController!
         controller.skillsToPick  = MutableOrderedSet<Skill>(array: skillsToAdd)
@@ -161,11 +170,11 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "ShowDieRollResult" {
-            var dieRollResultViewController = segue.destinationViewController as DieRollResultViewController
+            var dieRollResultViewController = segue.destinationViewController as! DieRollResultViewController
             rollTheDieAndShowResultsInViewController(dieRollResultViewController)
         }
         else if segue.identifier == "PushStatSelect" {
-            var statSelectViewController = segue.destinationViewController as StatSelectViewController
+            var statSelectViewController = segue.destinationViewController as! StatSelectViewController
             statSelectViewController.selectedStat = dieRoll.stat?.name ?? "No name"
             statSelectViewController.selectionChangedCallback = { newStatName, oldStatName in
                 self.statNameChanged(newStatName)
@@ -189,8 +198,8 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
     }
     
     func rollTheDieAndShowResultsInViewController(dieRollResultViewController: DieRollResultViewController) {
-        dieRoll.adds = addsTextField.text.toInt()!
-        dieRoll.extraD4s = Int16(extraDiceTextField.text.toInt()!)
+        dieRoll.adds = addsTextField.text.toInt() ?? 0
+        dieRoll.extraD4s = Int16(extraDiceTextField.text.toInt() ?? 0)
         
         dieRoll.roll()
         dieRollResultViewController.dieRoll = dieRoll
@@ -339,7 +348,9 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
     // MARK: - Navigation Controller Delegate
 
 
-    func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
+    func navigationController(navigationController: UINavigationController,
+		willShowViewController      viewController: UIViewController,
+		animated                                  : Bool) {
         
         // If this controller is being shown because the select skill view controller has just been closed, then add the skill it has found.
         if viewController == self {
@@ -347,7 +358,7 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
                 
                 dieRoll.skills = dieRoll.skills + [selectedSkill]
                 
-                if let skillName = selectedSkill.name {
+                if let skillName = selectedSkill.name as? String {
                     dieRoll.specialties[skillName] = skillSelectController?.selectedSpecialty
                 }
                 skillsTable.reloadData()
@@ -356,7 +367,7 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
             skillSelectController = nil
         }
     }
-    
+
     //MARK: - Table View
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -377,11 +388,13 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
         let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) as? UITableViewCell ?? UITableViewCell(style: .Value1, reuseIdentifier:CELL_ID)
         
         let skill = dieRoll.skills.objectAtIndex(indexPath.row)
-        cell.textLabel.text = skill.name
-        if let skillName = skill.name {
+        if let l = cell.textLabel {
+            l.text = skill.name as? String
+        }
+        if let skillName = skill.name as? String {
             let spec = dieRoll.specialties[skillName]
             if let l = cell.detailTextLabel {
-                l.text = spec?.name ?? ""
+                l.text = (spec?.name as? String) ?? ""
             }
         }
         return cell
@@ -393,7 +406,7 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
         assert(tableView == skillsTable && editingStyle == .Delete)
         if(tableView == skillsTable && editingStyle == .Delete) {
             let skill = dieRoll.skills[indexPath.row]
-            if let skillName = skill.name {
+            if let skillName = skill.name as? String {
                 dieRoll.specialties[skillName] = nil
             }
             dieRoll.skills.removeObjectAtIndex(indexPath.row)
@@ -409,11 +422,13 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
         let controller = skillSelectController!
         // Set the skill shown in the table as the currently-selected skill.
         controller.selectedSkill = dieRoll.skills[indexPath.row]
-        controller.selectedSpecialty = dieRoll.specialties[controller.selectedSkill?.name ?? ""]
+        controller.selectedSpecialty = dieRoll.specialties[(controller.selectedSkill?.name as? String) ?? ""]
         
         // The list of skills to pick is all the skills not already picked, except for the one we are currently editing.
         // Otherwise the user can't go back without making changes.
-        let skillsToPick: [Skill] = charSheet!.skills.array.map{$0 as Skill}.filter{ $0 == controller.selectedSkill || !self.dieRoll.skills.contains($0) }
+        let skillsToPick: [Skill] = (charSheet!.skills.array)
+			.map { $0 as! Skill }
+			.filter { $0 == controller.selectedSkill || !self.dieRoll.skills.contains($0) }
         controller.skillsToPick  = MutableOrderedSet<Skill>(array: skillsToPick)
         if let navc = navigationController {
             navc.pushViewController(controller, animated: true)
