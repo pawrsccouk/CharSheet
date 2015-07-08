@@ -26,7 +26,7 @@ class CharSheet : NSManagedObject {
 
 	// These are calculated values from the other stats.
 	var meleeAdds: Int {
-		return max(0, strength - 12)
+		return max(0, strength - 12) + max(0, luck - 12)
 	}
 
 	var rangedAdds: Int {
