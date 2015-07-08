@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="0BG-KE-4Sf">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="0BG-KE-4Sf">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <scenes>
-        <!--No character selected-->
+        <!--Char Sheet Use-->
         <scene sceneID="DWB-FV-mXJ">
             <objects>
-                <viewController id="vB0-Fg-pS5" customClass="CharSheetUseViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vB0-Fg-pS5" userLabel="Char Sheet Use" customClass="CharSheetUseViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="MIP-4D-g3s"/>
                         <viewControllerLayoutGuide type="bottom" id="ROz-Ux-ggf"/>
@@ -27,19 +27,31 @@
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ene-V1-JM4" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
                                 <rect key="frame" x="20" y="158" width="175" height="21"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="Apy-0S-376"/>
                                     <constraint firstAttribute="width" constant="175" id="mlT-7c-zPx"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="name" value="Strength"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="XrM-EW-XgT"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y9Z-QI-VGW" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
                                 <rect key="frame" x="203" y="158" width="175" height="21"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="3Vc-Ld-Zf1"/>
                                     <constraint firstAttribute="width" constant="175" id="AG9-cX-spP"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="name" value="Dexterity"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="oRt-Pq-1C3"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Fx-v2b" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
                                 <rect key="frame" x="386" y="158" width="175" height="21"/>
@@ -48,6 +60,12 @@
                                     <constraint firstAttribute="height" constant="21" id="ASf-km-SOc"/>
                                     <constraint firstAttribute="width" constant="175" id="BTf-gM-VcO"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="name" value="Constitution"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="kie-V6-Sou"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0zq-RI-JuM" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
                                 <rect key="frame" x="569" y="158" width="175" height="21"/>
@@ -56,14 +74,26 @@
                                     <constraint firstAttribute="width" constant="175" id="KwS-EI-Cb4"/>
                                     <constraint firstAttribute="height" constant="21" id="LbN-Hq-ano"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="name" value="Speed"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="VKn-S9-zVG"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jF8-6P-By4" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
                                 <rect key="frame" x="20" y="187" width="175" height="21"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="175" id="H94-ZD-E9V"/>
                                     <constraint firstAttribute="height" constant="21" id="Ykp-dR-dae"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="name" value="Intelligence"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="Uab-Yn-QVQ"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Tk-F2-1Rm" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
                                 <rect key="frame" x="203" y="187" width="175" height="21"/>
@@ -72,6 +102,12 @@
                                     <constraint firstAttribute="height" constant="21" id="QLm-N1-vpA"/>
                                     <constraint firstAttribute="width" constant="175" id="mRO-Dp-Bdj"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="name" value="Charisma"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="f36-tk-27p"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ge4-9I-6Nm" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
                                 <rect key="frame" x="386" y="187" width="175" height="21"/>
@@ -80,6 +116,12 @@
                                     <constraint firstAttribute="height" constant="21" id="Jur-Ue-Sdc"/>
                                     <constraint firstAttribute="width" constant="175" id="yyg-tT-mUa"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="name" value="Luck"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="bxW-Y9-A3N"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lHd-po-YLq" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
                                 <rect key="frame" x="569" y="187" width="175" height="21"/>
@@ -88,6 +130,12 @@
                                     <constraint firstAttribute="height" constant="21" id="5Oi-M7-jDM"/>
                                     <constraint firstAttribute="width" constant="175" id="NY4-v8-HoE"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="name" value="Perception"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="9pc-C3-xjh"/>
+                                </connections>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="100" contentMode="left" text="Stats" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ggR-HF-94P">
                                 <rect key="frame" x="20" y="123" width="50" height="27"/>
@@ -1141,10 +1189,10 @@
             </objects>
             <point key="canvasLocation" x="544" y="4099"/>
         </scene>
-        <!--Experience Gained-->
+        <!--Experience List-->
         <scene sceneID="3up-sC-skz">
             <objects>
-                <tableViewController id="vWB-V7-Wkq" customClass="EditXPViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="vWB-V7-Wkq" userLabel="Experience List" customClass="EditXPViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="wAK-hg-klz">
                         <rect key="frame" x="0.0" y="64" width="768" height="960"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

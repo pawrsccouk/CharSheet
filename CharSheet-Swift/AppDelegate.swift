@@ -50,12 +50,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 		openURL      url        : NSURL,
 		sourceApplication       : String?,
 		annotation              : AnyObject?) -> Bool {
+
         // Called when the application is started because someone clicked on or provided a document that we are registered to handle.
         // In this case, it is triggered when the user opens a .charSheet attachment in an email.
         // Import the data from the URL.
         
         if url.fileURL {
-            return masterViewController.importURL(url)
+			let result = masterViewController.importURL(url)
+			if !result.success {
+				masterViewController.showAlertForResult(result, title: "Error importing character sheet.")
+				return false // Failed to open the URL.
+			}
         }
         return false // Not a URL type we support.
     }

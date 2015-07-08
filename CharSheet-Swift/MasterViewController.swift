@@ -11,53 +11,96 @@ import CoreData
 
 
 
-class MasterViewController : UITableViewController, UITableViewDataSource, UITableViewDelegate, UIApplicationDelegate, NSFetchedResultsControllerDelegate {
+class MasterViewController : UITableViewController {
 
     var detailViewController: CharSheetUseViewController!
     var managedObjectContext: NSManagedObjectContext!
-    
-    // Call this to import a character sheet.
-    // URL will be a filename, load this and decide whether it is a new character or replaces an existing one.
-    // TODO: This should be in the model somewhere, not in a view controller. 
-    // I need to create a class to represent "all the character sheets".
-    func importURL(url: NSURL) -> Bool {
-        
+
+	/// Triggers a Fetch in CoreData of all the CharSheet objects available to the system.
+	private func fetchAllCharacters() -> NSFetchedResultsController
+	{
+		var fetchRequest = NSFetchRequest()
+		fetchRequest.entity = NSEntityDescription.entityForName("CharSheet", inManagedObjectContext:self.managedObjectContext)
+		fetchRequest.fetchBatchSize = 20    // Set the batch size to a suitable number.
+		fetchRequest.sortDescriptors = [NSSortDescriptor(key:"name", ascending:false)]
+
+		// nil for section name key path means "no sections".
+		let fetchedResultsController = NSFetchedResultsController(
+			fetchRequest        : fetchRequest,
+			managedObjectContext: self.managedObjectContext,
+			sectionNameKeyPath  : nil,
+			cacheName           : "Characters")
+		fetchedResultsController.delegate = self
+
+		var error: NSError? //Pointer()
+		if !fetchedResultsController.performFetch(&error) {
+			// Replace this implementation with code to handle the error appropriately.
+			if let err = error {
+				NSLog("MasterViewController: Error performing fetch: %@, %@", err, err.userInfo ?? "[]");
+			} else {
+				NSLog("MasterViewController: Unknown error performing fetch.")
+			}
+			abort();
+		}
+		return fetchedResultsController
+	}
+
+	/// Stores the results of fetching all the characters available in Core Data.
+	///
+	/// Generates the fetched results controller for this request only if it is needed.
+	lazy var fetchedResultsController: NSFetchedResultsController = { self.fetchAllCharacters() }()
+
+	/// Creates a CharSheet object and pulls all the data from the XML element provided to initialize it.
+	///
+	/// :param: element The root element holding all the sub-elements for this character sheet.
+	/// :returns: A newly-created CharSheet object which has been added to Core Data.
+	/// :note: This deletes the new char sheet if anything goes wrong during the loading process.
+
+	private func createCharSheetFromElement(element: DDXMLElement) -> Result<CharSheet>
+	{
+		return newCharacter()
+		.andThen { charSheet in
+			switch charSheet.updateFromXML(element) {
+			case .Error(let error):
+				self.deleteCharSheet(charSheet)
+				return failure(error)
+			case .Success:
+				return success(charSheet)
+			}
+		}
+	}
+
+	/// Import a character sheet.
+	///
+	/// :param: URL A file URL pointing at the document to load.
+	/// :todo: This should be in the model somewhere, not in a view controller.
+	///        I need to create a class to represent "all the character sheets".
+	/// :note: This decides whether the loaded data represents a new character or replaces an existing one.
+    func importURL(url: NSURL) -> NilResult
+	{
+		func findElement(document: DDXMLDocument, nodeName: String) -> Result<DDXMLElement>
+		{
+			for node in document.rootElement.children as! [DDXMLElement] {
+				if node.name == nodeName {
+					return success(node)
+				}
+			}
+			return failure(XMLSupport.XMLError("XMLDocument has no node named \(nodeName)"))
+		}
+
         // Data will be a character sheet in XML format.  Import it and create a character for it.
         if !url.fileURL {
-            NSLog("Error: URL: \(url) is not a file URL and isn't supported.")
-            return false
+            return XMLSupport.XMLFailure("Error: URL: \(url) is not a file URL and isn't supported.")
         }
-        var error: NSError?
-        var xmlData = NSData(contentsOfURL:url)
-        var document = DDXMLDocument(data:xmlData, options:0, error:&error)
-        if document == nil {
-            showAlertWithError(error, title: "Error importing character")
-            return false
-        }
-        
-        error = nil
-        for sheetNode in document.rootElement.children as! [DDXMLElement] {
-            if sheetNode.name == "charSheet" {
-                if var newSheet = newCharacter(fetchedResultsController) {
-                    if !newSheet.updateFromXML(sheetNode, error: &error) {
-                        showAlertWithError(error, title: "Error importing character")
-                        deleteCharSheet(newSheet)    // Remove the half-complete sheet from the data store.
-                    }
-                } else {
-                    XMLSupport.setError(&error, text: "CoreData failed to create a new CharSheet object.")
-                    showAlertWithError(error, title: "Error importing character")
-                }
-            }
-            else {
-                XMLSupport.setError(&error, text: "Import document: Unexpected XML node \(sheetNode.name), should be charSheet")
-                showAlertWithError(error, title: "Error importing character")
-                return false
-            }
-        }
-        return true
-    }
 
-    override func viewDidLoad() {
+		let xmlData = NSData(contentsOfURL:url)
+		return DDXMLDocument.documentWithData(xmlData!, options: 0)
+			.andThen { findElement($0, "charSheet") }
+			.andThen { self.createCharSheetFromElement($0).nilResult() }
+	}
+
+    override func viewDidLoad()
+	{
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = false
         navigationItem.leftBarButtonItem = editButtonItem()
@@ -66,31 +109,22 @@ class MasterViewController : UITableViewController, UITableViewDataSource, UITab
         detailViewController.managedObjectContext = managedObjectContext
     }
  
-    // Depracated in iOS8. Default should support all orientations.
-    //    override func shouldAutorotateToInterfaceOrientation(interfaceOrientation: UIInterfaceOrientation) -> Bool {
-    //        return true
-    //    }
-    
-    func showAlertWithError(error: NSError?, title: String) {
-        
-        // Show an error alert for a given string.
-        func showAlertForString(text: String) {
-            let alertController = UIAlertController(title: title, message:text, preferredStyle: .Alert)
-            let closeAction: UIAlertAction = UIAlertAction(title: "Close", style: .Default, handler: { (action: UIAlertAction?) -> Void in
-                self.dismissViewControllerAnimated(true, completion: nil)
-            })
-            alertController.addAction(closeAction)
-            presentViewController(alertController, animated: true, completion: nil)
-        }
-        
-        // If no error, just show the text "Unknown error" and stop.
-        if error == nil {
-            showAlertForString("Unknown error")
-            return
-        }
-        
+	/// Extract the error object from a Result, and present a view controller displaying the error.
+	///
+	/// Does nothing if result is successful.
+	///
+	/// :param: result The result to display.
+	/// :param: title  The title displayed on the error window.
+	func showAlertForResult<T>(result: Result<T>, title: String)
+	{
+		// Show nothing if this isn't an error result.
+		if result.error == nil {
+			return
+		}
+		let error = result.error!
+
         var errorText = "Unknown error"
-        if let userInfo = error!.userInfo {
+        if let userInfo = error.userInfo {
             
             if let fullInfo = userInfo[NSHelpAnchorErrorKey] as? String {
                 errorText = fullInfo
@@ -115,51 +149,77 @@ class MasterViewController : UITableViewController, UITableViewDataSource, UITab
                 }
             }
         }
-        
-        showAlertForString(errorText)
-        
-    }
+		let alertController = UIAlertController(
+			title         : title,
+			message       : errorText,
+			preferredStyle: .Alert)
+		alertController.addAction(UIAlertAction(
+			title: "Close",
+			style: .Default,
+			handler: { (action: UIAlertAction?) in self.dismissViewControllerAnimated(true, completion: nil)
+		}))
+		presentViewController(alertController, animated: true, completion: nil)
+   }
 
 
-    // Saves the data and handles any errors that occurred.
-    func saveData() {
-        let c = fetchedResultsController.managedObjectContext
-        if c.hasChanges {
-            var error: NSError?
-            if !c.save(&error) {
-                showAlertWithError(error!, title: "Error saving character");
-                NSLog("Unresolved error \(error!), \(error!.userInfo)")
-            }
-        }
+	/// Saves any changes made to the data since the last saveData call.
+    func saveData()
+	{
+		func saveChanges() -> NilResult
+		{
+			let c = fetchedResultsController.managedObjectContext
+			if c.hasChanges {
+				var error: NSError?
+				if !c.save(&error) {
+					NSLog("Unresolved save error \(error!), \(error!.userInfo)")
+					return failure(error!)
+				}
+			}
+			return success()
+		}
+
+
+		let result = saveChanges()
+		if !result.success {
+			showAlertForResult(result, title: "Error saving character.")
+		}
     }
-    
-    func newCharacter(fetchedResultsController: NSFetchedResultsController) -> CharSheet? {
-        let context  = fetchedResultsController.managedObjectContext
-        let entCharacter = fetchedResultsController.fetchRequest.entity
-        var newCharacter = NSEntityDescription.insertNewObjectForEntityForName(
-			entCharacter!.name!, inManagedObjectContext:context) as! CharSheet
-        newCharacter.name = "New Character"
-        return newCharacter
-    }
-    
-    @IBAction func insertNewCharSheet(sender: AnyObject?) {
-        newCharacter(fetchedResultsController)
+
+	/// Creates a new CharSheet entity in Core Data's managed object context and returns it.
+	func newCharacter() -> Result<CharSheet>
+	{
+		let context  = fetchedResultsController.managedObjectContext
+		if let
+			entCharacter = fetchedResultsController.fetchRequest.entity,
+			entName      = entCharacter.name,
+			newCharacter = NSEntityDescription.insertNewObjectForEntityForName(entName, inManagedObjectContext:context) as? CharSheet {
+				newCharacter.name = "New Character"
+				return success(newCharacter)
+		}
+		return failure(XMLSupport.XMLError("Error creating character sheet from Core Data"))
+	}
+
+    @IBAction func insertNewCharSheet(sender: AnyObject?)
+	{
+        newCharacter()
         saveData()     // Save the character immediately.
     }
     
-    func deleteCharSheet(charSheet: CharSheet) {
+    func deleteCharSheet(charSheet: CharSheet)
+	{
         fetchedResultsController.managedObjectContext.deleteObject(charSheet)
         // Blank the detail view if we were looking at this sheet when it was deleted.
         if(detailViewController.charSheet == charSheet) {
             detailViewController.charSheet = nil
         }
     }
-    
+}
 
-    //MARK: - Table View
-    
-    private let CELL_ID = "MasterViewController_Cell"
-    
+
+// MARK: - Table View Data Source
+
+extension MasterViewController: UITableViewDataSource
+{
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int
     {
         return fetchedResultsController.sections?.count ?? 0
@@ -172,17 +232,29 @@ class MasterViewController : UITableViewController, UITableViewDataSource, UITab
         return 0
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) as? UITableViewCell ?? UITableViewCell(style:.Subtitle, reuseIdentifier:CELL_ID)
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) -> UITableViewCell
+	{
+		let CELL_ID = "MasterViewController_Cell"
+        let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) as? UITableViewCell
+			?? UITableViewCell(style:.Subtitle, reuseIdentifier:CELL_ID)
         configureCell(cell, atIndexPath:indexPath)
         return cell
     }
-    
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+}
+
+// MARK: - Table View Delegate
+
+extension MasterViewController: UITableViewDelegate
+{
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
+	{
         return true    // All the rows are editable
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle:UITableViewCellEditingStyle, forRowAtIndexPath indexPath:NSIndexPath) {
+    override func tableView(  tableView: UITableView,
+		commitEditingStyle editingStyle: UITableViewCellEditingStyle,
+		forRowAtIndexPath     indexPath: NSIndexPath)
+	{
         if (editingStyle == .Delete) {
 			if let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as? CharSheet {
 				deleteCharSheet(sheet)
@@ -191,108 +263,80 @@ class MasterViewController : UITableViewController, UITableViewDataSource, UITab
         }
     }
     
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath:NSIndexPath) -> Bool {
+    override func tableView(  tableView: UITableView,
+		canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool
+	{
         return false    // The table view should not be re-orderable.
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath) {
+    override func tableView(    tableView: UITableView,
+		didSelectRowAtIndexPath indexPath: NSIndexPath)
+	{
 		if let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as? CharSheet {
 			detailViewController.charSheet = sheet
 		}
     }
-    
-    //MARK: - Fetched results controller
+}
 
-    private var _fetchedResultController: NSFetchedResultsController? = nil
-    // Generate the fetched results controller for this request only if it is needed, i.e. as a lazy variable.
-    var fetchedResultsController: NSFetchedResultsController {
-        
-        if _fetchedResultController == nil {
-            
-            var fetchRequest = NSFetchRequest()
-            fetchRequest.entity = NSEntityDescription.entityForName("CharSheet", inManagedObjectContext:self.managedObjectContext)
-            fetchRequest.fetchBatchSize = 20    // Set the batch size to a suitable number.
-            fetchRequest.sortDescriptors = [NSSortDescriptor(key:"name", ascending:false)]
-            
-            // nil for section name key path means "no sections".
-            var aFetchedResultsController = NSFetchedResultsController(fetchRequest:fetchRequest, managedObjectContext:self.managedObjectContext, sectionNameKeyPath:nil, cacheName:"Characters")
-            aFetchedResultsController.delegate = self
-            
-            var error = NSErrorPointer()
-            if !aFetchedResultsController.performFetch(error) {
-                // Replace this implementation with code to handle the error appropriately.
-                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                if let err = error.memory {
-                    NSLog("MasterViewController: Error performing fetch: %@, %@", err, err.userInfo ?? "[]");
-                } else {
-                    NSLog("MasterViewController: Unknown error performing fetch.")
-                }
-                abort();
-            }
-            
-            _fetchedResultController = aFetchedResultsController
-        }
-        return _fetchedResultController!
-    }
-    
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+
+    //MARK: - Fetched results controller
+extension MasterViewController: NSFetchedResultsControllerDelegate
+{
+    func controllerWillChangeContent(controller: NSFetchedResultsController)
+	{
         tableView.beginUpdates()
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex:Int, forChangeType type:NSFetchedResultsChangeType) {
-        switch(type) {
+    func controller(      controller: NSFetchedResultsController,
+		didChangeSection sectionInfo: NSFetchedResultsSectionInfo,
+		atIndex         sectionIndex: Int,
+		forChangeType     changeType: NSFetchedResultsChangeType)
+	{
+        switch(changeType) {
         case .Insert:
             tableView.insertSections(NSIndexSet(index:sectionIndex), withRowAnimation:.Fade)
-            
         case .Delete:
             tableView.deleteSections(NSIndexSet(index:sectionIndex), withRowAnimation:.Fade)
-            
         default:
-            break // Ignore all the other values.
+            break
         }
     }
     
 	func controller(  controller: NSFetchedResultsController,
 		didChangeObject anObject: AnyObject,
 		atIndexPath    indexPath: NSIndexPath?,
-		forChangeType       type: NSFetchedResultsChangeType,
-		newIndexPath            : NSIndexPath?) {
-
-			switch(type) {
-			case .Insert:
-				if let newIP = newIndexPath {
-					tableView.insertRowsAtIndexPaths([newIP], withRowAnimation: UITableViewRowAnimation.Fade)
-				}
-			case .Delete:
-				if let ip = indexPath {
-					tableView.deleteRowsAtIndexPaths([ip], withRowAnimation: UITableViewRowAnimation.Fade)
-				}
-			case .Update:
-				if let ip = indexPath, cell = tableView.cellForRowAtIndexPath(ip) {
-					configureCell(cell, atIndexPath:ip)
-				}
-
-			case .Move:
-				if let ip = indexPath, newIP = newIndexPath {
-					tableView.deleteRowsAtIndexPaths([ip],   withRowAnimation: UITableViewRowAnimation.Fade)
-					tableView.insertRowsAtIndexPaths([newIP],withRowAnimation: UITableViewRowAnimation.Fade)
-				}
+		forChangeType changeType: NSFetchedResultsChangeType,
+		newIndexPath            : NSIndexPath?)
+	{
+		switch(changeType) {
+		case .Insert:
+			if let newIP = newIndexPath {
+				tableView.insertRowsAtIndexPaths([newIP], withRowAnimation: UITableViewRowAnimation.Fade)
 			}
+		case .Delete:
+			if let ip = indexPath {
+				tableView.deleteRowsAtIndexPaths([ip], withRowAnimation: UITableViewRowAnimation.Fade)
+			}
+		case .Update:
+			if let ip = indexPath, cell = tableView.cellForRowAtIndexPath(ip) {
+				configureCell(cell, atIndexPath:ip)
+			}
+		case .Move:
+			if let ip = indexPath, newIP = newIndexPath {
+				tableView.deleteRowsAtIndexPaths([ip],   withRowAnimation: UITableViewRowAnimation.Fade)
+				tableView.insertRowsAtIndexPaths([newIP],withRowAnimation: UITableViewRowAnimation.Fade)
+			}
+		}
 	}
 
 
-	func controllerDidChangeContent(controller: NSFetchedResultsController) {
+	func controllerDidChangeContent(controller: NSFetchedResultsController)
+	{
 		tableView.endUpdates()
 	}
 
-    // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
-    //
-    //    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-    //        // In the simplest, most efficient, case, reload the table view.
-    //        tableView.reloadData()
-    //    }
-
-	func configureCell(cell: UITableViewCell, atIndexPath indexPath:NSIndexPath) {
+	func configureCell(cell: UITableViewCell, atIndexPath indexPath:NSIndexPath)
+	{
 		if let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as? CharSheet {
 			if let name = sheet.name, l = cell.textLabel {
 				l.text = name

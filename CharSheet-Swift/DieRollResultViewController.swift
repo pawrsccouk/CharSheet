@@ -66,14 +66,6 @@ class DieRollResultViewController : UIViewController {
     
 
 
-    //init(nibName: nibNameOrNil, bundle nibBundleOrNil:NSBundle) {
-    //    super.init(nibName:"DieRollResultView", bundle:nibBundleOrNil)
-    //        let bbiDone = UIBarButtonItem(barButtonSystemItem:.Done, target:self, action:"done")
-    //        navigationItem.setRightBarButtonItem(bbiDone)
-    //        addTickAction = nil
-    //    }
-    //    return self;
-    //}
 
 
     // MARK: Methods

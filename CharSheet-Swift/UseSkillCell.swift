@@ -33,7 +33,7 @@ class UseSkillCell : UICollectionViewCell {
                     s.addObserver(self, forKeyPath:"value"      , options:.New, context:nil)
                     s.addObserver(self, forKeyPath:"specialties", options:.New, context:nil)
                     
-                    setLabelViaTag(.Name       , value: s.name as? String ?? "")
+                    setLabelViaTag(.Name       , value: s.name ?? "")
                     setLabelViaTag(.Value      , value: s.value.description)
                     setLabelViaTag(.Specialties, value: s.specialtiesAsString)
                     
@@ -85,7 +85,7 @@ class UseSkillCell : UICollectionViewCell {
     }
 
     override func observeValueForKeyPath(keyPath: String, ofObject object:AnyObject, change:[NSObject: AnyObject], context:UnsafeMutablePointer<Void>) {
-        if      keyPath == "name"        { setLabelViaTag(.Name       , value: skill.name as? String ?? "") }
+        if      keyPath == "name"        { setLabelViaTag(.Name       , value: skill.name ?? "") }
         else if keyPath == "value"       { setLabelViaTag(.Value      , value: skill.value.description) }
         else if keyPath == "specialties" { setLabelViaTag(.Specialties, value: skill.specialtiesAsString) }
     }

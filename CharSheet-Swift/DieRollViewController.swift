@@ -11,7 +11,7 @@ import UIKit
 import CoreData
 
 
-class DieRollViewController : UIViewController, UINavigationControllerDelegate, UITableViewDelegate {
+class DieRollViewController : UIViewController, UITableViewDelegate {
 
     // MARK: - Interface Builder.
     
@@ -23,14 +23,13 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
     @IBOutlet weak var extraDiceStepper: UIStepper!
 
     
-    @IBAction func cancel(sender: AnyObject?) {
-        if let pvc = presentingViewController {
-            pvc.dismissViewControllerAnimated(true, completion:nil)
-        }
+    @IBAction func cancel(sender: AnyObject?)
+	{
+		presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
     }
 
-    @IBAction func stepperChanged(sender: AnyObject?) {
-        
+    @IBAction func stepperChanged(sender: AnyObject?)
+	{
         assert(sender != nil, "stepperChanged: No sender")
         if let stepper = sender as? UIStepper {
             assert(stepper.isKindOfClass(UIStepper), "stepperChanged: Sender \(stepper) must be a UIStepper")
@@ -44,7 +43,8 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
         }
     }
     
-    @IBAction func textFieldChanged(sender: AnyObject?) {
+    @IBAction func textFieldChanged(sender: AnyObject?)
+	{
         assert(sender != nil, "textFieldChanged: No sender")
         if let textField = sender as? UITextField {
             assert(textField.isKindOfClass(UITextField), "stepperChanged: Sender \(textField) must be a UITextField")
@@ -61,52 +61,90 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
         }
     }
   
-    @IBAction func editSkillTable(sender: AnyObject?) {
+    @IBAction func editSkillTable(sender: AnyObject?)
+	{
         var newEditing = !skillsTable.editing
         skillsTable.editing = newEditing
     }
     
-	@IBAction func addSkill(sender: AnyObject?) {
+	@IBAction func addSkill(sender: AnyObject?)
+	{
 		var skillsToAdd = (charSheet!.skills.array)
 			.map { $0 as! Skill }
 			.filter{ !self.dieRoll.skills.contains($0) }
 
         // Quit early if there are no more skills we can add.
-        if(skillsToAdd.count == 0) {
-            let alert = UIAlertController(
+		if(skillsToAdd.count == 0) {
+			let alert = UIAlertController(
 				title         : "Add skill",
 				message       : "There are no more skills to add.",
 				preferredStyle: .Alert)
-            let action = UIAlertAction(
+			alert.addAction(UIAlertAction(
 				title  : "Close",
 				style  : .Default,
-				handler: nil)
-            presentViewController(alert, animated: true, completion: nil)
-            return
+				handler: nil))
+			presentViewController(alert, animated: true, completion: nil)
+			return
         }
-        
-        assert(skillSelectController == nil,
-			"Skill select controller \(skillSelectController) should be nil when adding a skill")
-        skillSelectController = SkillSelectController.skillSelectControllerFromNib()
-        let controller = skillSelectController!
-        controller.skillsToPick  = MutableOrderedSet<Skill>(array: skillsToAdd)
-        controller.selectedSkill = skillsToAdd[0] // Default to showing the first skill.
-        controller.selectedSpecialty = nil
-        if let navc = navigationController {
-            navc.pushViewController(controller, animated:true)
-        }
-    }
-    
- 
-    // MARK: Properties
-    
-    // The die roll object actually makes the roll and records the results.
-    // I set up it's properties here (selected stat, skills, specialties etc.) which are used for the roll.
-    var dieRoll : DieRoll = DieRoll()
 
-    // This is the skill select picker. We need to track it so that I can add the skill it provides to the die roll when it exits.
+		assert(skillSelectController == nil,
+			"Skill select controller \(skillSelectController) should be nil when adding a skill")
+		skillSelectController = SkillSelectController.skillSelectControllerFromNib()
+		if let controller = skillSelectController {
+			controller.skillsToPick  = MutableOrderedSet<Skill>(array: skillsToAdd)
+			controller.selectedSkill = skillsToAdd[0] // Default to showing the first skill.
+			controller.selectedSpecialty = nil
+			navigationController!.pushViewController(controller, animated:true)
+		}
+	}
+
+
+    // MARK: Properties
+
+	// Context for KVO.
+	private var myContext: Int = 0
+
+	/// The die roll object actually makes the roll and records the results.
+	///
+	/// I set up it's properties here (selected stat, skills, specialties etc.) which are used for the roll.
+	var dieRoll : DieRoll = DieRoll() {
+		didSet {
+			NSLog("Die roll \(dieRoll) set")
+		}
+	}
+
+	deinit
+	{
+		dieRoll.removeObserver(self, forKeyPath: "adds")
+		dieRoll.removeObserver(self, forKeyPath: "extraD4s")
+	}
+
+	 override func observeValueForKeyPath(keyPath: String,
+		ofObject                           object: AnyObject,
+		change                                   : [NSObject : AnyObject],
+		context                                  : UnsafeMutablePointer<Void>)
+	{
+		if context != &myContext {
+			super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+			return
+		}
+		NSLog("DieRoll keypath \(keyPath) changed.")
+		if keyPath == "adds" {
+			addsStepper.value = Double(dieRoll.adds)
+			addsTextField.text = "\(dieRoll.adds)"
+		}
+		if keyPath == "extraD4s" {
+			extraDiceStepper.value = Double(dieRoll.extraD4s)
+			extraDiceTextField.text = "\(dieRoll.extraD4s)"
+		}
+	}
+
+	/// The controller used to present a list of skills to the user.
+	///
+	/// I need to track this so that I can add the skill it provides to the die roll when it exits.
     var skillSelectController: SkillSelectController?
 
+	/// The character sheet whose stats and skills we are using for this die roll.
     var charSheet: CharSheet! {
         didSet {
             if charSheet != oldValue {
@@ -117,14 +155,17 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
         }
     }
     
-    // If the die roll dialog wants to add a tick to a skill, it will call this block passing in the skill to be updated.
+	/// If the die roll dialog wants to add a tick to a skill, it will call this block passing in the skill to be updated.
     var dismissCallback: VoidCallback?
     
-    // This is called once the dialog has been closed.
+	/// Callback type for the callback to add a tick to the character sheet.
     typealias AddTickCallback = (skill: Skill) -> Void
+
+	/// Callback block called once the dialog has been closed to add a tick to the skill that was used.
     var addTickToSkillCallback: AddTickCallback?
-    
-    func setInitialStat(statOrNil: Stat?, skills:[Skill]) {
+
+    func setInitialStat(statOrNil: DieRoll.StatInfo?, skills:[Skill])
+	{
         assert(self.charSheet != nil, "DieRollViewController: No char sheet specified.")
         dieRoll.skills = MutableOrderedSet<Skill>(array: skills)
         
@@ -134,41 +175,37 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
         }
     }
     
-    // Creates a new DieRoll object.
-    override func awakeFromNib() {
-        dieRoll = DieRoll()
-        skillSelectController = nil
-        
-    }
-    
-    override func viewDidLoad() {
+
+    override func viewDidLoad()
+	{
         super.viewDidLoad()
+		dieRoll.addObserver(self, forKeyPath: "adds",     options: (.Initial | .New), context: &myContext)
+		dieRoll.addObserver(self, forKeyPath: "extraD4s", options: (.Initial | .New), context: &myContext)
         updateStatLabel()
-        addsStepper.value = 0
-        extraDiceStepper.value = 0
-        addsTextField.text = ""
-        extraDiceTextField.text = ""
-        
+
         if let navc = navigationController {
-            assert(navc.delegate == nil, "DieRollViewController: The navigation controller \(navigationController) has a delegate of \(navc.delegate). It should be nil")
+            assert(navc.delegate == nil,
+				"DieRollViewController: The navigation controller \(navc) has a delegate of \(navc.delegate). "
+				+ "It should be nil")
             navc.delegate = self
         }
     }
     
     
     
-    private func updateStatLabel() {
+    private func updateStatLabel()
+	{
         if let button = statButton {
             var statButtonText = "None"
             if let stat = dieRoll.stat {
-                statButtonText = "\(stat.name!): \(stat.value)"
+                statButtonText = "\(stat.name): \(stat.value)"
             }
             statButton.setTitle(statButtonText, forState: .Normal)
         }
     }
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+	{
         if segue.identifier == "ShowDieRollResult" {
             var dieRollResultViewController = segue.destinationViewController as! DieRollResultViewController
             rollTheDieAndShowResultsInViewController(dieRollResultViewController)
@@ -183,21 +220,19 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
         }
     }
     
-    func statNameChanged(newStatName: String?) {
-        
-        // Find the stat that name represents, and select it as dieRoll.stat.
-        let stats = self.charSheet!.allStats
-        var selectedStat: Stat? = nil
-        if newStatName != nil {
-            let filteredArray = stats.filter { stat in stat.name == newStatName }
-            
-            assert(filteredArray.count == 1, "Array \(filteredArray) should contain exactly one stat for name \(newStatName)")
-            selectedStat = filteredArray[0]
-        }
-        dieRoll.stat = selectedStat
-    }
-    
-    func rollTheDieAndShowResultsInViewController(dieRollResultViewController: DieRollResultViewController) {
+	func statNameChanged(newStatName: String?)
+	{
+		var statInfo: DieRoll.StatInfo? = nil
+		// Find the stat that name represents, and select it as dieRoll.stat.
+		if let newName = newStatName,
+			statValue = charSheet.statValueForName(newName) {
+				statInfo = (newName, statValue)
+		}
+		dieRoll.stat = statInfo
+	}
+
+    func rollTheDieAndShowResultsInViewController(dieRollResultViewController: DieRollResultViewController)
+	{
         dieRoll.adds = addsTextField.text.toInt() ?? 0
         dieRoll.extraD4s = Int16(extraDiceTextField.text.toInt() ?? 0)
         
@@ -214,199 +249,82 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
         
         dieRollResultViewController.dismissCallback = self.dismissCallback
     }
-    
-    
-////- (IBAction)changeStat:(id)sender
-////{
-////    statSelectController.delegate = self;
-////    [self.navigationController pushViewController:statSelectController animated:YES];
-////}
-////#pragma mark - ListSelect delegate
-////
-////
-////
-////
-////
-////-(BOOL)useSecondListInlistSelectController:(PWListSelectController *)selectController
-////{
-////    return YES;
-////}
-////
-////
-////
-////
-////
-////
-////-(NSString *)listSelectController:(PWListSelectController *)selectController titleForList:(PWListSelectWhichList)whichList
-////{
-////    NSAssert(selectController == skillSelectController, @"Select controller %@ didn't match our select controller %@", selectController, skillSelectController);
-////    return (whichList == PWListSelectPrimaryList)
-////            ? @"Skill"
-////            : [NSString stringWithFormat:@"Specialty for %@", currentSkill.name];
-////    return @"";
-////}
-////
-////
-////
-////
-////
-////
-////static NSString * const NO_STAT_TEXT = @"None", * const NO_SPECIALTY_TEXT = @"None";
-////
-////static NSOrderedSet *itemsWithNoneSet(NSOrderedSet *items, NSString * const noneText)
-////{
-////    NSMutableOrderedSet *newSet = [NSMutableOrderedSet orderedSetWithOrderedSet:items];
-////    [newSet insertObject:noneText atIndex:0];
-////    return newSet;
-////}
-////
-////
-////
-////
-////
-////
-////
-////
-////
-////
-////-(NSOrderedSet *)listSelectController:(PWListSelectController *)selectController itemsForList:(PWListSelectWhichList)whichList
-////{
-////    NSOrderedSet *result = nil;
-////    NSAssert(selectController == skillSelectController, @"Select controller %@ didn't match our select controller %@", selectController, skillSelectController);
-////    if(whichList == PWListSelectPrimaryList) {
-////                // Return only the skills we haven't already selected.
-////        NSMutableOrderedSet *unusedSkills = [NSMutableOrderedSet orderedSetWithOrderedSet:self.charSheet.skills];
-////        [unusedSkills minusOrderedSet:dieRoll.skills];
-////        result = unusedSkills;
-////    }
-////    else
-////        result = itemsWithNoneSet(currentSkill.specialties, NO_SPECIALTY_TEXT);
-////    return result;
-////}
-////
-////
-////
-////
-////
-////
-////
-////
-////
-////-(NSString *)listSelectController:(PWListSelectController *)selectController textForItem:(id)item inList:(PWListSelectWhichList)whichList
-////{
-////    NSAssert(selectController == skillSelectController, @"Select controller %@ didn't match our select controller %@", selectController, skillSelectController);
-////    if (whichList == PWListSelectPrimaryList)
-////        return ((PWSkill*)item).name;
-////    else
-////        return (item == NO_SPECIALTY_TEXT) ? item : ((PWSpecialty*)item).name;
-////    return @"";
-////}
-////
-////
-////
-////
-////
-////
-////
-////
-////-(void)listSelectController:(PWListSelectController *)selectController itemSelected:(id)item inList:(PWListSelectWhichList)whichList
-////{
-////    NSAssert(selectController == skillSelectController, @"Select controller %@ didn't match our select controller %@", selectController, skillSelectController);
-////    if(whichList == PWListSelectPrimaryList) {
-////        
-////        // NB - This requires that all the objects to go into selectedSkills are unique,
-////        // as the Mutable Ordered Set's addObject will not add the object if it is there already.
-////        // So we must filter the existing skills from the set of skills to offer, and not show the picker
-////        // if there are none left.
-////        
-////        if(! currentSkill) {
-////            currentSkill = item;
-////            [dieRoll.skills addObject:currentSkill];
-////            [skillsTable reloadData];
-////        } else if(item != currentSkill) {
-////            [dieRoll.skills removeObject:currentSkill];
-////            currentSkill = item;
-////            [dieRoll.skills addObject:item];
-////            [skillsTable reloadData];
-////        }
-////    }
-////    else {  // handle selection of specialty.
-////        if(item != NO_SPECIALTY_TEXT)
-////            [dieRoll.specialties setObject:item forKey:currentSkill.name];
-////        else if(currentSkill)
-////            [dieRoll.specialties removeObjectForKey:currentSkill.name];
-////        [skillsTable reloadData];
-////    }
-////}
-////
-////
-////
-////
-////
-////
-    
+}
+
     // MARK: - Navigation Controller Delegate
 
-
-    func navigationController(navigationController: UINavigationController,
+extension DieRollViewController: UINavigationControllerDelegate
+{
+	func navigationController(navigationController: UINavigationController,
 		willShowViewController      viewController: UIViewController,
-		animated                                  : Bool) {
-        
-        // If this controller is being shown because the select skill view controller has just been closed, then add the skill it has found.
-        if viewController == self {
-            if let selectedSkill = skillSelectController?.selectedSkill {
-                
-                dieRoll.skills = dieRoll.skills + [selectedSkill]
-                
-                if let skillName = selectedSkill.name as? String {
-                    dieRoll.specialties[skillName] = skillSelectController?.selectedSpecialty
-                }
-                skillsTable.reloadData()
-            }
-            // Then release the skill select controller. We will create a new one next time we want to edit a skill.
-            skillSelectController = nil
-        }
-    }
+		animated                                  : Bool)
+	{
+		// If this controller is being shown because the select skill view controller has just been closed,
+		// then add the skill it has found.
+		if viewController == self {
+			if let selectedSkill = skillSelectController?.selectedSkill {
+
+				dieRoll.skills = dieRoll.skills + [selectedSkill]
+
+				if let skillName = selectedSkill.name {
+					dieRoll.specialties[skillName] = skillSelectController?.selectedSpecialty
+				}
+				skillsTable.reloadData()
+			}
+			// Then release the skill select controller. We will create a new one next time we want to edit a skill.
+			skillSelectController = nil
+		}
+	}
+}
 
     //MARK: - Table View
 
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+extension DieRollViewController: UITableViewDataSource
+{
+
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int
+	{
         return 1
     }
     
     
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(         tableView: UITableView,
+		numberOfRowsInSection section: Int) -> Int
+	{
         return dieRoll.skills.count
     }
     
     
-    private let CELL_ID = "PWDieRollView_Cell"
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath ) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) as? UITableViewCell ?? UITableViewCell(style: .Value1, reuseIdentifier:CELL_ID)
-        
-        let skill = dieRoll.skills.objectAtIndex(indexPath.row)
-        if let l = cell.textLabel {
-            l.text = skill.name as? String
-        }
-        if let skillName = skill.name as? String {
-            let spec = dieRoll.specialties[skillName]
-            if let l = cell.detailTextLabel {
-                l.text = (spec?.name as? String) ?? ""
-            }
-        }
-        return cell
-    }
-    
-    
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        
+
+	func tableView(           tableView: UITableView,
+		cellForRowAtIndexPath indexPath: NSIndexPath ) -> UITableViewCell
+	{
+		let CELL_ID = "PWDieRollView_Cell"
+
+		let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) as? UITableViewCell
+			?? UITableViewCell(style: .Value1, reuseIdentifier:CELL_ID)
+
+		let skill = dieRoll.skills.objectAtIndex(indexPath.row)
+		cell.textLabel?.text = skill.name
+		if let
+			skillName = skill.name,
+			spec = dieRoll.specialties[skillName],
+			l = cell.detailTextLabel {
+				l.text = spec.name
+		}
+		return cell
+	}
+
+
+    func tableView(           tableView: UITableView,
+		commitEditingStyle editingStyle: UITableViewCellEditingStyle,
+		forRowAtIndexPath     indexPath: NSIndexPath)
+	{
         assert(tableView == skillsTable && editingStyle == .Delete)
         if(tableView == skillsTable && editingStyle == .Delete) {
             let skill = dieRoll.skills[indexPath.row]
-            if let skillName = skill.name as? String {
+            if let skillName = skill.name {
                 dieRoll.specialties[skillName] = nil
             }
             dieRoll.skills.removeObjectAtIndex(indexPath.row)
@@ -414,15 +332,17 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
         }
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        assert(skillSelectController == nil, "Table View select. Skill select controller is \(skillSelectController), should be nil")
+    func tableView(             tableView: UITableView,
+		didSelectRowAtIndexPath indexPath: NSIndexPath)
+	{
+        assert(skillSelectController == nil,
+			"Table View select. Skill select controller is \(skillSelectController), should be nil")
         skillSelectController = SkillSelectController.skillSelectControllerFromNib()
         
         let controller = skillSelectController!
         // Set the skill shown in the table as the currently-selected skill.
         controller.selectedSkill = dieRoll.skills[indexPath.row]
-        controller.selectedSpecialty = dieRoll.specialties[(controller.selectedSkill?.name as? String) ?? ""]
+        controller.selectedSpecialty = dieRoll.specialties[controller.selectedSkill?.name ?? ""]
         
         // The list of skills to pick is all the skills not already picked, except for the one we are currently editing.
         // Otherwise the user can't go back without making changes.
@@ -430,9 +350,7 @@ class DieRollViewController : UIViewController, UINavigationControllerDelegate, 
 			.map { $0 as! Skill }
 			.filter { $0 == controller.selectedSkill || !self.dieRoll.skills.contains($0) }
         controller.skillsToPick  = MutableOrderedSet<Skill>(array: skillsToPick)
-        if let navc = navigationController {
-            navc.pushViewController(controller, animated: true)
-        }
+		navigationController?.pushViewController(controller, animated: true)
     }
 }
 

@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14A389" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14E46" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="CharSheet" representedClassName="CharSheet_Swift.CharSheet" syncable="YES">
         <attribute name="age" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="charisma" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="constitution" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="dexterity" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="experience" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="game" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="intelligence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="level" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="luck" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="perception" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="player" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="speed" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="strength" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="woundsPhysical" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="woundsSubdual" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="logs" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="LogEntry" inverseName="parent" inverseEntity="LogEntry" syncable="YES"/>
         <relationship name="skills" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Skill" inverseName="parent" inverseEntity="Skill" syncable="YES"/>
-        <relationship name="stats" toMany="YES" minCount="8" maxCount="8" deletionRule="Cascade" destinationEntity="Stat" inverseName="parent" inverseEntity="Stat" syncable="YES"/>
         <relationship name="xp" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="XPGain" inverseName="parent" inverseEntity="XPGain" syncable="YES"/>
     </entity>
     <entity name="LogEntry" representedClassName="CharSheet_Swift.LogEntry" syncable="YES">
@@ -34,22 +41,16 @@
         <attribute name="value" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="parent" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Skill" inverseName="specialties" inverseEntity="Skill" syncable="YES"/>
     </entity>
-    <entity name="Stat" representedClassName="CharSheet_Swift.Stat" syncable="YES">
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="value" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <relationship name="parent" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="CharSheet" inverseName="stats" inverseEntity="CharSheet" syncable="YES"/>
-    </entity>
     <entity name="XPGain" representedClassName="CharSheet_Swift.XPGain" syncable="YES">
         <attribute name="amount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="reason" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="CharSheet" inverseName="xp" inverseEntity="CharSheet" syncable="YES"/>
     </entity>
     <elements>
-        <element name="CharSheet" positionX="52" positionY="135" width="128" height="255"/>
+        <element name="CharSheet" positionX="52" positionY="135" width="128" height="360"/>
         <element name="LogEntry" positionX="439" positionY="315" width="128" height="103"/>
         <element name="Skill" positionX="223" positionY="45" width="128" height="118"/>
         <element name="Specialty" positionX="396" positionY="81" width="128" height="88"/>
-        <element name="Stat" positionX="277" positionY="207" width="128" height="88"/>
         <element name="XPGain" positionX="160" positionY="192" width="128" height="88"/>
     </elements>
 </model>

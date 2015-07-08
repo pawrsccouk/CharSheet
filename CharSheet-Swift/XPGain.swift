@@ -9,38 +9,46 @@
 import CoreData
 import Foundation
 
-class XPGain : NSManagedObject, XMLClient {
+class XPGain : NSManagedObject
+{
     
     // MARK: - Properties - CoreData
     @NSManaged var amount: Int16, reason: String?, parent: CharSheet!
     
-    override func awakeFromInsert() -> Void {
+    override func awakeFromInsert() -> Void
+	{
         super.awakeFromInsert()
         self.amount  = 0
         self.reason  = "Reason"
     }
-    
-    // MARK: - PWXMLClient implementation
-    
-    var asObject: NSObject { get { return self } }
-    
+}
+    // MARK: - XMLClient implementation
+
     // XML entity and attribute tags for this object.
-    private enum Element: String { case XP_ENTRY = "xpEntry" }
-    private enum Attribute: String { case AMOUNT = "amount", REASON = "reason" }
+private let XP_ENTRY = "xpEntry"
+private enum Attribute: String { case AMOUNT = "amount", REASON = "reason" }
+
+extension XPGain: XMLClient
+{
+    var asObject: NSObject {
+		get { return self }
+	}
+    
     
     func asXML() -> DDXMLElement {
         func attribute(name: Attribute, value: String) -> DDXMLNode {
 			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
 		}
-        let this    = DDXMLElement.elementWithName(Element.XP_ENTRY.rawValue) as! DDXMLElement
+        let this = DDXMLElement.elementWithName(XP_ENTRY) as! DDXMLElement
         this.addAttribute( attribute( .AMOUNT, self.amount.description) )
         this.addAttribute( attribute( .REASON, self.reason!) )
         return this
     }
     
-    func updateFromXML(element: DDXMLElement, inout error:NSError?) -> Bool {
-        if !XMLSupport.validateElementName(element.name, expectedName: Element.XP_ENTRY.rawValue, error: &error) {
-				return false
+    func updateFromXML(element: DDXMLElement) -> NilResult {
+        let result = XMLSupport.validateElementName(element.name, expectedName: XP_ENTRY)
+		if let err = result.error {
+			return failure(err)
 		}
         for attrNode in (element.attributes as! [DDXMLNode]) {
             if let nodeName = Attribute(rawValue: attrNode.name) {
@@ -50,9 +58,9 @@ class XPGain : NSManagedObject, XMLClient {
                 }
             }
             else {
-				return XMLSupport.setError(&error, text: "Unrecognised XP entry attribute: \(attrNode.name)")
+				return XMLSupport.XMLFailure("Unrecognised XP entry attribute: \(attrNode.name)")
 			}
         }
-        return true
+        return success()
     }
 }

@@ -11,7 +11,7 @@ import CoreData
 
 private let CELL_ID = "CharSheetEditSkill_Cell"
 
-class CharSheetEditViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CharSheetEditViewController : UIViewController {
 
     // MARK: - Interface Builder
     @IBOutlet weak var strengthTextField    : UITextField!
@@ -123,35 +123,36 @@ class CharSheetEditViewController : UIViewController, UITableViewDelegate, UITab
     
     // MARK: - Private helper functions
     
-    // Set the value of the stat into the text field and into the numeric value of the associated stepper.
-    private func setValue(value: Int16, inTextField textField: UITextField?) {
-        if let tf = textField {
-            if let stepper = stepperForTextField(tf) {
-                stepper.value  = Double(value)
-                tf.text = value.description
-            }
-        }
-    }
+	/// Copies data in the model into the various UI controls.
+    private func configureView()
+	{
+		// Set the value of the stat into the text field and into the numeric value of the associated stepper.
+		func setValue(value: Int16, inTextField textField: UITextField?)
+		{
+			if let tf = textField, stepper = stepperForTextField(tf) {
+				stepper.value = Double(value)
+				tf.text = value.description
+			}
+		}
 
-    private func configureView() {
-        let name = charSheet.name ?? ""
-        navigationItem.title  = "Edit - \(name)"
-        if let t = charNameTextField   { t.text   = charSheet.name   }
-        if let t = gameTextField       { t.text   = charSheet.game   }
-        if let t = playerTextField     { t.text   = charSheet.player }
-        if let t = levelTextField      { t.text   = charSheet.level.description      }
-        if let t = levelStepper        { t.value   = Double(charSheet.level)         }
-        if let t = experienceTextField { t.text   = charSheet.experience.description }
+		let name = charSheet.name ?? ""
+        navigationItem.title      = "Edit - \(name)"
+        charNameTextField?.text   = charSheet.name
+        gameTextField?.text       = charSheet.game
+        playerTextField?.text     = charSheet.player
+        levelTextField?.text      = charSheet.level.description
+        levelStepper?.value       = Double(charSheet.level)
+        experienceTextField?.text = charSheet.experience.description
         
         // Copy the stats values to the text fields.
-        setValue(charSheet.strength.value    , inTextField:strengthTextField    )
-        setValue(charSheet.dexterity.value   , inTextField:dexterityTextField   )
-        setValue(charSheet.constitution.value, inTextField:constitutionTextField)
-        setValue(charSheet.speed.value       , inTextField:speedTextField       )
-        setValue(charSheet.charisma.value    , inTextField:charismaTextField    )
-        setValue(charSheet.perception.value  , inTextField:perceptionTextField  )
-        setValue(charSheet.intelligence.value, inTextField:intelligenceTextField)
-        setValue(charSheet.luck.value        , inTextField:luckTextField        )
+        setValue(charSheet.strength    , inTextField:strengthTextField    )
+        setValue(charSheet.dexterity   , inTextField:dexterityTextField   )
+        setValue(charSheet.constitution, inTextField:constitutionTextField)
+        setValue(charSheet.speed       , inTextField:speedTextField       )
+        setValue(charSheet.charisma    , inTextField:charismaTextField    )
+        setValue(charSheet.perception  , inTextField:perceptionTextField  )
+        setValue(charSheet.intelligence, inTextField:intelligenceTextField)
+        setValue(charSheet.luck        , inTextField:luckTextField        )
         
         // Skills are handled by the view delegate.
         if let tableView = skillsTableView {
@@ -160,85 +161,90 @@ class CharSheetEditViewController : UIViewController, UITableViewDelegate, UITab
         }
     }
 
-    private func saveStat(stat: Stat, inTextField textField: UITextField) {
-        let val = Int16(textField.text.toInt() ?? 0)
-        if val > 0 {
-            stat.value = val
-        }
-    }
-    
-    private func configureData() {
+	/// Copies the data in the various UI controls back into the model.
+    private func configureData()
+	{
         charSheet.name   = charNameTextField.text
         charSheet.game   = gameTextField.text
         charSheet.player = playerTextField.text
         charSheet.experience = Int32(experienceTextField.text.toInt() ?? 0)
         charSheet.level      = Int16(levelTextField.text.toInt() ?? 0)
         
-        //charSheet.logStatsWithContext("Edit-ConfigureData-Before")
-        saveStat(charSheet.strength    , inTextField: strengthTextField    )
-        saveStat(charSheet.dexterity   , inTextField: dexterityTextField   )
-        saveStat(charSheet.constitution, inTextField: constitutionTextField)
-        saveStat(charSheet.speed       , inTextField: speedTextField       )
-        saveStat(charSheet.charisma    , inTextField: charismaTextField    )
-        saveStat(charSheet.perception  , inTextField: perceptionTextField  )
-        saveStat(charSheet.intelligence, inTextField: intelligenceTextField)
-        saveStat(charSheet.luck        , inTextField: luckTextField        )
-        //charSheet.logStatsWithContext("Edit-ConfigureData-After")
+        charSheet.strength     = Int16(strengthTextField.text.toInt()     ?? 0)
+        charSheet.dexterity    = Int16(dexterityTextField.text.toInt()    ?? 0)
+        charSheet.constitution = Int16(constitutionTextField.text.toInt() ?? 0)
+        charSheet.speed        = Int16(speedTextField.text.toInt()        ?? 0)
+        charSheet.charisma     = Int16(charismaTextField.text.toInt()     ?? 0)
+        charSheet.perception   = Int16(perceptionTextField.text.toInt()   ?? 0)
+        charSheet.intelligence = Int16(intelligenceTextField.text.toInt() ?? 0)
+        charSheet.luck         = Int16(luckTextField.text.toInt()         ?? 0)
     }
     
     
     
-    private func textFieldForStepper(stepper: UIStepper) -> UITextField? {
+    private func textFieldForStepper(stepper: UIStepper) -> UITextField?
+	{
         assert(stepper.tag < 10)
         return view.viewWithTag(stepper.tag + 10) as? UITextField
     }
     
-    private func stepperForTextField(textField: UITextField) -> UIStepper? {
+    private func stepperForTextField(textField: UITextField) -> UIStepper?
+	{
         assert(textField.tag > 10)
         return view.viewWithTag(textField.tag - 10) as? UIStepper
     }
-    
+}
+
     // MARK: - Table View Data Source
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
+extension CharSheetEditViewController: UITableViewDataSource
+{
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+	{
         let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID, forIndexPath: indexPath) as! EditSkillCell
         let skill = charSheet.skills[indexPath.row] as! Skill
-        cell.name = skill.name as! String
+        cell.name = skill.name ?? "No name"
         cell.value = skill.value
         cell.specialties = skill.specialtiesAsString
         cell.editingAccessoryType = .DetailDisclosureButton
         return cell
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+	{
         return charSheet.skills.count
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int
+	{
         return 1
     }
-    
-    
+}
     
     // MARK: - Table View Delegate
 
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle:UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+extension CharSheetEditViewController: UITableViewDelegate
+{
+    func tableView(           tableView: UITableView,
+		commitEditingStyle editingStyle: UITableViewCellEditingStyle,
+		forRowAtIndexPath     indexPath: NSIndexPath)
+	{
         if editingStyle == .Delete {
             charSheet.removeSkillAtIndex(indexPath.row)
-            // Update the table view to match the new model.
             skillsTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
     }
     
-    func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+    func tableView(              tableView: UITableView,
+		moveRowAtIndexPath sourceIndexPath: NSIndexPath,
+		toIndexPath   destinationIndexPath: NSIndexPath)
+	{
         // Table view has already moved the row, so we just need to update the model.
         charSheet.skills.moveObjectsAtIndexes(NSIndexSet(index: sourceIndexPath.row), toIndex:destinationIndexPath.row)
     }
     
     
-    func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
-        
+    func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath)
+	{
         let esb = UIStoryboard(name: "Edit", bundle: NSBundle.mainBundle())
 		let navId = "EditSkillNavigationController"
         let esnc = esb.instantiateViewControllerWithIdentifier(navId) as! UINavigationController
@@ -248,9 +254,6 @@ class CharSheetEditViewController : UIViewController, UITableViewDelegate, UITab
         editSkillViewController.completionCallback = { self.skillsTableView.reloadData() }
         esnc.modalPresentationStyle = .FormSheet
         esnc.modalTransitionStyle = .CrossDissolve
-        if let navc = navigationController {
-            navc.presentViewController(esnc, animated: true, completion:nil)
-        }
+		navigationController?.presentViewController(esnc, animated: true, completion:nil)
     }
-    
 }

@@ -10,39 +10,41 @@ import Foundation
 import CoreData
 
 
-class Specialty : NSManagedObject, XMLClient {
+class Specialty : NSManagedObject {
     
-    @NSManaged var name: NSString?, value: Int16, parent: Skill!
+    @NSManaged var name: String?, value: Int16, parent: Skill!
     
-    override func awakeFromInsert() -> Void
-    {
+    override func awakeFromInsert() -> Void {
         super.awakeFromInsert()
         self.name = ""
         self.value = 0
     }
-    
-    
-    
-    // MARK - PWXMLClient implementation
-    
+}
+
+// MARK: - PWXMLClient implementation
+private let SPECIALTY = "specialty"
+private enum Attribute: String { case NAME = "name", VALUE = "value" }
+
+extension Specialty: XMLClient {
+
     var asObject: NSObject { get { return self } }
     
-    
-    private enum Element: String { case SPECIALTY = "specialty" }
-    private enum Attribute: String { case NAME = "name", VALUE = "value" }
     
     func asXML() -> DDXMLElement {
         func attribute(name: Attribute, value: String) -> DDXMLNode {
 			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
 		}
-		let this = DDXMLElement.elementWithName(Element.SPECIALTY.rawValue) as! DDXMLElement
-        this.addAttribute( attribute(.NAME , self.name as! String) )
+		let this = DDXMLElement.elementWithName(SPECIALTY) as! DDXMLElement
+        this.addAttribute( attribute(.NAME , self.name ?? "No name") )
         this.addAttribute( attribute(.VALUE, self.value.description) )
         return this
     }
 
-    func updateFromXML(element: DDXMLElement, inout error:NSError?) -> Bool {
-        if !XMLSupport.validateElementName(element.name, expectedName: Element.SPECIALTY.rawValue, error: &error) { return false }
+    func updateFromXML(element: DDXMLElement) -> NilResult {
+		let result = XMLSupport.validateElementName(element.name, expectedName: SPECIALTY)
+		if let e = result.error {
+			return failure(e)
+		}
         for attrNode in (element.attributes as! [DDXMLNode]) {
             if let nodeName = Attribute(rawValue: attrNode.name) {
                 switch nodeName {
@@ -51,11 +53,10 @@ class Specialty : NSManagedObject, XMLClient {
                 }
             }
             else {
-				return XMLSupport.setError(&error
-					, text:"Attribute \(attrNode.name) unrecognised in \(Element.SPECIALTY)") }
+				return XMLSupport.XMLFailure("Attribute \(attrNode.name) unrecognised in \(SPECIALTY)")
+			}
         }
-        return true
+        return success()
     }
-    
 }
 

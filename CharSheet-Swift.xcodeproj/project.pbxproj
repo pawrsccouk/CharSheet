@@ -13,7 +13,6 @@
 		5725DE7E1A0415CD00343E5F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7D1A0415CD00343E5F /* Images.xcassets */; };
 		5725DE811A0415CD00343E5F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7F1A0415CD00343E5F /* LaunchScreen.xib */; };
 		5725DE8D1A0415CD00343E5F /* CharSheet_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE8C1A0415CD00343E5F /* CharSheet_SwiftTests.swift */; };
-		5725DE981A046F5900343E5F /* CharSheet.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE961A046F5900343E5F /* CharSheet.xcdatamodeld */; };
 		5725DEA91A046FF800343E5F /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE9C1A046FF800343E5F /* DDXMLElementAdditions.m */; };
 		5725DEAA1A046FF800343E5F /* NSString+DDXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE9F1A046FF800343E5F /* NSString+DDXML.m */; };
 		5725DEAB1A046FF800343E5F /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEA21A046FF800343E5F /* DDXMLDocument.m */; };
@@ -21,7 +20,6 @@
 		5725DEAD1A046FF800343E5F /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEA61A046FF800343E5F /* DDXMLNode.m */; };
 		5725DEAF1A04703900343E5F /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5725DEAE1A04703900343E5F /* libxml2.dylib */; };
 		5725DEB71A0473EC00343E5F /* CharSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB01A0473EC00343E5F /* CharSheet.swift */; };
-		5725DEBC1A0473EC00343E5F /* Stat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB51A0473EC00343E5F /* Stat.swift */; };
 		5725DEC01A047D5100343E5F /* XMLSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEBF1A047D5100343E5F /* XMLSupport.swift */; };
 		5725DEC31A0493F100343E5F /* Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEC21A0493F100343E5F /* Misc.swift */; };
 		5725DEC41A04A1D000343E5F /* Skill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB31A0473EC00343E5F /* Skill.swift */; };
@@ -31,6 +29,8 @@
 		5725DEC81A07679900343E5F /* DieRoll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB11A0473EC00343E5F /* DieRoll.swift */; };
 		5725DECA1A07878600343E5F /* MutableSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEC91A07878600343E5F /* MutableSet.swift */; };
 		5725DED81A07935A00343E5F /* TicksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DED71A07935A00343E5F /* TicksView.swift */; };
+		5755E1B81B432FF600E466D4 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5755E1B71B432FF600E466D4 /* Result.swift */; };
+		5755E1BA1B43439D00E466D4 /* XMLExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5755E1B91B43439D00E466D4 /* XMLExtensions.swift */; };
 		577A81A71A07C73600DA1EC8 /* EditSkillCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A41A07C73600DA1EC8 /* EditSkillCellView.xib */; };
 		577A81A81A07C73600DA1EC8 /* SkillSelectView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A51A07C73600DA1EC8 /* SkillSelectView.xib */; };
 		577A81A91A07C73600DA1EC8 /* UseSkillCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A61A07C73600DA1EC8 /* UseSkillCellView.xib */; };
@@ -56,6 +56,7 @@
 		577A81D31A091F8B00DA1EC8 /* SkillSelectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81D21A091F8B00DA1EC8 /* SkillSelectController.swift */; };
 		577A81D61A0B358300DA1EC8 /* Edit.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 577A81D41A0B358300DA1EC8 /* Edit.storyboard */; };
 		577A81D71A0B358300DA1EC8 /* MainUse.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 577A81D51A0B358300DA1EC8 /* MainUse.storyboard */; };
+		57D635A11B448970004AAB4D /* CharSheet.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 57D6359E1B448970004AAB4D /* CharSheet.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		571133D41B4D66CA001F0210 /* Notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Notes.md; sourceTree = "<group>"; };
 		5725DE6C1A0415CD00343E5F /* CharSheet-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CharSheet-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5725DE701A0415CD00343E5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5725DE711A0415CD00343E5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -79,7 +81,6 @@
 		5725DE861A0415CD00343E5F /* CharSheet-SwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CharSheet-SwiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5725DE8B1A0415CD00343E5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5725DE8C1A0415CD00343E5F /* CharSheet_SwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharSheet_SwiftTests.swift; sourceTree = "<group>"; };
-		5725DE971A046F5900343E5F /* CharSheet.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CharSheet.xcdatamodel; sourceTree = "<group>"; };
 		5725DE9B1A046FF800343E5F /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElementAdditions.h; sourceTree = "<group>"; };
 		5725DE9C1A046FF800343E5F /* DDXMLElementAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElementAdditions.m; sourceTree = "<group>"; };
 		5725DE9E1A046FF800343E5F /* NSString+DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DDXML.h"; sourceTree = "<group>"; };
@@ -98,13 +99,14 @@
 		5725DEB21A0473EC00343E5F /* LogEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogEntry.swift; sourceTree = "<group>"; };
 		5725DEB31A0473EC00343E5F /* Skill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Skill.swift; sourceTree = "<group>"; };
 		5725DEB41A0473EC00343E5F /* Specialty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Specialty.swift; sourceTree = "<group>"; };
-		5725DEB51A0473EC00343E5F /* Stat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stat.swift; sourceTree = "<group>"; };
 		5725DEB61A0473EC00343E5F /* XPGain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XPGain.swift; sourceTree = "<group>"; };
 		5725DEBF1A047D5100343E5F /* XMLSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLSupport.swift; sourceTree = "<group>"; };
 		5725DEC11A047F3500343E5F /* Bridging_Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Bridging_Header.h; path = ../Bridging_Header.h; sourceTree = "<group>"; };
 		5725DEC21A0493F100343E5F /* Misc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
 		5725DEC91A07878600343E5F /* MutableSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableSet.swift; sourceTree = "<group>"; };
 		5725DED71A07935A00343E5F /* TicksView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicksView.swift; sourceTree = "<group>"; };
+		5755E1B71B432FF600E466D4 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		5755E1B91B43439D00E466D4 /* XMLExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLExtensions.swift; sourceTree = "<group>"; };
 		577A81A41A07C73600DA1EC8 /* EditSkillCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditSkillCellView.xib; sourceTree = "<group>"; };
 		577A81A51A07C73600DA1EC8 /* SkillSelectView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SkillSelectView.xib; sourceTree = "<group>"; };
 		577A81A61A07C73600DA1EC8 /* UseSkillCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UseSkillCellView.xib; sourceTree = "<group>"; };
@@ -130,7 +132,8 @@
 		577A81D21A091F8B00DA1EC8 /* SkillSelectController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkillSelectController.swift; sourceTree = "<group>"; };
 		577A81D41A0B358300DA1EC8 /* Edit.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Edit.storyboard; sourceTree = "<group>"; };
 		577A81D51A0B358300DA1EC8 /* MainUse.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainUse.storyboard; sourceTree = "<group>"; };
-		57E9DB6C1A13C37000861CC4 /* CharSheet 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CharSheet 2.xcdatamodel"; sourceTree = "<group>"; };
+		57D6359F1B448970004AAB4D /* CharSheet 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CharSheet 2.xcdatamodel"; sourceTree = "<group>"; };
+		57D635A01B448970004AAB4D /* CharSheet.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CharSheet.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +158,7 @@
 		5725DE631A0415CC00343E5F = {
 			isa = PBXGroup;
 			children = (
+				571133D41B4D66CA001F0210 /* Notes.md */,
 				5725DEAE1A04703900343E5F /* libxml2.dylib */,
 				5725DE991A046FF800343E5F /* KissXML */,
 				5725DE6E1A0415CD00343E5F /* CharSheet-Swift */,
@@ -178,11 +182,12 @@
 				577A81D11A08CFEC00DA1EC8 /* Controllers */,
 				577A81AA1A07C74F00DA1EC8 /* Views */,
 				5725DE711A0415CD00343E5F /* AppDelegate.swift */,
-				5725DEBE1A04740A00343E5F /* Model */,
-				5725DE781A0415CD00343E5F /* DetailViewController.swift */,
-				5725DE7D1A0415CD00343E5F /* Images.xcassets */,
-				577A81AE1A07C8F900DA1EC8 /* StoryboardManager.swift */,
 				5725DEC11A047F3500343E5F /* Bridging_Header.h */,
+				5755E1B71B432FF600E466D4 /* Result.swift */,
+				577A81AE1A07C8F900DA1EC8 /* StoryboardManager.swift */,
+				5755E1B91B43439D00E466D4 /* XMLExtensions.swift */,
+				5725DEBE1A04740A00343E5F /* Model */,
+				5725DE7D1A0415CD00343E5F /* Images.xcassets */,
 				5725DE6F1A0415CD00343E5F /* Supporting Files */,
 			);
 			path = "CharSheet-Swift";
@@ -260,7 +265,7 @@
 		5725DEBE1A04740A00343E5F /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				5725DE961A046F5900343E5F /* CharSheet.xcdatamodeld */,
+				57D6359E1B448970004AAB4D /* CharSheet.xcdatamodeld */,
 				5725DEB01A0473EC00343E5F /* CharSheet.swift */,
 				5725DEB11A0473EC00343E5F /* DieRoll.swift */,
 				5725DEB21A0473EC00343E5F /* LogEntry.swift */,
@@ -268,7 +273,6 @@
 				5725DEC91A07878600343E5F /* MutableSet.swift */,
 				5725DEB31A0473EC00343E5F /* Skill.swift */,
 				5725DEB41A0473EC00343E5F /* Specialty.swift */,
-				5725DEB51A0473EC00343E5F /* Stat.swift */,
 				5725DEB61A0473EC00343E5F /* XPGain.swift */,
 				5725DEBF1A047D5100343E5F /* XMLSupport.swift */,
 			);
@@ -300,6 +304,7 @@
 			children = (
 				577A81B91A08CFD700DA1EC8 /* CharSheetEditViewController.swift */,
 				577A81BA1A08CFD700DA1EC8 /* CharSheetUseViewController.swift */,
+				5725DE781A0415CD00343E5F /* DetailViewController.swift */,
 				577A81BB1A08CFD700DA1EC8 /* DieRollResultViewController.swift */,
 				577A81BC1A08CFD700DA1EC8 /* DieRollViewController.swift */,
 				577A81BD1A08CFD700DA1EC8 /* EditNotesViewController.swift */,
@@ -420,7 +425,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5725DEBC1A0473EC00343E5F /* Stat.swift in Sources */,
 				577A81D31A091F8B00DA1EC8 /* SkillSelectController.swift in Sources */,
 				577A81B71A07C8F900DA1EC8 /* UseSkillCell.swift in Sources */,
 				577A81B31A07C8F900DA1EC8 /* CharSheetUseControl.swift in Sources */,
@@ -431,11 +435,12 @@
 				577A81C91A08CFD700DA1EC8 /* EditNotesViewController.swift in Sources */,
 				577A81B81A07C8F900DA1EC8 /* UseStatLabel.swift in Sources */,
 				577A81B41A07C8F900DA1EC8 /* EditSkillCell.swift in Sources */,
+				57D635A11B448970004AAB4D /* CharSheet.xcdatamodeld in Sources */,
 				5725DE721A0415CD00343E5F /* AppDelegate.swift in Sources */,
 				5725DEC51A04AFF800343E5F /* Specialty.swift in Sources */,
-				5725DE981A046F5900343E5F /* CharSheet.xcdatamodeld in Sources */,
 				5725DE771A0415CD00343E5F /* MasterViewController.swift in Sources */,
 				5725DEC31A0493F100343E5F /* Misc.swift in Sources */,
+				5755E1B81B432FF600E466D4 /* Result.swift in Sources */,
 				577A81C71A08CFD700DA1EC8 /* DieRollResultViewController.swift in Sources */,
 				5725DEB71A0473EC00343E5F /* CharSheet.swift in Sources */,
 				577A81B21A07C8F900DA1EC8 /* ActionSheet.swift in Sources */,
@@ -444,6 +449,7 @@
 				577A81CB1A08CFD700DA1EC8 /* EditSpecialtyViewController.swift in Sources */,
 				577A81B51A07C8F900DA1EC8 /* StoryboardManager.swift in Sources */,
 				5725DEAA1A046FF800343E5F /* NSString+DDXML.m in Sources */,
+				5755E1BA1B43439D00E466D4 /* XMLExtensions.swift in Sources */,
 				577A81D01A08CFD700DA1EC8 /* StatSelectViewController.swift in Sources */,
 				5725DEAC1A046FF800343E5F /* DDXMLElement.m in Sources */,
 				577A81C81A08CFD700DA1EC8 /* DieRollViewController.swift in Sources */,
@@ -663,13 +669,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		5725DE961A046F5900343E5F /* CharSheet.xcdatamodeld */ = {
+		57D6359E1B448970004AAB4D /* CharSheet.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				57E9DB6C1A13C37000861CC4 /* CharSheet 2.xcdatamodel */,
-				5725DE971A046F5900343E5F /* CharSheet.xcdatamodel */,
+				57D6359F1B448970004AAB4D /* CharSheet 2.xcdatamodel */,
+				57D635A01B448970004AAB4D /* CharSheet.xcdatamodel */,
 			);
-			currentVersion = 57E9DB6C1A13C37000861CC4 /* CharSheet 2.xcdatamodel */;
+			currentVersion = 57D6359F1B448970004AAB4D /* CharSheet 2.xcdatamodel */;
 			path = CharSheet.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
