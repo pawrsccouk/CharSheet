@@ -9,8 +9,8 @@
 import UIKit
 import CoreData
 
-class SkillSelectController : UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
-
+class SkillSelectController : UIViewController
+{
     // MARK: Interface Builder
     
     @IBOutlet weak var skillPicker: UIPickerView!
@@ -18,31 +18,42 @@ class SkillSelectController : UIViewController, UIPickerViewDataSource, UIPicker
     
     // MARK: Properties
     
-    // The char sheet used to get the available skills and specialties.
+	/// The char sheet used to get the available skills and specialties.
     //@property (nonatomic, strong) PWCharSheet *charSheet;
     
-    // The currently selected skill and specialty.
+	/// The currently selected skill
     var selectedSkill: Skill?
+
+	/// The currently selected specialty
     var selectedSpecialty: Specialty?
     
-    // The possible skills we can pick.
+	/// Set of the possible skills we can pick.
     var skillsToPick = MutableOrderedSet<Skill>()
-    
-    // Callback if the selection changes.
+
+	/// Type of a callback function which passes in the selected skill and specialty.
     typealias SelectionChanged = (selectedSkill: Skill, selectedSpecialty: Specialty) -> Void
+
+	/// Callback if the selection changes.
     var  selectionChangedBlock: SelectionChanged?
     
-    // Call to get a new skill select controller from the Nib file. Use in place of Alloc/Init.
-    class func skillSelectControllerFromNib() -> SkillSelectController {
+	/// Factory function to get a new skill select controller from the Nib file.
+	/// Use in place of an initializer.
+	///
+	/// :returns: A new SkillSelectController.
+    class func skillSelectControllerFromNib() -> SkillSelectController
+	{
         let allObjects = NSBundle.mainBundle().loadNibNamed("SkillSelectView", owner: self, options: nil)
         return allObjects[0] as! SkillSelectController
     }
-    
-    override func viewWillAppear(animated: Bool) {
+
+
+	// MARK: Overrides
+
+    override func viewWillAppear(animated: Bool)
+	{
         super.viewWillAppear(animated)
         
         // If we have been given a selected skill or specialty, then set the pickers to show those values by default.
-        
         if let skill = selectedSkill {
             var indexOfObject = skillsToPick.indexOfObject(skill)
             assert(indexOfObject != NSNotFound, "Skill \(skill) is not in the list of skills to pick \(skillsToPick)")
@@ -50,8 +61,9 @@ class SkillSelectController : UIViewController, UIPickerViewDataSource, UIPicker
         
             if let spec = selectedSpecialty {
                 let indexOfObject = skill.specialties.indexOfObject(spec)
-                assert(indexOfObject != NSNotFound, "Specialty \(spec) is not in the list of specialties \(skill.specialties) for skill \(skill)")
-                    specialtyPicker.selectRow(indexOfObject + 1, inComponent: 0, animated: false)
+                assert(indexOfObject != NSNotFound,
+					"Specialty \(spec) is not in the list of specialties \(skill.specialties) for skill \(skill)")
+				specialtyPicker.selectRow(indexOfObject + 1, inComponent: 0, animated: false)
             }
             else {
                 specialtyPicker.selectRow(0, inComponent: 0, animated: false)   // The "None" row.
@@ -146,62 +158,76 @@ class SkillSelectController : UIViewController, UIPickerViewDataSource, UIPicker
 ////
 ////}
 
+}
 
+//MARK: - Picker View Data Source
 
-//MARK: - Picker View Delegate
-
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+extension SkillSelectController: UIPickerViewDataSource
+{
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int
+	{
         return 1
     }
 
-
-
-
-
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: NSInteger) -> Int
+    func pickerView(           pickerView: UIPickerView,
+		numberOfRowsInComponent component: NSInteger) -> Int
     {
         assert(pickerView == skillPicker || pickerView == specialtyPicker, "Unknown picker \(pickerView) passed to numberOfRowsInComponent for SkillSelectController \(self)")
         if      pickerView == skillPicker     { return skillsToPick.count }
         else if pickerView == specialtyPicker { return (selectedSkill?.specialties?.count ?? 0) + 1 } // Extra row "None" in the specialties list.
         else { return 0 }
     }
-    
-    
-    
-    
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String {
+}
+
+//MARK: - Picker View Delegate
+
+extension SkillSelectController: UIPickerViewDelegate
+{
+    func pickerView(pickerView: UIPickerView,
+		titleForRow        row: Int,
+		forComponent component: Int) -> String
+	{
         assert(component == 0, "Component ID \(component) is not 0")
-        assert(pickerView == skillPicker || pickerView == specialtyPicker, "Unknown picker \(pickerView) passed to numberOfRowsInComponent for SkillSelectController \(self)")
-        
-        if pickerView == skillPicker {
+
+		var text = ""
+		switch pickerView {
+
+		case skillPicker:
             var skill = self.skillsToPick[row]
-            return skill.name ?? "No name"
-        }
-        else if pickerView == specialtyPicker  {
+            text = skill.name ?? "No name"
+
+		case specialtyPicker:
             // First row should always be "None" and other rows follow in order after that.
             if row == 0 { return "None" }
             if let specialty = selectedSkill?.specialties[row - 1] as? Specialty {
-                return specialty.name ?? "No name"
+                text = specialty.name ?? "No name"
             }
-        }
-        return ""
-    }
+
+		default:
+			assert(false, "Unknown picker \(pickerView) passed to numberOfRowsInComponent for SkillSelectController \(self)")
+		}
+		return text
+	}
 
     
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    func pickerView(pickerView: UIPickerView,
+		didSelectRow       row: Int,
+		inComponent  component: Int)
+	{
         assert(component == 0, "Component ID \(component) is not 0")
-        assert(pickerView == skillPicker || pickerView == specialtyPicker, "Unknown picker \(pickerView) passed to numberOfRowsInComponent for SkillSelectController \(self)")
-        
-        if pickerView == skillPicker {
-            selectedSkill = self.skillsToPick[row]
+
+		switch pickerView {
+		case skillPicker:
+			selectedSkill = self.skillsToPick[row]
             self.selectedSpecialty = nil
             specialtyPicker.reloadAllComponents()   // Reload the specialty picker now the skill has changed.
-        }
-        else if(pickerView == specialtyPicker) {     // First row "None" equates to a nil selected specialty.
+
+		case specialtyPicker:     // First row "None" equates to a nil selected specialty.
             selectedSpecialty = (row == 0) ? nil : self.selectedSkill?.specialties[row - 1] as? Specialty
-        }
+
+		default:
+			assert(false, "Unknown picker \(pickerView) passed to numberOfRowsInComponent for SkillSelectController \(self)")
+		}
     }
-    
-    
 }
 

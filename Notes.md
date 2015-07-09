@@ -10,3 +10,5 @@ can click on to add the skill. Currently the "+" icon is too far away from the u
 
 ## Bugs
 [x] ExtraD4 initial value should default to 1 or be taken from the die roll object.
+[ ] Cannot remove skill once added to die roll view.
+[x] Specialty says "Detail" when no specialty provided. Should say nothing.

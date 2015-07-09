@@ -11,8 +11,8 @@ import UIKit
 import CoreData
 
 
-class DieRollViewController : UIViewController, UITableViewDelegate {
-
+class DieRollViewController: UIViewController
+{
     // MARK: - Interface Builder.
     
     @IBOutlet weak var statButton: UIButton!
@@ -307,16 +307,20 @@ extension DieRollViewController: UITableViewDataSource
 
 		let skill = dieRoll.skills.objectAtIndex(indexPath.row)
 		cell.textLabel?.text = skill.name
-		if let
-			skillName = skill.name,
-			spec = dieRoll.specialties[skillName],
-			l = cell.detailTextLabel {
-				l.text = spec.name
+		if let detailLabel = cell.detailTextLabel {
+			detailLabel.text = "No specialty"
+			if let
+				skillName = skill.name,
+				spec = dieRoll.specialties[skillName] {
+					detailLabel.text = spec.name
+			}
 		}
 		return cell
 	}
+}
 
-
+extension DieRollViewController: UITableViewDelegate
+{
     func tableView(           tableView: UITableView,
 		commitEditingStyle editingStyle: UITableViewCellEditingStyle,
 		forRowAtIndexPath     indexPath: NSIndexPath)
