@@ -1,5 +1,5 @@
 //
-//  PWDetailViewController.m
+//  CharSheetUseViewController.swift
 //  CharSheet
 //
 //  Created by Patrick Wallace on 23/07/2012.
@@ -10,8 +10,8 @@ import CoreData
 import UIKit
 import MessageUI
 
-class CharSheetUseViewController : UIViewController {
-
+class CharSheetUseViewController : UIViewController
+{
     // MARK: - Interface Builder
     @IBOutlet weak var strengthBtn    : UseStatLabel!
     @IBOutlet weak var intelligenceBtn: UseStatLabel!

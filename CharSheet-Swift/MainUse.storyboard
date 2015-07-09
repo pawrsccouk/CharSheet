@@ -7,25 +7,25 @@
         <!--Char Sheet Use-->
         <scene sceneID="DWB-FV-mXJ">
             <objects>
-                <viewController id="vB0-Fg-pS5" userLabel="Char Sheet Use" customClass="CharSheetUseViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vB0-Fg-pS5" userLabel="Char Sheet Use" customClass="CharSheetUseViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="MIP-4D-g3s"/>
                         <viewControllerLayoutGuide type="bottom" id="ROz-Ux-ggf"/>
                     </layoutGuides>
-                    <view key="view" contentMode="redraw" id="ozs-4h-2Z1" customClass="CharSheetUseControl" customModule="CharSheet_Swift" customModuleProvider="target">
+                    <view key="view" contentMode="redraw" id="ozs-4h-2Z1" customClass="CharSheetUseControl" customModule="CharSheet" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="64" width="768" height="960"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="DBA-AS-y4Q">
                                 <rect key="frame" x="20" y="293" width="728" height="623"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <collectionViewLayout key="collectionViewLayout" id="WQi-xb-eds" customClass="StrictGridLayout" customModule="CharSheet_Swift" customModuleProvider="target"/>
+                                <collectionViewLayout key="collectionViewLayout" id="WQi-xb-eds" customClass="StrictGridLayout" customModule="CharSheet" customModuleProvider="target"/>
                                 <cells/>
                                 <connections>
                                     <outlet property="dataSource" destination="vB0-Fg-pS5" id="fVo-IY-at2"/>
                                 </connections>
                             </collectionView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ene-V1-JM4" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ene-V1-JM4" customClass="UseStatLabel" customModule="CharSheet" customModuleProvider="target">
                                 <rect key="frame" x="20" y="158" width="175" height="21"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -39,7 +39,7 @@
                                     <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="XrM-EW-XgT"/>
                                 </connections>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y9Z-QI-VGW" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y9Z-QI-VGW" customClass="UseStatLabel" customModule="CharSheet" customModuleProvider="target">
                                 <rect key="frame" x="203" y="158" width="175" height="21"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -53,7 +53,7 @@
                                     <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="oRt-Pq-1C3"/>
                                 </connections>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Fx-v2b" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Fx-v2b" customClass="UseStatLabel" customModule="CharSheet" customModuleProvider="target">
                                 <rect key="frame" x="386" y="158" width="175" height="21"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
@@ -67,7 +67,7 @@
                                     <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="kie-V6-Sou"/>
                                 </connections>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0zq-RI-JuM" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0zq-RI-JuM" customClass="UseStatLabel" customModule="CharSheet" customModuleProvider="target">
                                 <rect key="frame" x="569" y="158" width="175" height="21"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
@@ -81,7 +81,7 @@
                                     <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="VKn-S9-zVG"/>
                                 </connections>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jF8-6P-By4" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jF8-6P-By4" customClass="UseStatLabel" customModule="CharSheet" customModuleProvider="target">
                                 <rect key="frame" x="20" y="187" width="175" height="21"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -95,7 +95,7 @@
                                     <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="Uab-Yn-QVQ"/>
                                 </connections>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Tk-F2-1Rm" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Tk-F2-1Rm" customClass="UseStatLabel" customModule="CharSheet" customModuleProvider="target">
                                 <rect key="frame" x="203" y="187" width="175" height="21"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
@@ -109,7 +109,7 @@
                                     <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="f36-tk-27p"/>
                                 </connections>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ge4-9I-6Nm" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ge4-9I-6Nm" customClass="UseStatLabel" customModule="CharSheet" customModuleProvider="target">
                                 <rect key="frame" x="386" y="187" width="175" height="21"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
@@ -123,7 +123,7 @@
                                     <action selector="statSelected:" destination="vB0-Fg-pS5" eventType="touchUpInside" id="bxW-Y9-A3N"/>
                                 </connections>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lHd-po-YLq" customClass="UseStatLabel" customModule="CharSheet_Swift" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lHd-po-YLq" customClass="UseStatLabel" customModule="CharSheet" customModuleProvider="target">
                                 <rect key="frame" x="569" y="187" width="175" height="21"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
@@ -422,7 +422,7 @@
         <!--Characters-->
         <scene sceneID="4Ld-iC-MYG">
             <objects>
-                <tableViewController clearsSelectionOnViewWillAppear="NO" id="Twi-wg-5Rs" customClass="MasterViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController clearsSelectionOnViewWillAppear="NO" id="Twi-wg-5Rs" customClass="MasterViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="xDZ-va-qJT">
                         <rect key="frame" x="0.0" y="0.0" width="308" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -547,7 +547,7 @@
         <!--Die Roll-->
         <scene sceneID="Diw-DL-RFB">
             <objects>
-                <viewController modalPresentationStyle="formSheet" id="eUm-sj-kZy" customClass="DieRollViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="formSheet" id="eUm-sj-kZy" customClass="DieRollViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="pav-Z7-qkB"/>
                         <viewControllerLayoutGuide type="bottom" id="uBQ-6y-q8h"/>
@@ -751,7 +751,7 @@
         <!--Die Roll Result View Controller-->
         <scene sceneID="cv8-KS-dAA">
             <objects>
-                <viewController id="NLz-rN-Jly" customClass="DieRollResultViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="NLz-rN-Jly" customClass="DieRollResultViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="oui-7q-Y4b"/>
                         <viewControllerLayoutGuide type="bottom" id="arB-e3-7Vj"/>
@@ -815,7 +815,7 @@
         <!--Statistics-->
         <scene sceneID="84e-UR-x52">
             <objects>
-                <tableViewController id="8iR-Ga-aIw" customClass="StatSelectViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="8iR-Ga-aIw" customClass="StatSelectViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="edb-Eh-TTT">
                         <rect key="frame" x="0.0" y="64" width="540" height="556"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1024,7 +1024,7 @@
         <!--Log View Controller-->
         <scene sceneID="rSh-Bt-2pg">
             <objects>
-                <tableViewController id="Ur0-zi-DDQ" customClass="LogViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="Ur0-zi-DDQ" customClass="LogViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="bHy-2R-3DT">
                         <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1079,7 +1079,7 @@
         <!--Log Entry View Controller-->
         <scene sceneID="jmk-ct-4kp">
             <objects>
-                <viewController id="5mk-gB-EEd" customClass="LogEntryViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="5mk-gB-EEd" customClass="LogEntryViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <textView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" id="kIj-d8-p2P">
                         <rect key="frame" x="0.0" y="0.0" width="382" height="209"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1101,7 +1101,7 @@
         <!--Campaign Notes-->
         <scene sceneID="29d-DQ-y2g">
             <objects>
-                <viewController id="Psg-bB-nvx" customClass="EditNotesViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Psg-bB-nvx" customClass="EditNotesViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ywm-XE-WfT"/>
                         <viewControllerLayoutGuide type="bottom" id="8pq-Fi-8gt"/>
@@ -1192,7 +1192,7 @@
         <!--Experience List-->
         <scene sceneID="3up-sC-skz">
             <objects>
-                <tableViewController id="vWB-V7-Wkq" userLabel="Experience List" customClass="EditXPViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="vWB-V7-Wkq" userLabel="Experience List" customClass="EditXPViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="wAK-hg-klz">
                         <rect key="frame" x="0.0" y="64" width="768" height="960"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1251,7 +1251,7 @@
         <!--Experience Gained-->
         <scene sceneID="eng-Ot-zrj">
             <objects>
-                <viewController id="Vxo-RR-QUX" customClass="EditXPGainViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Vxo-RR-QUX" customClass="EditXPGainViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="t5A-4z-kdO"/>
                         <viewControllerLayoutGuide type="bottom" id="vBA-bw-ALB"/>

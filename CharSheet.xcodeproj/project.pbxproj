@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		5725DE721A0415CD00343E5F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE711A0415CD00343E5F /* AppDelegate.swift */; };
 		5725DE771A0415CD00343E5F /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE761A0415CD00343E5F /* MasterViewController.swift */; };
-		5725DE791A0415CD00343E5F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE781A0415CD00343E5F /* DetailViewController.swift */; };
 		5725DE7E1A0415CD00343E5F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7D1A0415CD00343E5F /* Images.xcassets */; };
 		5725DE811A0415CD00343E5F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7F1A0415CD00343E5F /* LaunchScreen.xib */; };
 		5725DEA91A046FF800343E5F /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE9C1A046FF800343E5F /* DDXMLElementAdditions.m */; };
@@ -64,7 +63,6 @@
 		5725DE701A0415CD00343E5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5725DE711A0415CD00343E5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5725DE761A0415CD00343E5F /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		5725DE781A0415CD00343E5F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		5725DE7D1A0415CD00343E5F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5725DE801A0415CD00343E5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		5725DE9B1A046FF800343E5F /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElementAdditions.h; sourceTree = "<group>"; };
@@ -264,7 +262,6 @@
 			children = (
 				577A81B91A08CFD700DA1EC8 /* CharSheetEditViewController.swift */,
 				577A81BA1A08CFD700DA1EC8 /* CharSheetUseViewController.swift */,
-				5725DE781A0415CD00343E5F /* DetailViewController.swift */,
 				577A81BB1A08CFD700DA1EC8 /* DieRollResultViewController.swift */,
 				577A81BC1A08CFD700DA1EC8 /* DieRollViewController.swift */,
 				577A81BD1A08CFD700DA1EC8 /* EditNotesViewController.swift */,
@@ -391,7 +388,6 @@
 				5725DEC61A04E30F00343E5F /* LogEntry.swift in Sources */,
 				577A81CD1A08CFD700DA1EC8 /* EditXPViewController.swift in Sources */,
 				577A81CA1A08CFD700DA1EC8 /* EditSkillViewController.swift in Sources */,
-				5725DE791A0415CD00343E5F /* DetailViewController.swift in Sources */,
 				577A81CE1A08CFD700DA1EC8 /* LogEntryViewController.swift in Sources */,
 				5725DEC71A04E95A00343E5F /* XPGain.swift in Sources */,
 				5725DEA91A046FF800343E5F /* DDXMLElementAdditions.m in Sources */,
