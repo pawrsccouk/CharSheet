@@ -17,7 +17,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.paw.CharSheet-Swift.charsheet</string>
+				<string>com.paw.CharSheet.charsheet</string>
 			</array>
 		</dict>
 	</array>
@@ -78,7 +78,7 @@
 			<key>UTTypeDescription</key>
 			<string>CharSheet character</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.paw.CharSheet-Swift.charsheet</string>
+			<string>com.paw.CharSheet.charsheet</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

@@ -12,7 +12,6 @@
 		5725DE791A0415CD00343E5F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE781A0415CD00343E5F /* DetailViewController.swift */; };
 		5725DE7E1A0415CD00343E5F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7D1A0415CD00343E5F /* Images.xcassets */; };
 		5725DE811A0415CD00343E5F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7F1A0415CD00343E5F /* LaunchScreen.xib */; };
-		5725DE8D1A0415CD00343E5F /* CharSheet_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE8C1A0415CD00343E5F /* CharSheet_SwiftTests.swift */; };
 		5725DEA91A046FF800343E5F /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE9C1A046FF800343E5F /* DDXMLElementAdditions.m */; };
 		5725DEAA1A046FF800343E5F /* NSString+DDXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE9F1A046FF800343E5F /* NSString+DDXML.m */; };
 		5725DEAB1A046FF800343E5F /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEA21A046FF800343E5F /* DDXMLDocument.m */; };
@@ -59,28 +58,15 @@
 		57D635A11B448970004AAB4D /* CharSheet.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 57D6359E1B448970004AAB4D /* CharSheet.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		5725DE871A0415CD00343E5F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5725DE641A0415CC00343E5F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5725DE6B1A0415CD00343E5F;
-			remoteInfo = "CharSheet-Swift";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		571133D41B4D66CA001F0210 /* Notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Notes.md; sourceTree = "<group>"; };
-		5725DE6C1A0415CD00343E5F /* CharSheet-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CharSheet-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5725DE6C1A0415CD00343E5F /* CharSheet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CharSheet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5725DE701A0415CD00343E5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5725DE711A0415CD00343E5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5725DE761A0415CD00343E5F /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
 		5725DE781A0415CD00343E5F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		5725DE7D1A0415CD00343E5F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5725DE801A0415CD00343E5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		5725DE861A0415CD00343E5F /* CharSheet-SwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CharSheet-SwiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5725DE8B1A0415CD00343E5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5725DE8C1A0415CD00343E5F /* CharSheet_SwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharSheet_SwiftTests.swift; sourceTree = "<group>"; };
 		5725DE9B1A046FF800343E5F /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElementAdditions.h; sourceTree = "<group>"; };
 		5725DE9C1A046FF800343E5F /* DDXMLElementAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElementAdditions.m; sourceTree = "<group>"; };
 		5725DE9E1A046FF800343E5F /* NSString+DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DDXML.h"; sourceTree = "<group>"; };
@@ -145,13 +131,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5725DE831A0415CD00343E5F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -162,7 +141,6 @@
 				5725DEAE1A04703900343E5F /* libxml2.dylib */,
 				5725DE991A046FF800343E5F /* KissXML */,
 				5725DE6E1A0415CD00343E5F /* CharSheet-Swift */,
-				5725DE891A0415CD00343E5F /* CharSheet-SwiftTests */,
 				5725DE6D1A0415CD00343E5F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -170,8 +148,7 @@
 		5725DE6D1A0415CD00343E5F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5725DE6C1A0415CD00343E5F /* CharSheet-Swift.app */,
-				5725DE861A0415CD00343E5F /* CharSheet-SwiftTests.xctest */,
+				5725DE6C1A0415CD00343E5F /* CharSheet.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -197,23 +174,6 @@
 			isa = PBXGroup;
 			children = (
 				5725DE701A0415CD00343E5F /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		5725DE891A0415CD00343E5F /* CharSheet-SwiftTests */ = {
-			isa = PBXGroup;
-			children = (
-				5725DE8C1A0415CD00343E5F /* CharSheet_SwiftTests.swift */,
-				5725DE8A1A0415CD00343E5F /* Supporting Files */,
-			);
-			path = "CharSheet-SwiftTests";
-			sourceTree = "<group>";
-		};
-		5725DE8A1A0415CD00343E5F /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				5725DE8B1A0415CD00343E5F /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -324,9 +284,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5725DE6B1A0415CD00343E5F /* CharSheet-Swift */ = {
+		5725DE6B1A0415CD00343E5F /* CharSheet */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5725DE901A0415CD00343E5F /* Build configuration list for PBXNativeTarget "CharSheet-Swift" */;
+			buildConfigurationList = 5725DE901A0415CD00343E5F /* Build configuration list for PBXNativeTarget "CharSheet" */;
 			buildPhases = (
 				5725DE681A0415CD00343E5F /* Sources */,
 				5725DE691A0415CD00343E5F /* Frameworks */,
@@ -336,28 +296,10 @@
 			);
 			dependencies = (
 			);
-			name = "CharSheet-Swift";
+			name = CharSheet;
 			productName = "CharSheet-Swift";
-			productReference = 5725DE6C1A0415CD00343E5F /* CharSheet-Swift.app */;
+			productReference = 5725DE6C1A0415CD00343E5F /* CharSheet.app */;
 			productType = "com.apple.product-type.application";
-		};
-		5725DE851A0415CD00343E5F /* CharSheet-SwiftTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 5725DE931A0415CD00343E5F /* Build configuration list for PBXNativeTarget "CharSheet-SwiftTests" */;
-			buildPhases = (
-				5725DE821A0415CD00343E5F /* Sources */,
-				5725DE831A0415CD00343E5F /* Frameworks */,
-				5725DE841A0415CD00343E5F /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				5725DE881A0415CD00343E5F /* PBXTargetDependency */,
-			);
-			name = "CharSheet-SwiftTests";
-			productName = "CharSheet-SwiftTests";
-			productReference = 5725DE861A0415CD00343E5F /* CharSheet-SwiftTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -371,13 +313,9 @@
 					5725DE6B1A0415CD00343E5F = {
 						CreatedOnToolsVersion = 6.1;
 					};
-					5725DE851A0415CD00343E5F = {
-						CreatedOnToolsVersion = 6.1;
-						TestTargetID = 5725DE6B1A0415CD00343E5F;
-					};
 				};
 			};
-			buildConfigurationList = 5725DE671A0415CC00343E5F /* Build configuration list for PBXProject "CharSheet-Swift" */;
+			buildConfigurationList = 5725DE671A0415CC00343E5F /* Build configuration list for PBXProject "CharSheet" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -390,8 +328,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5725DE6B1A0415CD00343E5F /* CharSheet-Swift */,
-				5725DE851A0415CD00343E5F /* CharSheet-SwiftTests */,
+				5725DE6B1A0415CD00343E5F /* CharSheet */,
 			);
 		};
 /* End PBXProject section */
@@ -408,13 +345,6 @@
 				577A81A71A07C73600DA1EC8 /* EditSkillCellView.xib in Resources */,
 				5725DE7E1A0415CD00343E5F /* Images.xcassets in Resources */,
 				577A81D61A0B358300DA1EC8 /* Edit.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5725DE841A0415CD00343E5F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,23 +399,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5725DE821A0415CD00343E5F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5725DE8D1A0415CD00343E5F /* CharSheet_SwiftTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		5725DE881A0415CD00343E5F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5725DE6B1A0415CD00343E5F /* CharSheet-Swift */;
-			targetProxy = 5725DE871A0415CD00343E5F /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		5725DE7F1A0415CD00343E5F /* LaunchScreen.xib */ = {
@@ -585,7 +499,7 @@
 				"HEADER_SEARCH_PATHS[arch=*]" = /usr/include/libxml2;
 				INFOPLIST_FILE = "CharSheet-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = CharSheet;
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = Bridging_Header.h;
 			};
 			name = Debug;
@@ -597,49 +511,15 @@
 				"HEADER_SEARCH_PATHS[arch=*]" = /usr/include/libxml2;
 				INFOPLIST_FILE = "CharSheet-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = CharSheet;
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = Bridging_Header.h;
-			};
-			name = Release;
-		};
-		5725DE941A0415CD00343E5F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "CharSheet-SwiftTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CharSheet-Swift.app/CharSheet-Swift";
-			};
-			name = Debug;
-		};
-		5725DE951A0415CD00343E5F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "CharSheet-SwiftTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CharSheet-Swift.app/CharSheet-Swift";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5725DE671A0415CC00343E5F /* Build configuration list for PBXProject "CharSheet-Swift" */ = {
+		5725DE671A0415CC00343E5F /* Build configuration list for PBXProject "CharSheet" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5725DE8E1A0415CD00343E5F /* Debug */,
@@ -648,20 +528,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5725DE901A0415CD00343E5F /* Build configuration list for PBXNativeTarget "CharSheet-Swift" */ = {
+		5725DE901A0415CD00343E5F /* Build configuration list for PBXNativeTarget "CharSheet" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5725DE911A0415CD00343E5F /* Debug */,
 				5725DE921A0415CD00343E5F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		5725DE931A0415CD00343E5F /* Build configuration list for PBXNativeTarget "CharSheet-SwiftTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5725DE941A0415CD00343E5F /* Debug */,
-				5725DE951A0415CD00343E5F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

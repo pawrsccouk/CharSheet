@@ -44,18 +44,14 @@ class Skill : NSManagedObject {
     }
 
 
-    var specialtiesAsString: String {
-        var str = "", first = true
-        for spec in (self.specialties.array as! [Specialty]) {
-            if first {
-                str += "\(spec.name!) +\(spec.value)"
-                first = false
-            } else {
-                str += "; \(spec.name!) +\(spec.value)"
-            }
-        }
-        return str
-    }
+	var specialtiesAsString: String {
+		var str = ""
+		if let specArray = self.specialties?.array {
+			let specs = specArray.map{ $0 as! Specialty }
+			str = "; ".join(specs.map{ "\($0.name!) + \($0.value)" })
+		}
+		return str
+	}
 
 
 	// MARK: Methods

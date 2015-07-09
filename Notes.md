@@ -9,4 +9,4 @@ can click on to add the skill. Currently the "+" icon is too far away from the u
 [ ] Associate a GUID with the character so we can tell which character is which even if the name changes.
 
 ## Bugs
-ExtraD4 initial value should default to 1 or be taken from the die roll object.
+[x] ExtraD4 initial value should default to 1 or be taken from the die roll object.

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="maA-i4-GlL">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="maA-i4-GlL">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -25,7 +25,7 @@
         <!--Edit Specialty View Controller-->
         <scene sceneID="M0p-pJ-mMi">
             <objects>
-                <viewController storyboardIdentifier="EditSpecialtyViewController" id="VAX-jh-WbI" customClass="EditSpecialtyViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EditSpecialtyViewController" id="VAX-jh-WbI" customClass="EditSpecialtyViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="KF1-Y5-wcv"/>
                         <viewControllerLayoutGuide type="bottom" id="vLa-Vo-6eF"/>
@@ -116,7 +116,7 @@
         <!--Root View Controller-->
         <scene sceneID="bFx-TL-LcQ">
             <objects>
-                <viewController id="diy-yT-jEi" customClass="EditSkillViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="diy-yT-jEi" customClass="EditSkillViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="JKO-mL-zrx"/>
                         <viewControllerLayoutGuide type="bottom" id="ld6-Me-TEn"/>
@@ -215,7 +215,7 @@
         <!--Edit - -->
         <scene sceneID="txv-AB-BWd">
             <objects>
-                <viewController id="8xE-fi-a7r" customClass="CharSheetEditViewController" customModule="CharSheet_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="8xE-fi-a7r" customClass="CharSheetEditViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="gYc-1h-xFT"/>
                         <viewControllerLayoutGuide type="bottom" id="pO4-vW-3nx"/>
@@ -527,11 +527,11 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="pLf-PY-TEx">
-                                <rect key="frame" x="20" y="354" width="732" height="586"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="pLf-PY-TEx">
+                                <rect key="frame" x="28" y="354" width="728" height="598"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CharSheetEditSkill_Cell" id="hVE-Db-eia" customClass="EditSkillCell" customModule="CharSheet_Swift" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CharSheetEditSkill_Cell" id="hVE-Db-eia" customClass="EditSkillCell" customModule="CharSheet" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hVE-Db-eia" id="rCU-1D-7ch">
                                             <autoresizingMask key="autoresizingMask"/>
@@ -555,7 +555,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Specialties" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iTF-Cs-MDF">
-                                                    <rect key="frame" x="317" y="11" width="407" height="21"/>
+                                                    <rect key="frame" x="317" y="11" width="403" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -591,6 +591,7 @@
                         <constraints>
                             <constraint firstItem="5Rw-a8-u10" firstAttribute="centerY" secondItem="dcr-iv-SJA" secondAttribute="centerY" id="2Ox-TZ-URt"/>
                             <constraint firstItem="GOA-X5-tDU" firstAttribute="top" secondItem="9iM-2w-B0Q" secondAttribute="bottom" constant="8" symbolic="YES" id="2Rz-rV-Itv"/>
+                            <constraint firstItem="unM-XC-sZF" firstAttribute="top" secondItem="QRY-IN-dEG" secondAttribute="bottom" constant="11" id="3ZV-8z-ChI"/>
                             <constraint firstItem="9iM-2w-B0Q" firstAttribute="top" secondItem="QRY-IN-dEG" secondAttribute="bottom" constant="8" symbolic="YES" id="3dg-mv-Scl"/>
                             <constraint firstItem="lOy-qZ-wKd" firstAttribute="leading" secondItem="Kbb-KW-eUj" secondAttribute="leading" constant="20" symbolic="YES" id="3tT-1C-kuh"/>
                             <constraint firstItem="VpG-9T-rxV" firstAttribute="top" secondItem="QRY-IN-dEG" secondAttribute="bottom" constant="8" symbolic="YES" id="50r-5r-uap"/>
@@ -598,6 +599,7 @@
                             <constraint firstItem="OaR-KD-zUN" firstAttribute="leading" secondItem="VpG-9T-rxV" secondAttribute="trailing" constant="8" symbolic="YES" id="8AK-Gn-UFx"/>
                             <constraint firstItem="QRY-IN-dEG" firstAttribute="top" secondItem="82A-Yq-e6R" secondAttribute="bottom" constant="8" symbolic="YES" id="91Q-dl-DRK"/>
                             <constraint firstItem="Tui-f1-yPn" firstAttribute="leading" secondItem="Kbb-KW-eUj" secondAttribute="leading" constant="20" symbolic="YES" id="BCy-7i-TOh"/>
+                            <constraint firstItem="pLf-PY-TEx" firstAttribute="leading" secondItem="Kbb-KW-eUj" secondAttribute="leadingMargin" constant="8" id="Bfe-F2-5qw"/>
                             <constraint firstItem="9iM-2w-B0Q" firstAttribute="leading" secondItem="FPk-GI-v5d" secondAttribute="trailing" constant="8" symbolic="YES" id="Bs9-Nu-T3r"/>
                             <constraint firstItem="unM-XC-sZF" firstAttribute="leading" secondItem="Kbb-KW-eUj" secondAttribute="leading" constant="20" symbolic="YES" id="E2z-DT-1YN"/>
                             <constraint firstItem="dX4-DS-7h9" firstAttribute="leading" secondItem="jlB-8m-DTa" secondAttribute="trailing" constant="8" symbolic="YES" id="Ehf-d3-gR5"/>
@@ -620,7 +622,6 @@
                             <constraint firstItem="Hfr-c8-vMR" firstAttribute="top" secondItem="VpG-9T-rxV" secondAttribute="bottom" constant="8" symbolic="YES" id="XTH-MY-tl8"/>
                             <constraint firstItem="Hfr-c8-vMR" firstAttribute="leading" secondItem="lOy-qZ-wKd" secondAttribute="trailing" constant="8" symbolic="YES" id="Yby-ak-wh7"/>
                             <constraint firstItem="5mP-8O-apr" firstAttribute="leading" secondItem="VzA-9b-wsV" secondAttribute="trailing" constant="8" symbolic="YES" id="Zvb-dV-1lM"/>
-                            <constraint firstItem="VpG-9T-rxV" firstAttribute="baseline" secondItem="unM-XC-sZF" secondAttribute="baseline" id="aNp-14-poc"/>
                             <constraint firstItem="dM7-og-HNp" firstAttribute="leading" secondItem="9iM-2w-B0Q" secondAttribute="trailing" constant="8" id="bEv-Qf-tAm"/>
                             <constraint firstItem="3qa-Be-oa8" firstAttribute="baseline" secondItem="Ynt-2A-nBh" secondAttribute="baseline" id="bVe-at-vk6"/>
                             <constraint firstItem="99f-GD-7jA" firstAttribute="leading" secondItem="TKn-1F-uDP" secondAttribute="trailing" constant="4" id="cb3-T9-OAn"/>
@@ -649,6 +650,7 @@
                             <constraint firstItem="Hfr-c8-vMR" firstAttribute="baseline" secondItem="lOy-qZ-wKd" secondAttribute="baseline" id="ikl-Ih-d0x"/>
                             <constraint firstItem="4Le-KD-ZbG" firstAttribute="baseline" secondItem="o2R-zt-tR6" secondAttribute="baseline" id="kkX-dV-G44"/>
                             <constraint firstItem="Tui-f1-yPn" firstAttribute="baseline" secondItem="Mr7-jZ-jXa" secondAttribute="baseline" id="l14-kt-X0b"/>
+                            <constraint firstItem="pLf-PY-TEx" firstAttribute="top" secondItem="mHl-0r-ssR" secondAttribute="bottom" constant="8" id="lma-h8-cfZ"/>
                             <constraint firstItem="Mr7-jZ-jXa" firstAttribute="top" secondItem="dX4-DS-7h9" secondAttribute="bottom" constant="8" symbolic="YES" id="nll-3u-yZZ"/>
                             <constraint firstItem="QgP-W8-jP9" firstAttribute="centerY" secondItem="Mr7-jZ-jXa" secondAttribute="centerY" id="o2F-vL-D1q"/>
                             <constraint firstItem="jlB-8m-DTa" firstAttribute="baseline" secondItem="dX4-DS-7h9" secondAttribute="baseline" id="oBf-DQ-Ixl"/>
@@ -659,6 +661,8 @@
                             <constraint firstItem="H9d-X9-ItZ" firstAttribute="leading" secondItem="GOA-X5-tDU" secondAttribute="trailing" constant="8" id="tac-AM-6Vs"/>
                             <constraint firstItem="QRY-IN-dEG" firstAttribute="baseline" secondItem="PmU-Vt-K8L" secondAttribute="baseline" id="te3-E8-ci3"/>
                             <constraint firstItem="5mP-8O-apr" firstAttribute="centerY" secondItem="96Q-BS-nwS" secondAttribute="centerY" id="u8z-Pz-E51"/>
+                            <constraint firstItem="pLf-PY-TEx" firstAttribute="trailing" secondItem="Kbb-KW-eUj" secondAttribute="trailingMargin" constant="8" id="uiY-f7-sVX"/>
+                            <constraint firstItem="pO4-vW-3nx" firstAttribute="top" secondItem="pLf-PY-TEx" secondAttribute="bottom" constant="8" symbolic="YES" id="vcj-fP-IIu"/>
                             <constraint firstAttribute="trailing" secondItem="o2R-zt-tR6" secondAttribute="trailing" constant="20" symbolic="YES" id="wRV-Y7-xKM"/>
                             <constraint firstItem="Hfr-c8-vMR" firstAttribute="centerY" secondItem="urv-N0-foX" secondAttribute="centerY" id="wmM-Qj-q2g"/>
                             <constraint firstAttribute="trailing" secondItem="Ynt-2A-nBh" secondAttribute="trailing" constant="20" symbolic="YES" id="yqY-Od-zZS"/>
