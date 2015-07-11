@@ -86,18 +86,24 @@ class DieRoll : NSObject
     var resultAsHTML: String {
         get {
             var log = NSMutableString()
-            log.appendString("<html><head/><body>")
-            log.appendString("D6 Roll:<br/>")
+            log.appendString("<html><head/><style>")
+			log.appendString("div { margin-left: 25px; }")
+			log.appendString("span { margin-left: 25px; }")
+			log.appendString(".botch { color: red; }")
+			log.appendString("</style><body>")
+            log.appendString("<b>D6 Roll:</b><br/>")
             
             // For the D6 rolls, first check for a botch and return immediately if so.
             if isBotch(d6Rolls) {
-                return "\(d6Rolls[0]) + \(d6Rolls[1]) (Botch!)"
+                log.appendString("<div>\(d6Rolls[0]) + \(d6Rolls[1]) (<b class=botch>Botch!</b>)</div>")
+				log.appendString("</body></html>")
+				return log.description
             }
             
             // Format the D6 rolls.
             assert(d6Rolls.count % 2 == 0, "Uneven number of d6 rolls")
             var d6Total = Int16(0)
-            log.appendString(spacing)
+            log.appendString("<div>")
             for var i = 0, c = d6Rolls.count; i < c; i += 2 {
                 let n1 = d6Rolls[i], n2 = d6Rolls[i+1]
                 var isDouble = n1 == n2
@@ -108,35 +114,46 @@ class DieRoll : NSObject
                 log.appendString("\(n1) + \(n2) \(doubleStr)")
                 d6Total += n1 + n2
             }
-            log.appendString("&nbsp;&nbsp;= \(d6Total)<br/>")
+            log.appendString("&nbsp;&nbsp;= \(d6Total)</div>")
             
             // Add the stat if necessary.
             if let si = stat {
-                log.appendString("Stats: <br/>\(spacing)\(si.name) = \(si.value)<br/>")
+                log.appendString("<b>Stats:</b><br/><div>\(si.name) = \(si.value)</div>")
             }
             // Now add the skill rolls.
             if skills.count > 0 {
-                log.appendString("Skills:<br/>")
-                
-                for skill in skills.array {
+                log.appendString("<b>Skills:</b><br/><div>")
+				let skillLines = skills.array.map { (skill) -> String in
 					assert(skill.name != nil, "Skill \(skill) has no name")
 					let skillName = skill.name!
-                    let spec = specialties[skillName]
+                    let spec = self.specialties[skillName]
                     
-                    let rollsForSkill: [Int16] = dieRollsPerSkill[skillName] ?? []
-                    let skillRollStr = formatSkillRoll(skill, rolls: rollsForSkill, spec: spec)
-                    log.appendString("\(spacing)\(skillRollStr)<br/>")
-                }
+                    let rollsForSkill: [Int16] = self.dieRollsPerSkill[skillName] ?? []
+					var skillTotal = rollsForSkill.reduce(0) { $0 + $1 }
+					var specStr    = "", finalTotal = Int16(0)
+					if let specialty = spec {
+						let specName = specialty.name ?? "No name"
+						specStr = "<br/><span>(+ \(specName) = \(specialty.value))</span>"
+					}
+					finalTotal += skillTotal
+					let rollsText = " + ".join(rollsForSkill.map{$0.description})
+					let safeName = self.sanitiseHTML(skillName)
+					return "\(safeName) (\(rollsForSkill.count)) = \(rollsText) = \(finalTotal) \(specStr)"
+				}
+				log.appendString("<br/>".join(skillLines))
+				log.appendString("</div>")
             }
 
 			// Add extra d4s.
-			let extraD4Text = " + ".join(extraD4Rolls.map{"\($0)"})
-			let extraD4Value = extraD4Rolls.reduce(0) { $0 + $1 }
-			log.appendString("Extra D4s:&nbsp;\(extraD4Text) = \(extraD4Value)<br/>")
+			if extraD4s != 0 {
+				let extraD4Text = " + ".join(extraD4Rolls.map{"\($0)"})
+				let extraD4Value = extraD4Rolls.reduce(0) { $0 + $1 }
+				log.appendString("<b>Extra D4s:</b><br/><div>\(extraD4Text) = \(extraD4Value)</div>")
+			}
 
             // Add any final adds.
             if(adds != 0) {
-                log.appendString("Adds:<br/>\(spacing)+ \(adds)<br/>")
+                log.appendString("<b>Adds:</b><br/><div>\(adds)</div><br/>")
             }
             log.appendString("<br/><hr/>")
             log.appendString("<b>Total = \(total)</b>")
@@ -253,25 +270,6 @@ class DieRoll : NSObject
     
     
     
-	/// Returns an HTML String containing a one-line formatted result of a skill roll.
-	/// This includes the name and value of the skill, any specialties used and the actual result of the roll.
-	///
-	/// :param: skill The skill that was rolled.
-	/// :param: rolls An array containing the result of each die roll used to roll the skill.
-	/// :param: spec  Optionally the specialty that was used in the roll.
-    private func formatSkillRoll(skill: Skill, rolls: [Int16], spec: Specialty?) -> String
-	{
-        var skillTotal = rolls.reduce(0) { $0 + $1 }
-        var specStr    = "", finalTotal = Int16(0)
-        if let specialty = spec {
-            specStr = String(format:"(+ %d)", specialty.value)
-            finalTotal += specialty.value
-        }
-        finalTotal += skillTotal
-		let skillName = skill.name!, rollsText = " + ".join(rolls.map{$0.description})
-        return String(format:"%@ (%d) = %@ %@ = %d",
-			sanitiseHTML(skillName), rolls.count, rollsText, specStr, finalTotal)
-    }
 
     
 	/// Returns true if the first two die rolls in the array provided indicate a botch.
@@ -286,7 +284,7 @@ class DieRoll : NSObject
     
     
     
-    private let spacing = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+	private let spacing = "&ht;&ht;"//"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
     
 	/// Returns a summary of a die roll suitable for adding to the logs.
 	private func getSummary() -> String
