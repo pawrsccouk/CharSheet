@@ -125,7 +125,12 @@ class MutableOrderedSet<T: AnyObject> {
     func removeObjectAtIndex(idx: Int) {
         _set.removeObjectAtIndex(idx)
     }
-    
+
+	func replaceObjectAtIndex(idx: Int, withObject object: AnyObject)
+	{
+		_set.replaceObjectAtIndex(idx, withObject: object)
+	}
+
     func mutableCopy() -> MutableOrderedSet<T> {
         //return a shallow copy of this object
         return MutableOrderedSet(array: self.array)

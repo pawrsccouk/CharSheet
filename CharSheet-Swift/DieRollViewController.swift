@@ -90,10 +90,12 @@ class DieRollViewController: UIViewController
 		assert(skillSelectController == nil,
 			"Skill select controller \(skillSelectController) should be nil when adding a skill")
 		skillSelectController = SkillSelectController.skillSelectControllerFromNib()
+		assert(skillSelectController != nil, "No SkillSelectController object in Nib")
 		if let controller = skillSelectController {
 			controller.skillsToPick  = MutableOrderedSet<Skill>(array: skillsToAdd)
 			controller.selectedSkill = skillsToAdd[0] // Default to showing the first skill.
 			controller.selectedSpecialty = nil
+			editingSkill = nil
 			navigationController!.pushViewController(controller, animated:true)
 		}
 	}
@@ -101,17 +103,17 @@ class DieRollViewController: UIViewController
 
     // MARK: Properties
 
+	/// If we are editing an existing skill, this is the skill we are changing.
+	/// If we are adding a new skill, this is nil.
+	private var editingSkill: Skill? = nil
+
 	// Context for KVO.
 	private var myContext: Int = 0
 
 	/// The die roll object actually makes the roll and records the results.
 	///
 	/// I set up it's properties here (selected stat, skills, specialties etc.) which are used for the roll.
-	var dieRoll : DieRoll = DieRoll() {
-		didSet {
-			NSLog("Die roll \(dieRoll) set")
-		}
-	}
+	var dieRoll : DieRoll = DieRoll()
 
 	deinit
 	{
@@ -124,18 +126,17 @@ class DieRollViewController: UIViewController
 		change                                   : [NSObject : AnyObject],
 		context                                  : UnsafeMutablePointer<Void>)
 	{
-		if context != &myContext {
-			super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
-			return
-		}
-		NSLog("DieRoll keypath \(keyPath) changed.")
-		if keyPath == "adds" {
+		switch keyPath {
+		case "adds" where context == &myContext:
 			addsStepper.value = Double(dieRoll.adds)
 			addsTextField.text = "\(dieRoll.adds)"
-		}
-		if keyPath == "extraD4s" {
+
+		case "extraD4s" where context == &myContext:
 			extraDiceStepper.value = Double(dieRoll.extraD4s)
 			extraDiceTextField.text = "\(dieRoll.extraD4s)"
+
+		default:
+			super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
 		}
 	}
 
@@ -150,6 +151,7 @@ class DieRollViewController: UIViewController
             if charSheet != oldValue {
                 dieRoll.charSheet = charSheet
                 updateStatLabel()
+				editingSkill = nil
                 skillSelectController = nil
             }
         }
@@ -164,6 +166,10 @@ class DieRollViewController: UIViewController
 	/// Callback block called once the dialog has been closed to add a tick to the skill that was used.
     var addTickToSkillCallback: AddTickCallback?
 
+	/// Start the die roll view displaying a skill and/or a stat by default.
+	///
+	/// This allows the user to select the stat and/or skill from the main page and have them defaulted here.
+	/// The user can add or remove the stat or skills later if they want.
     func setInitialStat(statOrNil: DieRoll.StatInfo?, skills:[Skill])
 	{
         assert(self.charSheet != nil, "DieRollViewController: No char sheet specified.")
@@ -192,7 +198,7 @@ class DieRollViewController: UIViewController
     }
     
     
-    
+	/// Update the label specifying which stat to use from the specified StatInfo object.
     private func updateStatLabel()
 	{
         if let button = statButton {
@@ -206,20 +212,26 @@ class DieRollViewController: UIViewController
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
 	{
-        if segue.identifier == "ShowDieRollResult" {
+		switch segue.identifier! {
+		case "ShowDieRollResult":
             var dieRollResultViewController = segue.destinationViewController as! DieRollResultViewController
             rollTheDieAndShowResultsInViewController(dieRollResultViewController)
-        }
-        else if segue.identifier == "PushStatSelect" {
+
+        case "PushStatSelect":
             var statSelectViewController = segue.destinationViewController as! StatSelectViewController
             statSelectViewController.selectedStat = dieRoll.stat?.name ?? "No name"
-            statSelectViewController.selectionChangedCallback = { newStatName, oldStatName in
-                self.statNameChanged(newStatName)
+            statSelectViewController.selectionChangedCallback = { newName, _ in
+                self.statNameChanged(newName)
                 self.updateStatLabel()
             }
+
+		default:
+			assert(false, "Unexpected segue identifier \(segue.identifier!)")
         }
     }
-    
+
+	/// Callback func called when the name of the stat has changed.
+	/// Look up the value for the given name and assign a StatInfo pair to the die roll.
 	func statNameChanged(newStatName: String?)
 	{
 		var statInfo: DieRoll.StatInfo? = nil
@@ -231,6 +243,9 @@ class DieRollViewController: UIViewController
 		dieRoll.stat = statInfo
 	}
 
+	/// Callback. Trigger a die roll with the settings in DieRoll, and present a view controller to show the results.
+	///
+	/// :param: dieRollResultViewController The controller to push to display the die roll result.
     func rollTheDieAndShowResultsInViewController(dieRollResultViewController: DieRollResultViewController)
 	{
         dieRoll.adds = addsTextField.text.toInt() ?? 0
@@ -262,22 +277,41 @@ extension DieRollViewController: UINavigationControllerDelegate
 		// If this controller is being shown because the select skill view controller has just been closed,
 		// then add the skill it has found.
 		if viewController == self {
-			if let selectedSkill = skillSelectController?.selectedSkill {
-
-				dieRoll.skills = dieRoll.skills + [selectedSkill]
-
-				if let skillName = selectedSkill.name {
-					dieRoll.specialties[skillName] = skillSelectController?.selectedSpecialty
+			if let oldSkill = editingSkill {
+				// We are replacing one skill with another.
+				if let selectedSkill = skillSelectController?.selectedSkill {
+					// We have a skill to replace. Perform the replacement.
+					if selectedSkill != oldSkill {
+						let index = dieRoll.skills.indexOfObject(oldSkill)
+						assert(index != NSNotFound, "Index of skill \(oldSkill).name = \(oldSkill.name) not in die roll skill set.")
+						if index != NSNotFound {
+							dieRoll.skills.replaceObjectAtIndex(index, withObject:selectedSkill)
+						}
+					}
+				} else {
+					// We have no skill, remove the existing skill from the list to display.
+					dieRoll.skills.remove(oldSkill)
 				}
-				skillsTable.reloadData()
+			} else {
+				// We are adding a new skill, so just append to the list.
+				if let selectedSkill = skillSelectController?.selectedSkill {
+					dieRoll.skills = dieRoll.skills + [selectedSkill]
+				}
 			}
+
+			if let selectedSkill = skillSelectController?.selectedSkill, skillName = selectedSkill.name {
+				dieRoll.specialties[skillName] = skillSelectController?.selectedSpecialty
+			}
+			skillsTable.reloadData()
+
 			// Then release the skill select controller. We will create a new one next time we want to edit a skill.
 			skillSelectController = nil
+			editingSkill = nil
 		}
 	}
 }
 
-    //MARK: - Table View
+    //MARK: - Table View Data Source
 
 extension DieRollViewController: UITableViewDataSource
 {
@@ -319,6 +353,8 @@ extension DieRollViewController: UITableViewDataSource
 	}
 }
 
+// MARK: - Table View Delegate
+
 extension DieRollViewController: UITableViewDelegate
 {
     func tableView(           tableView: UITableView,
@@ -342,10 +378,11 @@ extension DieRollViewController: UITableViewDelegate
         assert(skillSelectController == nil,
 			"Table View select. Skill select controller is \(skillSelectController), should be nil")
         skillSelectController = SkillSelectController.skillSelectControllerFromNib()
-        
+        assert(skillSelectController != nil, "Failed to load SkillSelectController from Nib file.")
         let controller = skillSelectController!
         // Set the skill shown in the table as the currently-selected skill.
         controller.selectedSkill = dieRoll.skills[indexPath.row]
+		editingSkill = controller.selectedSkill
         controller.selectedSpecialty = dieRoll.specialties[controller.selectedSkill?.name ?? ""]
         
         // The list of skills to pick is all the skills not already picked, except for the one we are currently editing.
