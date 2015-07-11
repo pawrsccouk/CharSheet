@@ -108,7 +108,28 @@ class MasterViewController : UITableViewController {
         detailViewController = splitViewController?.viewControllers.last?.topViewController as! CharSheetUseViewController
         detailViewController.managedObjectContext = managedObjectContext
     }
- 
+
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		// If we have a view with no character sheet set, then find the sheet we were looking at last time
+		// and set it here by default.
+
+		let allObjects = fetchedResultsController.sections?.flatMap({ (sectionInfo: AnyObject) in
+			return (sectionInfo as! NSFetchedResultsSectionInfo).objects as! [CharSheet]
+		})
+		let userDefaults = NSUserDefaults.standardUserDefaults()
+		let lastViewedSheetName = userDefaults.stringForKey("LastSelectedCharacter")
+		if let dvc = detailViewController where dvc.charSheet == nil {
+			if let sheetName = lastViewedSheetName {
+				if let charSheet = allObjects?.filter({ $0.name == sheetName }).first {
+					dvc.defaultCharSheet = charSheet
+				}
+			}
+		}
+	}
+
+
+
 	/// Extract the error object from a Result, and present a view controller displaying the error.
 	///
 	/// Does nothing if result is successful.
@@ -246,7 +267,8 @@ extension MasterViewController: UITableViewDataSource
 
 extension MasterViewController: UITableViewDelegate
 {
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
+    override func tableView(  tableView: UITableView,
+		canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
 	{
         return true    // All the rows are editable
     }
@@ -274,6 +296,9 @@ extension MasterViewController: UITableViewDelegate
 	{
 		if let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as? CharSheet {
 			detailViewController.charSheet = sheet
+
+			// Store the last selection so I can automatically restore it when the app starts up.
+			NSUserDefaults.standardUserDefaults().setValue(sheet.name ?? "", forKey: "LastSelectedCharacter")
 		}
     }
 }
@@ -320,6 +345,12 @@ extension MasterViewController: NSFetchedResultsControllerDelegate
 		case .Update:
 			if let ip = indexPath, cell = tableView.cellForRowAtIndexPath(ip) {
 				configureCell(cell, atIndexPath:ip)
+
+				// Store the new name so I can automatically restore it when the app starts up.
+				// This assumes you only change the name of the character you're currently working on.
+				if let sheet = fetchedResultsController.objectAtIndexPath(ip) as? CharSheet {
+					NSUserDefaults.standardUserDefaults().setValue(sheet.name ?? "", forKey: "LastSelectedCharacter")
+				}
 			}
 		case .Move:
 			if let ip = indexPath, newIP = newIndexPath {
@@ -334,6 +365,8 @@ extension MasterViewController: NSFetchedResultsControllerDelegate
 	{
 		tableView.endUpdates()
 	}
+
+
 
 	func configureCell(cell: UITableViewCell, atIndexPath indexPath:NSIndexPath)
 	{

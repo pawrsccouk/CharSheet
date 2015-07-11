@@ -46,12 +46,12 @@ class CharSheetUseViewController : UIViewController
         let editNavigationController = editStoryboard.instantiateInitialViewController() as! UINavigationController
         let charSheetEditViewController = editNavigationController.viewControllers[0] as! CharSheetEditViewController
         
-        charSheetEditViewController.managedObjectContext   = self.managedObjectContext
-        charSheetEditViewController.charSheet = self.charSheet
+        charSheetEditViewController.managedObjectContext = managedObjectContext
+        charSheetEditViewController.charSheet = charSheet
         charSheetEditViewController.dismissCallback = {     // Save data and refresh the view when the modal popup completes.
             self.configureView()
-            if let callback = self.saveAllData {
-                callback()
+            if let saveData = self.saveAllData {
+                saveData()
             }
         }
 		navigationController?.presentViewController(editNavigationController, animated:true, completion:nil)
@@ -158,6 +158,11 @@ class CharSheetUseViewController : UIViewController
         }
     }
 
+	/// Default character sheet to display if the user hasn't set one already.
+	///
+	/// Once the user assigns a value to charSheet then this has no effect.
+	var defaultCharSheet: CharSheet? = nil
+
     var masterPopoverController: UIPopoverController?
     var managedObjectContext: NSManagedObjectContext!
     
@@ -244,7 +249,6 @@ class CharSheetUseViewController : UIViewController
 					save()
 				}
 			}
-
 		}
 
 		func prepareXPView(editXPViewController: EditXPViewController)
@@ -324,6 +328,15 @@ class CharSheetUseViewController : UIViewController
         configureView()
     }
 
+
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+
+		// If we are about to display an empty char sheet, and we have a default then display the default instead.
+		if let cs = defaultCharSheet where charSheet == nil {
+			charSheet = cs
+		}
+	}
 
 	private func deselectEveryStat()
 	{
