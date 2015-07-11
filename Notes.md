@@ -1,6 +1,6 @@
 # CharSheet-Swift notes and TODOs
 ## TODOs
-[ ] Log details should appear linked to the row that triggered them, not at the bottom of the screen.
+[x] Log details should appear linked to the row that triggered them, not at the bottom of the screen.
 [ ] Ensure all die rolls are appearing as they should. Ensure they are properly random.
 [ ] Where we have empty tables (e.g. Die Roll/Skills) we should have an initial row marked <Add Skill> which the user
 can click on to add the skill. Currently the "+" icon is too far away from the user's attention.

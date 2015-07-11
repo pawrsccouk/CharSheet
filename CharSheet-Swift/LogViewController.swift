@@ -20,68 +20,69 @@ class LogViewController : UITableViewController, UITableViewDataSource {
     private var sortedLogs: [LogEntry] = []
 
 
-    @IBAction func done(sender: AnyObject) {
+    @IBAction func done(sender: AnyObject)
+	{
         presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
     }
-    
-//    // Trigger a popup showing the log entry LOGENTRY, appearing as though it had appeared from ORIGINATINGVIEW.
-//    -(void) showLogEntry: (PWLogEntry*)logEntry originatingFrom: (UIView*)originatingView
-//    {
-//        if(! _logEntryController)
-//            _logEntryController = [[PWLogEntryViewController alloc] init];
-//        _logEntryController.logEntry = logEntry;
-//    
-//        if(! _logEntryPopover) {
-//            _logEntryPopover = [[UIPopoverController alloc] initWithContentViewController:_logEntryController];
-//            // Allow this view to be selected, so we can just update the text view inside the popover if the user clicks on a different row.
-//            _logEntryPopover.passthroughViews = @[self.tableView];
-//        }
-//    
-//        if(! _logEntryPopover.isPopoverVisible) {
-//            [_logEntryPopover presentPopoverFromRect:originatingView.bounds
-//                                             inView:originatingView
-//                           permittedArrowDirections:UIPopoverArrowDirectionAny
-//                                           animated:YES];
-//        }
-//    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender:AnyObject?) {
-        if segue.identifier == "LogEntryPopover" {
-            // Find the selected log entry. SENDER is the object that triggered the segue (in this case, the table view cell that was clicked on).
-            if let cell = sender as? UITableViewCell {
-                let logEntryViewController = segue.destinationViewController as! LogEntryViewController
-                assert(cell.isKindOfClass(UITableViewCell), "Sender \(cell) must be a table view cell.")
-                
-                if let selectedRow = tableView.indexPathForCell(cell) {
-                    let log = sortedLogs[selectedRow.row]
-                    logEntryViewController.logEntry = log
-                }
-            } else {
-                assert(false, "No sender provided")
-            }
-        }
-    }
-    
-    // MARK: - Table view data source
 
-    let dateFormatter: NSDateFormatter = {
+	/// Loads a Log Entry View Controller from the storyboard, populates it and presents it as a popover.
+	///
+	/// :param: tableView The table view to overlay with the popover. 
+	/// :param: indexPath Index to the table-view row which triggered the popup.
+	///                   The popover will display the LogEntry associated with this row.
+	/// We use a custom popover instead of a Storyboard Segue as the segue points the popover
+	/// at the bottom of the table view and not the row that was selected.
+	///
+	/// **NB** This assumes the LogEntryViewController object is in the same storyboard as this controller is.
+
+	func openCustomPopoverForTableView(tableView: UITableView, cellIndexPath indexPath: NSIndexPath)
+	{
+		let logEntryController = storyboard!.instantiateViewControllerWithIdentifier("Log Entry View Controller")
+			as! LogEntryViewController
+		logEntryController.logEntry = sortedLogs[indexPath.row]
+
+		let popOver = UIPopoverController(contentViewController:logEntryController)
+
+		//Get the cell that presents the popover and use the cell frame to calculate the popover's origin.
+		if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+			let displayFrom = CGRectMake(
+				cell.frame.origin.x + (cell.frame.size.width / 3),
+				cell.center.y + tableView.frame.origin.y - tableView.contentOffset.y - cell.frame.size.height,
+				1, 1)
+			popOver.presentPopoverFromRect(displayFrom, inView:view, permittedArrowDirections:.Left, animated:true)
+		} else {
+			assert(false, "Table view \(tableView) failed to get a cell for index path \(indexPath)")
+		}
+	}
+
+	/// Used internally to format dates for display in the log summary table cells.
+    lazy private var dateFormatter: NSDateFormatter = {
         var dateFormatter = NSDateFormatter()
         dateFormatter.dateStyle = .ShortStyle
         dateFormatter.timeStyle = .ShortStyle
         return dateFormatter
     }()
 
-    let cellIdentifier = "LogViewCell"
+    private let cellIdentifier = "LogViewCell"
+}
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+// MARK: - Table View Data Source
+extension LogViewController: UITableViewDataSource
+{
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int
+	{
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView,
+		numberOfRowsInSection section: Int) -> Int
+	{
         return sortedLogs.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) -> UITableViewCell {
+    override func tableView(  tableView: UITableView,
+		cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+	{
         
         if var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as? UITableViewCell {
             let entry = sortedLogs[indexPath.row] as LogEntry
@@ -96,18 +97,15 @@ class LogViewController : UITableViewController, UITableViewDataSource {
         assert(false, "TableViewCell not found for identifier \(cellIdentifier)")
         return UITableViewCell()
     }
-    
-    
-    //#pragma mark - Table view delegate
-    //
-    //- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-    //{
-    //    [self showLogEntry:_sortedLogs[indexPath.row]
-    //       originatingFrom:[self.tableView cellForRowAtIndexPath:indexPath]];
-    //}
+}
 
-
-
-
+// MARK: - Table View Delegate
+extension LogViewController: UITableViewDelegate
+{
+	override func tableView(    tableView: UITableView,
+		didSelectRowAtIndexPath indexPath: NSIndexPath)
+	{
+		openCustomPopoverForTableView(tableView, cellIndexPath:indexPath)
+	}
 }
 

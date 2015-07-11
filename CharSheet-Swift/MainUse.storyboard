@@ -1001,10 +1001,10 @@
             </objects>
             <point key="canvasLocation" x="1790" y="1320"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Log List Navigation Controller-->
         <scene sceneID="zoX-qT-dV2">
             <objects>
-                <navigationController definesPresentationContext="YES" id="Y8j-rH-2tJ" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" id="Y8j-rH-2tJ" userLabel="Log List Navigation Controller" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -1053,11 +1053,6 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="5mk-gB-EEd" kind="popover" identifier="LogEntryPopover" popoverAnchorView="bHy-2R-3DT" id="94R-8A-X30">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -1079,7 +1074,7 @@
         <!--Log Entry View Controller-->
         <scene sceneID="jmk-ct-4kp">
             <objects>
-                <viewController id="5mk-gB-EEd" customClass="LogEntryViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Log Entry View Controller" title="Log Entry View Controller" id="5mk-gB-EEd" customClass="LogEntryViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
                     <textView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" id="kIj-d8-p2P">
                         <rect key="frame" x="0.0" y="0.0" width="382" height="209"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
