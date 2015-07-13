@@ -7,6 +7,7 @@ can click on to add the skill. Currently the "+" icon is too far away from the u
 [x] Die roll results should be more readable, possibly in an HTML table or using proper tabbing.
 [x] Automatically select the last-used character on startup.
 [ ] Associate a GUID with the character so we can tell which character is which even if the name changes.
+[ ] Find out how Steppers & Input Fields are supposted to work.
 
 ## Bugs
 [x] ExtraD4 initial value should default to 1 or be taken from the die roll object.
@@ -14,3 +15,9 @@ can click on to add the skill. Currently the "+" icon is too far away from the u
 [x] Die Roll view is adding skills instead of updating an existing skill.
 [x] Specialty says "Detail" when no specialty provided. Should say nothing.
 [ ] Automatic loading of last char sheet viewed fails for Portrait as the MasterViewController is not shown.
+
+
+## Ugly files
+CharSheetUseViewController
+DieRollViewController
+CharSheet

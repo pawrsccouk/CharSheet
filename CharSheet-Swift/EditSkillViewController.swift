@@ -1,68 +1,44 @@
 //
-//  PWEditSkillViewController.m
+//  PWEditSkillViewController.swift
 //  CharSheet
 //
 //  Created by Patrick Wallace on 21/11/2012.
-//
-//
 
 import CoreData
 import UIKit
 
-class EditSkillViewController : UIViewController {
-    
+class EditSkillViewController : UIViewController
+{
     // MARK: - Interface Builder
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var valueTextField: UITextField!
     @IBOutlet weak var ticksTextField: UITextField!
-    @IBOutlet weak var valueStepper: UIStepper!
-    @IBOutlet weak var ticksStepper: UIStepper!
     @IBOutlet weak var specialtiesTableView: UITableView!
-    
-    
-    @IBAction func stepperChanged(sender: AnyObject?) {
-        if let s = sender as? NSObject {
-            if      s == valueStepper { valueTextField.text = Int(valueStepper.value).description }
-            else if s == ticksStepper { ticksTextField.text = Int(ticksStepper.value).description }
-        } else {
-            assert(false, "EditSkillViewController.stepperChanged: No sender")
-        }
+	@IBOutlet var stepperAssistants: [StepperAssistant]!
+
+    @IBAction func done(sender: AnyObject?)
+	{
+		presentingViewController?.dismissViewControllerAnimated(true, completion: completionCallback)
     }
     
-    @IBAction func numericValueChanged(sender: AnyObject?) {
-        if let s = sender as? NSObject {
-            if      s == valueTextField { valueStepper.value = Double(valueTextField.text.toInt() ?? 0) }
-            else if s == ticksTextField { ticksStepper.value = Double(ticksTextField.text.toInt() ?? 0) }
-        }
-        else {
-            assert(false, "EditSkillViewController.numericValueChanged: No sender")
-        }
-    }
-    
-    @IBAction func done(sender: AnyObject?) {
-        if let pvc = presentingViewController {
-            pvc.dismissViewControllerAnimated(true, completion: completionCallback)
-        }
-    }
-    
-    // Public API
-    
-    var skill: Skill! {
-        didSet {
-            configureView()
-        }
-    }
-    
+    // MARK: Public API
+
+	/// The skill to edit. Must be set before the view is displayed.
+    var skill: Skill!
+
+	/// Callback triggered once the view controller has been dismissed with the *done* action.
     var completionCallback: VoidCallback?
     
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(animated: Bool)
+	{
         super.viewWillAppear(animated)
         specialtiesTableView.editing = true
         configureView()
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(animated: Bool)
+	{
         if let s = skill {
             s.name = nameTextField.text;
             s.value = Int16(valueTextField.text.toInt() ?? 0)
@@ -71,30 +47,31 @@ class EditSkillViewController : UIViewController {
         super.viewDidDisappear(animated)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(animated: Bool)
+	{
         super.viewDidAppear(animated)
         // Called when the specialties view is removed, so update the data with any new values in there.
         specialtiesTableView.reloadData()
     }
-    
-    private func configureView() {
-        // Ensure this is not called until the Interface Builder items have been set.
-        if nameTextField == nil { return }
-        
+
+	/// Update the controls in the view from the values in *skill*.
+    private func configureView()
+	{
         navigationItem.title = skill.name ?? "New skill"
         nameTextField.text   = skill.name ?? ""
-        valueTextField.text  = skill.value.description
-        ticksTextField.text  = skill.ticks.description
-        valueStepper.value   = Double(skill.value)
-        ticksStepper.value   = Double(skill.ticks)
+        valueTextField.text  = "\(skill.value)"
+        ticksTextField.text  = "\(skill.ticks)"
+		for s in stepperAssistants {
+			s.updateStepperFromTextField()
+		}
         specialtiesTableView.reloadData()
     }
     
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+	{
         if segue.identifier == "PushEditSpecialty" {
-            let newSpecialty = self.skill.appendSpecialty()
+            let newSpecialty = skill.appendSpecialty()
             let editSpecialtyViewController = segue.destinationViewController as! EditSpecialtyViewController
             editSpecialtyViewController.specialty = newSpecialty
         }
@@ -103,10 +80,8 @@ class EditSkillViewController : UIViewController {
     
     // MARK: - Table View Data
 
-extension EditSkillViewController: UITableViewDataSource {
-
-    
-
+extension EditSkillViewController: UITableViewDataSource
+{
     func numberOfSectionsInTableView(tableView: UITableView) -> Int
 	{
         return 1
@@ -141,7 +116,6 @@ extension EditSkillViewController: UITableViewDataSource {
 
 extension EditSkillViewController: UITableViewDelegate
 {
-
     func tableView(           tableView: UITableView,
 		commitEditingStyle editingStyle: UITableViewCellEditingStyle,
 		forRowAtIndexPath     indexPath: NSIndexPath)
@@ -169,9 +143,6 @@ extension EditSkillViewController: UITableViewDelegate
         esvc.specialty = skill.specialties[indexPath.row] as! Specialty
 		navigationController?.pushViewController(esvc, animated: true)
     }
-
-
-
 }
 
 

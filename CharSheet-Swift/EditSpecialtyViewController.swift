@@ -1,54 +1,44 @@
 //
-//  PWEditSpecialtyViewController.m
+//  PWEditSpecialtyViewController.swift
 //  CharSheet
 //
 //  Created by Patrick Wallace on 21/11/2012.
-//
-//
 
 import UIKit
 
-//
-class EditSpecialtyViewController : UIViewController {
-    
+/// View controller for editing a single specialty object, which must be set before the view is displayed.
+class EditSpecialtyViewController : UIViewController
+{
     @IBOutlet weak var valueField: UITextField!
     @IBOutlet weak var nameField: UITextField!
-    @IBOutlet weak var stepperView: UIStepper!
+	@IBOutlet var stepperAssistants: [StepperAssistant]!
 
-    var specialty: Specialty! {
-        didSet {
-            if specialty != oldValue {
-                configureView()
-            }
-        }
-    }
-    
-    private func configureView() {
-        if nameField == nil { return } // Don't populate the items until they have been wired up by the view controller.
+	/// The specialty we are editing.
+    var specialty: Specialty!
+
+	/// Update the view with details gathered from *specialty*.
+    private func configureView()
+	{
         nameField.text    = specialty.name
 		valueField.text   = specialty.value.description
-        stepperView.value = Double(specialty.value.description.toInt() ?? 0)
+		for s in stepperAssistants {
+			s.updateStepperFromTextField()
+		}
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	override func viewWillAppear(animated: Bool)
+	{
+        super.viewWillAppear(animated)
         configureView()
     }
     
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(animated: Bool)
+	{
         var spec = specialty
         spec.name = nameField.text
         spec.value = Int16(valueField.text.toInt() ?? 0)
         super.viewDidDisappear(animated)
     }
-    
-    
-    
-    @IBAction func stepperValueChanged(sender: AnyObject?) {
-        valueField.text = NSNumber(integer:Int(stepperView.value)).stringValue
-    }
-
-
 }
 

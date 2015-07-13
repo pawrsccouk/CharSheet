@@ -43,6 +43,9 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="textFieldValueChanged:" destination="BfB-Kx-S0n" eventType="editingChanged" id="cnE-fe-1CW"/>
+                                </connections>
                             </textField>
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="WOY-01-yZp">
                                 <rect key="frame" x="206" y="59" width="94" height="29"/>
@@ -51,7 +54,7 @@
                                     <constraint firstAttribute="width" constant="94" id="tFz-du-Ga8"/>
                                 </constraints>
                                 <connections>
-                                    <action selector="stepperValueChanged:" destination="VAX-jh-WbI" eventType="valueChanged" id="kGs-3e-Dq5"/>
+                                    <action selector="stepperValueChanged:" destination="BfB-Kx-S0n" eventType="valueChanged" id="3Fo-IU-crb"/>
                                 </connections>
                             </stepper>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Specialty name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cLp-iU-n5P">
@@ -105,11 +108,17 @@
                     <navigationItem key="navigationItem" id="nAq-qb-u7f"/>
                     <connections>
                         <outlet property="nameField" destination="cLp-iU-n5P" id="X2m-MD-jGS"/>
-                        <outlet property="stepperView" destination="WOY-01-yZp" id="wqw-WV-T6Z"/>
                         <outlet property="valueField" destination="qxN-cd-Cbm" id="BqQ-1T-Vjm"/>
+                        <outletCollection property="stepperAssistants" destination="BfB-Kx-S0n" collectionClass="NSMutableArray" id="Q5p-bU-bfR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rqn-Ry-Lgo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="BfB-Kx-S0n" userLabel="Value Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="WOY-01-yZp" id="Bgi-a7-JF2"/>
+                        <outlet property="textField" destination="qxN-cd-Cbm" id="cI1-PJ-Jwd"/>
+                    </connections>
+                </customObject>
             </objects>
             <point key="canvasLocation" x="100" y="-391"/>
         </scene>
@@ -130,13 +139,13 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="numericValueChanged:" destination="diy-yT-jEi" eventType="valueChanged" id="68q-On-AoY"/>
+                                    <action selector="textFieldValueChanged:" destination="j7v-yw-HqL" eventType="editingChanged" id="MeK-Nr-Wyo"/>
                                 </connections>
                             </textField>
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="3Rw-xq-D99" userLabel="Value Stepper">
                                 <rect key="frame" x="166" y="60" width="94" height="29"/>
                                 <connections>
-                                    <action selector="stepperChanged:" destination="diy-yT-jEi" eventType="valueChanged" id="CTN-kd-lAe"/>
+                                    <action selector="stepperValueChanged:" destination="j7v-yw-HqL" eventType="valueChanged" id="p8t-VE-FyN"/>
                                 </connections>
                             </stepper>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Skill name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WEq-xu-NEg" userLabel="Name Textfield">
@@ -175,13 +184,13 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="numericValueChanged:" destination="diy-yT-jEi" eventType="valueChanged" id="cgF-25-AJB"/>
+                                    <action selector="textFieldValueChanged:" destination="yCk-ja-itN" eventType="editingChanged" id="TQM-V1-Els"/>
                                 </connections>
                             </textField>
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="20" translatesAutoresizingMaskIntoConstraints="NO" id="fnm-Gh-ZS8" userLabel="Ticks Stepper">
                                 <rect key="frame" x="423" y="60" width="94" height="29"/>
                                 <connections>
-                                    <action selector="stepperChanged:" destination="diy-yT-jEi" eventType="valueChanged" id="JVx-xx-g0d"/>
+                                    <action selector="stepperValueChanged:" destination="yCk-ja-itN" eventType="valueChanged" id="IDV-sW-OKt"/>
                                 </connections>
                             </stepper>
                         </subviews>
@@ -202,13 +211,25 @@
                     <connections>
                         <outlet property="nameTextField" destination="WEq-xu-NEg" id="NHn-6R-1Be"/>
                         <outlet property="specialtiesTableView" destination="kdm-0x-VXJ" id="MJF-n9-xMi"/>
-                        <outlet property="ticksStepper" destination="fnm-Gh-ZS8" id="zXv-II-Jre"/>
                         <outlet property="ticksTextField" destination="ele-Ez-9EY" id="Yxc-h1-9AA"/>
-                        <outlet property="valueStepper" destination="3Rw-xq-D99" id="76A-8f-FZK"/>
                         <outlet property="valueTextField" destination="IaD-jq-GHr" id="sBH-cT-m9h"/>
+                        <outletCollection property="stepperAssistants" destination="j7v-yw-HqL" collectionClass="NSMutableArray" id="gVz-jD-vWQ"/>
+                        <outletCollection property="stepperAssistants" destination="yCk-ja-itN" collectionClass="NSMutableArray" id="cuH-6w-s0k"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hef-Pv-afc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="j7v-yw-HqL" userLabel="Value Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="3Rw-xq-D99" id="AMB-MY-GJj"/>
+                        <outlet property="textField" destination="IaD-jq-GHr" id="1IT-55-AaS"/>
+                    </connections>
+                </customObject>
+                <customObject id="yCk-ja-itN" userLabel="Ticks Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="fnm-Gh-ZS8" id="swU-5H-ZkO"/>
+                        <outlet property="textField" destination="ele-Ez-9EY" id="C5I-8D-yzZ"/>
+                    </connections>
+                </customObject>
             </objects>
             <point key="canvasLocation" x="862" y="-1131"/>
         </scene>
@@ -268,7 +289,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="textFieldValueChanged:" destination="8xE-fi-a7r" eventType="editingDidEnd" id="no9-Bj-saF"/>
+                                    <action selector="textFieldValueChanged:" destination="K3a-3g-o7r" eventType="editingChanged" id="v99-D9-MdX"/>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Hfr-c8-vMR" userLabel="Text Field -Constitution">
@@ -279,7 +300,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="textFieldValueChanged:" destination="8xE-fi-a7r" eventType="editingDidEnd" id="bsp-Wu-I02"/>
+                                    <action selector="textFieldValueChanged:" destination="NqE-vQ-g39" eventType="editingChanged" id="URh-FM-wVU"/>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" tag="15" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dX4-DS-7h9" userLabel="Text Field -Dexterity">
@@ -290,7 +311,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="textFieldValueChanged:" destination="8xE-fi-a7r" eventType="editingDidEnd" id="1Tk-Xt-nAs"/>
+                                    <action selector="textFieldValueChanged:" destination="3Am-Zg-FP0" eventType="editingChanged" id="SzW-2C-WUj"/>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" tag="17" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Mr7-jZ-jXa" userLabel="Text Field -Speed">
@@ -301,7 +322,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="textFieldValueChanged:" destination="8xE-fi-a7r" eventType="editingDidEnd" id="LNo-Zf-t5Z"/>
+                                    <action selector="textFieldValueChanged:" destination="Bj8-WI-zAx" eventType="editingChanged" id="6yc-mf-MED"/>
                                 </connections>
                             </textField>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Charisma" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FPk-GI-v5d">
@@ -348,7 +369,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="textFieldValueChanged:" destination="8xE-fi-a7r" eventType="editingDidEnd" id="5KQ-Lc-XtG"/>
+                                    <action selector="textFieldValueChanged:" destination="vsl-w8-RL1" eventType="editingChanged" id="AdS-7u-AxR"/>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" tag="14" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GOA-X5-tDU" userLabel="Text Field -Intelligence">
@@ -359,7 +380,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="textFieldValueChanged:" destination="8xE-fi-a7r" eventType="editingDidEnd" id="cLw-2j-FqF"/>
+                                    <action selector="textFieldValueChanged:" destination="p19-5A-mbJ" eventType="editingChanged" id="mdi-Zg-nke"/>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5Rw-a8-u10" userLabel="Text Field -Perception">
@@ -370,7 +391,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="textFieldValueChanged:" destination="8xE-fi-a7r" eventType="editingDidEnd" id="akb-MZ-CdA"/>
+                                    <action selector="textFieldValueChanged:" destination="Ww7-m4-0OL" eventType="editingChanged" id="DR2-en-S1S"/>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" tag="18" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5mP-8O-apr" userLabel="Text Field -Luck">
@@ -381,55 +402,55 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="textFieldValueChanged:" destination="8xE-fi-a7r" eventType="editingDidEnd" id="qtL-Ny-PIH"/>
+                                    <action selector="textFieldValueChanged:" destination="57N-kd-9vT" eventType="editingChanged" id="xPw-g5-9nL"/>
                                 </connections>
                             </textField>
                             <stepper opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="dM7-og-HNp" userLabel="Stepper -Charisma">
                                 <rect key="frame" x="603" y="161" width="94" height="29"/>
                                 <connections>
-                                    <action selector="stepperValueChanged:" destination="8xE-fi-a7r" eventType="valueChanged" id="tT2-wN-WpJ"/>
+                                    <action selector="stepperValueChanged:" destination="vsl-w8-RL1" eventType="valueChanged" id="YYP-w4-Psq"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="H9d-X9-ItZ" userLabel="Stepper -Intelligence">
                                 <rect key="frame" x="603" y="199" width="94" height="29"/>
                                 <connections>
-                                    <action selector="stepperValueChanged:" destination="8xE-fi-a7r" eventType="valueChanged" id="S5B-3S-FkK"/>
+                                    <action selector="stepperValueChanged:" destination="p19-5A-mbJ" eventType="valueChanged" id="bqT-XE-wqe"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="dcr-iv-SJA" userLabel="Stepper -Perception">
                                 <rect key="frame" x="603" y="237" width="94" height="29"/>
                                 <connections>
-                                    <action selector="stepperValueChanged:" destination="8xE-fi-a7r" eventType="valueChanged" id="8zi-g8-8Fy"/>
+                                    <action selector="stepperValueChanged:" destination="Ww7-m4-0OL" eventType="valueChanged" id="JaO-NG-gCj"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" clipsSubviews="YES" tag="8" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="96Q-BS-nwS" userLabel="Stepper -Luck">
                                 <rect key="frame" x="603" y="275" width="94" height="29"/>
                                 <connections>
-                                    <action selector="stepperValueChanged:" destination="8xE-fi-a7r" eventType="valueChanged" id="bPf-DN-ny4"/>
+                                    <action selector="stepperValueChanged:" destination="57N-kd-9vT" eventType="valueChanged" id="z7w-lV-euk"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="OaR-KD-zUN" userLabel="Stepper -Strength">
                                 <rect key="frame" x="238" y="161" width="94" height="29"/>
                                 <connections>
-                                    <action selector="stepperValueChanged:" destination="8xE-fi-a7r" eventType="valueChanged" id="Z57-bJ-3nm"/>
+                                    <action selector="stepperValueChanged:" destination="K3a-3g-o7r" eventType="valueChanged" id="5pi-vS-DTg"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="urv-N0-foX" userLabel="Stepper -Constitution">
                                 <rect key="frame" x="238" y="199" width="94" height="29"/>
                                 <connections>
-                                    <action selector="stepperValueChanged:" destination="8xE-fi-a7r" eventType="valueChanged" id="gO5-Ia-COd"/>
+                                    <action selector="stepperValueChanged:" destination="NqE-vQ-g39" eventType="valueChanged" id="ucL-al-IcX"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="8IG-dq-CMg" userLabel="Stepper -Dexterity">
                                 <rect key="frame" x="238" y="237" width="94" height="29"/>
                                 <connections>
-                                    <action selector="stepperValueChanged:" destination="8xE-fi-a7r" eventType="valueChanged" id="ao7-rh-yUP"/>
+                                    <action selector="stepperValueChanged:" destination="3Am-Zg-FP0" eventType="valueChanged" id="1LP-Lj-naB"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" clipsSubviews="YES" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="QgP-W8-jP9" userLabel="Stepper -Speed">
                                 <rect key="frame" x="238" y="275" width="94" height="29"/>
                                 <connections>
-                                    <action selector="stepperValueChanged:" destination="8xE-fi-a7r" eventType="valueChanged" id="X6n-t2-IjR"/>
+                                    <action selector="stepperValueChanged:" destination="Bj8-WI-zAx" eventType="valueChanged" id="Jm6-Oo-Jic"/>
                                 </connections>
                             </stepper>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Skills" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mHl-0r-ssR">
@@ -487,13 +508,13 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="levelTextFieldValueChanged:" destination="8xE-fi-a7r" eventType="editingDidEnd" id="cji-pB-3Zf"/>
+                                    <action selector="textFieldValueChanged:" destination="i0N-O8-lQh" eventType="editingChanged" id="1le-qO-de3"/>
                                 </connections>
                             </textField>
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="hu3-If-n60" userLabel="Stepper -Level">
                                 <rect key="frame" x="202" y="85" width="94" height="29"/>
                                 <connections>
-                                    <action selector="levelStepperValueChanged:" destination="8xE-fi-a7r" eventType="valueChanged" id="qfH-cR-VHD"/>
+                                    <action selector="stepperValueChanged:" destination="i0N-O8-lQh" eventType="valueChanged" id="QEs-uT-1FY"/>
                                 </connections>
                             </stepper>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="XP" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TKn-1F-uDP">
@@ -695,7 +716,6 @@
                         <outlet property="experienceTextField" destination="99f-GD-7jA" id="GMI-Ze-MUh"/>
                         <outlet property="gameTextField" destination="Ynt-2A-nBh" id="RtN-IC-aof"/>
                         <outlet property="intelligenceTextField" destination="GOA-X5-tDU" id="IiG-RL-OF0"/>
-                        <outlet property="levelStepper" destination="hu3-If-n60" id="6Sp-9X-Cfu"/>
                         <outlet property="levelTextField" destination="82A-Yq-e6R" id="zsW-Ag-vaT"/>
                         <outlet property="luckTextField" destination="5mP-8O-apr" id="AJx-s2-Qwl"/>
                         <outlet property="perceptionTextField" destination="5Rw-a8-u10" id="wiG-di-VBd"/>
@@ -703,9 +723,72 @@
                         <outlet property="skillsTableView" destination="pLf-PY-TEx" id="7FN-3I-aCO"/>
                         <outlet property="speedTextField" destination="Mr7-jZ-jXa" id="jm4-v3-Dcd"/>
                         <outlet property="strengthTextField" destination="VpG-9T-rxV" id="HmR-wL-z2J"/>
+                        <outletCollection property="stepperControllers" destination="K3a-3g-o7r" collectionClass="NSMutableArray" id="wak-tb-gFe"/>
+                        <outletCollection property="stepperControllers" destination="NqE-vQ-g39" collectionClass="NSMutableArray" id="uva-fT-pC5"/>
+                        <outletCollection property="stepperControllers" destination="3Am-Zg-FP0" collectionClass="NSMutableArray" id="UQc-HB-dy7"/>
+                        <outletCollection property="stepperControllers" destination="Bj8-WI-zAx" collectionClass="NSMutableArray" id="WO9-wO-ebm"/>
+                        <outletCollection property="stepperControllers" destination="vsl-w8-RL1" collectionClass="NSMutableArray" id="0wD-fr-xEB"/>
+                        <outletCollection property="stepperControllers" destination="p19-5A-mbJ" collectionClass="NSMutableArray" id="LIo-bf-D5y"/>
+                        <outletCollection property="stepperControllers" destination="Ww7-m4-0OL" collectionClass="NSMutableArray" id="2PT-nN-yG9"/>
+                        <outletCollection property="stepperControllers" destination="57N-kd-9vT" collectionClass="NSMutableArray" id="fuw-Yh-fRz"/>
+                        <outletCollection property="stepperControllers" destination="i0N-O8-lQh" collectionClass="NSMutableArray" id="3mP-1G-G1z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ycH-mc-5Yt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="K3a-3g-o7r" userLabel="Strength Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="OaR-KD-zUN" id="TNu-Fb-45o"/>
+                        <outlet property="textField" destination="VpG-9T-rxV" id="0ma-q9-4vg"/>
+                    </connections>
+                </customObject>
+                <customObject id="NqE-vQ-g39" userLabel="Constitution Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="urv-N0-foX" id="Xla-jG-YqY"/>
+                        <outlet property="textField" destination="Hfr-c8-vMR" id="Rd1-mf-b6j"/>
+                    </connections>
+                </customObject>
+                <customObject id="3Am-Zg-FP0" userLabel="Dexterity Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="8IG-dq-CMg" id="6ry-un-Chu"/>
+                        <outlet property="textField" destination="dX4-DS-7h9" id="iKU-Oq-wxq"/>
+                    </connections>
+                </customObject>
+                <customObject id="Bj8-WI-zAx" userLabel="Speed Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="QgP-W8-jP9" id="eVG-W7-3JV"/>
+                        <outlet property="textField" destination="Mr7-jZ-jXa" id="UfW-XD-nic"/>
+                    </connections>
+                </customObject>
+                <customObject id="vsl-w8-RL1" userLabel="Charisma Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="dM7-og-HNp" id="aHQ-bc-opE"/>
+                        <outlet property="textField" destination="9iM-2w-B0Q" id="G2G-jb-R1b"/>
+                    </connections>
+                </customObject>
+                <customObject id="p19-5A-mbJ" userLabel="Intelligence Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="H9d-X9-ItZ" id="rfC-X2-4Mp"/>
+                        <outlet property="textField" destination="GOA-X5-tDU" id="glk-GH-f9T"/>
+                    </connections>
+                </customObject>
+                <customObject id="Ww7-m4-0OL" userLabel="Perception Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="dcr-iv-SJA" id="btL-cK-dEn"/>
+                        <outlet property="textField" destination="5Rw-a8-u10" id="Q4q-Kx-l4t"/>
+                    </connections>
+                </customObject>
+                <customObject id="57N-kd-9vT" userLabel="Luck Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="96Q-BS-nwS" id="RXW-JJ-CDT"/>
+                        <outlet property="textField" destination="5mP-8O-apr" id="1t7-DW-L03"/>
+                    </connections>
+                </customObject>
+                <customObject id="i0N-O8-lQh" userLabel="Level Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="hu3-If-n60" id="hop-3a-FYm"/>
+                        <outlet property="textField" destination="82A-Yq-e6R" id="Slk-0o-kHT"/>
+                    </connections>
+                </customObject>
             </objects>
             <point key="canvasLocation" x="-881" y="-1334"/>
         </scene>

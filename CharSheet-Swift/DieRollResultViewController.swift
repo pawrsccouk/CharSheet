@@ -16,8 +16,8 @@ class DieRollResultViewController : UIViewController {
     @IBOutlet weak var webView: UIWebView!
     @IBOutlet weak var addTickSwitch: UISwitch!
 
-    @IBAction func done(sender: AnyObject?) {
-        
+    @IBAction func done(sender: AnyObject?)
+	{
         if addTickSwitch.on {
             if let callback = addTickAction {
                 callback()
@@ -43,49 +43,36 @@ class DieRollResultViewController : UIViewController {
 
     // MARK: - Properties
     
-    var dieRoll: DieRoll! {
-        didSet {
-            if dieRoll != oldValue {
-                if let w = webView {
-                    w.loadHTMLString(dieRoll.resultAsHTML, baseURL: nil)
-                }
-            }
-        }
-    }
-    
+    var dieRoll: DieRoll!
+
     // Called when the user wants to add a tick to a skill.
     var addTickAction: VoidCallback? {
         didSet {
-            // Always re-check the controls just in case (e.g. if the user explicitly passes in nil and it is nil already, we want to ensure the control is disabled).
+            // Always re-check the controls just in case
+			// (If the user explicitly passes in nil and it is nil already, we want to ensure the control is disabled).
             enableAddTickControl()
         }
     }
     
     // Called when the user dismisses the popup. Save stuff here.
     var dismissCallback: VoidCallback?
-    
-
-
 
 
     // MARK: Methods
     
-    func enableAddTickControl() {
+    func enableAddTickControl()
+	{
         if let s = addTickSwitch {
             s.on       = addTickAction != nil     // Default to YES if allowed, NO if disabled.
             s.enabled  = addTickAction != nil
         }
     }
     
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        if let w = webView {
-            w.loadHTMLString(dieRoll.resultAsHTML, baseURL:nil)
-        }
-        enableAddTickControl()
-    }
-
+	override func viewWillAppear(animated: Bool)
+	{
+		super.viewWillAppear(animated)
+		webView.loadHTMLString(dieRoll.resultAsHTML, baseURL: nil)
+		enableAddTickControl()
+	}
 }
 

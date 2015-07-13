@@ -13,54 +13,21 @@ import CoreData
 
 class DieRollViewController: UIViewController
 {
-    // MARK: - Interface Builder.
+    // MARK: IB Properties
     
     @IBOutlet weak var statButton: UIButton!
     @IBOutlet weak var skillsTable: UITableView!
     @IBOutlet weak var addsTextField: UITextField!
     @IBOutlet weak var extraDiceTextField: UITextField!
-    @IBOutlet weak var addsStepper: UIStepper!
-    @IBOutlet weak var extraDiceStepper: UIStepper!
+	@IBOutlet var stepperAssistants: [StepperAssistant]!
 
+	// MARK: IB Actions
     
     @IBAction func cancel(sender: AnyObject?)
 	{
 		presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
     }
 
-    @IBAction func stepperChanged(sender: AnyObject?)
-	{
-        assert(sender != nil, "stepperChanged: No sender")
-        if let stepper = sender as? UIStepper {
-            assert(stepper.isKindOfClass(UIStepper), "stepperChanged: Sender \(stepper) must be a UIStepper")
-            assert(stepper == addsStepper || stepper == extraDiceStepper, "stepperChanged: Sender \(stepper) must be extra dice stepper \(extraDiceStepper) or adds stepper \(addsStepper)")
-            if(stepper == addsStepper) {
-                addsTextField.text = Int16(addsStepper.value).description
-            }
-            else if(stepper == extraDiceStepper) {
-                extraDiceTextField.text = Int16(extraDiceStepper.value).description
-            }
-        }
-    }
-    
-    @IBAction func textFieldChanged(sender: AnyObject?)
-	{
-        assert(sender != nil, "textFieldChanged: No sender")
-        if let textField = sender as? UITextField {
-            assert(textField.isKindOfClass(UITextField), "stepperChanged: Sender \(textField) must be a UITextField")
-            assert(textField == addsTextField || textField == extraDiceTextField, "textFieldChanged: Sender %@ must be extra dice text field \(textField) or adds text field \(extraDiceTextField)")
-            if (textField == addsTextField) {
-                addsStepper.value = Double(textField.text?.toInt() ?? 0)
-            }
-            else if (textField == extraDiceTextField) {
-                if (textField.text.toInt() < 0) {
-                    textField.text = ""
-                }
-                extraDiceStepper.value = Double(extraDiceTextField.text?.toInt() ?? 0)
-            }
-        }
-    }
-  
     @IBAction func editSkillTable(sender: AnyObject?)
 	{
         var newEditing = !skillsTable.editing
@@ -93,10 +60,10 @@ class DieRollViewController: UIViewController
 		assert(skillSelectController != nil, "No SkillSelectController object in Nib")
 		if let controller = skillSelectController {
 			controller.skillsToPick  = MutableOrderedSet<Skill>(array: skillsToAdd)
-			controller.selectedSkill = skillsToAdd[0] // Default to showing the first skill.
+			controller.selectedSkill = skillsToAdd.first // Default skill to show
 			controller.selectedSpecialty = nil
 			editingSkill = nil
-			navigationController!.pushViewController(controller, animated:true)
+			navigationController?.pushViewController(controller, animated:true)
 		}
 	}
 
@@ -115,6 +82,30 @@ class DieRollViewController: UIViewController
 	/// I set up it's properties here (selected stat, skills, specialties etc.) which are used for the roll.
 	var dieRoll : DieRoll = DieRoll()
 
+	/// The controller used to present a list of skills to the user.
+	///
+	/// I need to track this so that I can add the skill it provides to the die roll when it exits.
+	var skillSelectController: SkillSelectController?
+
+	/// The character sheet whose stats and skills we are using for this die roll.
+	var charSheet: CharSheet! {
+		didSet {
+			dieRoll.charSheet = charSheet
+		}
+	}
+
+	/// If the die roll dialog wants to add a tick to a skill, it will call this block passing in the skill to be updated.
+	var dismissCallback: VoidCallback?
+
+	/// Callback type for the callback to add a tick to the character sheet.
+	typealias AddTickCallback = (skill: Skill) -> Void
+
+	/// Callback block called once the dialog has been closed to add a tick to the skill that was used.
+	var addTickToSkillCallback: AddTickCallback?
+
+
+	// MARK: Overrides
+
 	deinit
 	{
 		dieRoll.removeObserver(self, forKeyPath: "adds")
@@ -128,43 +119,60 @@ class DieRollViewController: UIViewController
 	{
 		switch keyPath {
 		case "adds" where context == &myContext:
-			addsStepper.value = Double(dieRoll.adds)
 			addsTextField.text = "\(dieRoll.adds)"
+			for s in stepperAssistants {
+				s.updateStepperFromTextField()
+			}
 
 		case "extraD4s" where context == &myContext:
-			extraDiceStepper.value = Double(dieRoll.extraD4s)
 			extraDiceTextField.text = "\(dieRoll.extraD4s)"
+			for s in stepperAssistants {
+				s.updateStepperFromTextField()
+			}
 
 		default:
 			super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
 		}
 	}
 
-	/// The controller used to present a list of skills to the user.
-	///
-	/// I need to track this so that I can add the skill it provides to the die roll when it exits.
-    var skillSelectController: SkillSelectController?
 
-	/// The character sheet whose stats and skills we are using for this die roll.
-    var charSheet: CharSheet! {
-        didSet {
-            if charSheet != oldValue {
-                dieRoll.charSheet = charSheet
-                updateStatLabel()
-				editingSkill = nil
-                skillSelectController = nil
-            }
-        }
-    }
-    
-	/// If the die roll dialog wants to add a tick to a skill, it will call this block passing in the skill to be updated.
-    var dismissCallback: VoidCallback?
-    
-	/// Callback type for the callback to add a tick to the character sheet.
-    typealias AddTickCallback = (skill: Skill) -> Void
+	override func viewDidLoad()
+	{
+		super.viewDidLoad()
+		dieRoll.addObserver(self, forKeyPath: "adds",     options: (.Initial | .New), context: &myContext)
+		dieRoll.addObserver(self, forKeyPath: "extraD4s", options: (.Initial | .New), context: &myContext)
+		updateStatLabel()
 
-	/// Callback block called once the dialog has been closed to add a tick to the skill that was used.
-    var addTickToSkillCallback: AddTickCallback?
+		if let navc = navigationController {
+			assert(navc.delegate == nil,
+				"DieRollViewController: The navigation controller \(navc) has a delegate of \(navc.delegate). "
+					+ "It should be nil")
+			navc.delegate = self
+		}
+	}
+
+
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+	{
+		switch segue.identifier! {
+		case "ShowDieRollResult":
+			var dieRollResultViewController = segue.destinationViewController as! DieRollResultViewController
+			rollTheDieAndShowResultsInViewController(dieRollResultViewController)
+
+		case "PushStatSelect":
+			var statSelectViewController = segue.destinationViewController as! StatSelectViewController
+			statSelectViewController.selectedStat = dieRoll.stat?.name ?? "No name"
+			statSelectViewController.selectionChangedCallback = { newName, _ in
+				self.statNameChanged(newName)
+				self.updateStatLabel()
+			}
+
+		default:
+			assert(false, "Unexpected segue identifier \(segue.identifier!)")
+		}
+	}
+
+	// MARK: Public API
 
 	/// Start the die roll view displaying a skill and/or a stat by default.
 	///
@@ -180,24 +188,9 @@ class DieRollViewController: UIViewController
             updateStatLabel()
         }
     }
-    
 
-    override func viewDidLoad()
-	{
-        super.viewDidLoad()
-		dieRoll.addObserver(self, forKeyPath: "adds",     options: (.Initial | .New), context: &myContext)
-		dieRoll.addObserver(self, forKeyPath: "extraD4s", options: (.Initial | .New), context: &myContext)
-        updateStatLabel()
+	// MARK: Private Methods
 
-        if let navc = navigationController {
-            assert(navc.delegate == nil,
-				"DieRollViewController: The navigation controller \(navc) has a delegate of \(navc.delegate). "
-				+ "It should be nil")
-            navc.delegate = self
-        }
-    }
-    
-    
 	/// Update the label specifying which stat to use from the specified StatInfo object.
     private func updateStatLabel()
 	{
@@ -210,29 +203,9 @@ class DieRollViewController: UIViewController
         }
     }
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
-	{
-		switch segue.identifier! {
-		case "ShowDieRollResult":
-            var dieRollResultViewController = segue.destinationViewController as! DieRollResultViewController
-            rollTheDieAndShowResultsInViewController(dieRollResultViewController)
-
-        case "PushStatSelect":
-            var statSelectViewController = segue.destinationViewController as! StatSelectViewController
-            statSelectViewController.selectedStat = dieRoll.stat?.name ?? "No name"
-            statSelectViewController.selectionChangedCallback = { newName, _ in
-                self.statNameChanged(newName)
-                self.updateStatLabel()
-            }
-
-		default:
-			assert(false, "Unexpected segue identifier \(segue.identifier!)")
-        }
-    }
-
 	/// Callback func called when the name of the stat has changed.
 	/// Look up the value for the given name and assign a StatInfo pair to the die roll.
-	func statNameChanged(newStatName: String?)
+	private func statNameChanged(newStatName: String?)
 	{
 		var statInfo: DieRoll.StatInfo? = nil
 		// Find the stat that name represents, and select it as dieRoll.stat.
@@ -246,7 +219,7 @@ class DieRollViewController: UIViewController
 	/// Callback. Trigger a die roll with the settings in DieRoll, and present a view controller to show the results.
 	///
 	/// :param: dieRollResultViewController The controller to push to display the die roll result.
-    func rollTheDieAndShowResultsInViewController(dieRollResultViewController: DieRollResultViewController)
+    private func rollTheDieAndShowResultsInViewController(dieRollResultViewController: DieRollResultViewController)
 	{
         dieRoll.adds = addsTextField.text.toInt() ?? 0
         dieRoll.extraD4s = Int16(extraDiceTextField.text.toInt() ?? 0)
@@ -385,7 +358,8 @@ extension DieRollViewController: UITableViewDelegate
 		editingSkill = controller.selectedSkill
         controller.selectedSpecialty = dieRoll.specialties[controller.selectedSkill?.name ?? ""]
         
-        // The list of skills to pick is all the skills not already picked, except for the one we are currently editing.
+        // The list of skills to pick is all the skills not already picked
+		// except for the one we are currently editing.
         // Otherwise the user can't go back without making changes.
         let skillsToPick: [Skill] = (charSheet!.skills.array)
 			.map { $0 as! Skill }

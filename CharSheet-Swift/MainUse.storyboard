@@ -606,7 +606,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="textFieldChanged:" destination="eUm-sj-kZy" eventType="editingChanged" id="rJb-6h-aIh"/>
+                                    <action selector="textFieldValueChanged:" destination="73U-jQ-i0t" eventType="editingChanged" id="0wP-1S-aPN"/>
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h9Z-sG-iAt">
@@ -640,19 +640,19 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="textFieldChanged:" destination="eUm-sj-kZy" eventType="editingChanged" id="liV-5t-pbS"/>
+                                    <action selector="textFieldValueChanged:" destination="Tbl-cI-D7l" eventType="editingChanged" id="IBw-da-hmn"/>
                                 </connections>
                             </textField>
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" minimumValue="-100" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="R6U-Un-y4y">
                                 <rect key="frame" x="162" y="46" width="94" height="29"/>
                                 <connections>
-                                    <action selector="stepperChanged:" destination="eUm-sj-kZy" eventType="valueChanged" id="P17-yW-6uL"/>
+                                    <action selector="stepperValueChanged:" destination="73U-jQ-i0t" eventType="valueChanged" id="VAV-dG-Wcn"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="SCD-bV-5DU">
                                 <rect key="frame" x="162" y="84" width="94" height="29"/>
                                 <connections>
-                                    <action selector="stepperChanged:" destination="eUm-sj-kZy" eventType="valueChanged" id="Ewv-Hl-aIq"/>
+                                    <action selector="stepperValueChanged:" destination="Tbl-cI-D7l" eventType="valueChanged" id="Snc-KP-wM9"/>
                                 </connections>
                             </stepper>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="jZo-jK-BmH">
@@ -736,15 +736,27 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <connections>
-                        <outlet property="addsStepper" destination="R6U-Un-y4y" id="cS6-iv-6ea"/>
                         <outlet property="addsTextField" destination="X5L-4O-RCK" id="Hne-Ew-rqV"/>
-                        <outlet property="extraDiceStepper" destination="SCD-bV-5DU" id="w1k-fi-mVG"/>
                         <outlet property="extraDiceTextField" destination="q9d-SO-aNa" id="JNl-lI-ON6"/>
                         <outlet property="skillsTable" destination="jZo-jK-BmH" id="Mc4-dF-2fD"/>
                         <outlet property="statButton" destination="h9Z-sG-iAt" id="7T1-W0-Ncg"/>
+                        <outletCollection property="stepperAssistants" destination="73U-jQ-i0t" collectionClass="NSMutableArray" id="9C6-6g-ESY"/>
+                        <outletCollection property="stepperAssistants" destination="Tbl-cI-D7l" collectionClass="NSMutableArray" id="7Vq-fJ-zjO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zld-Rf-kwQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="73U-jQ-i0t" userLabel="Adds Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="R6U-Un-y4y" id="2Od-cw-Lov"/>
+                        <outlet property="textField" destination="X5L-4O-RCK" id="Gd5-OQ-f6q"/>
+                    </connections>
+                </customObject>
+                <customObject id="Tbl-cI-D7l" userLabel="ExtraD4s Stepper Assistant" customClass="StepperAssistant" customModule="CharSheet" customModuleProvider="target">
+                    <connections>
+                        <outlet property="stepper" destination="SCD-bV-5DU" id="qug-Tj-f8a"/>
+                        <outlet property="textField" destination="q9d-SO-aNa" id="1jw-H8-j9y"/>
+                    </connections>
+                </customObject>
             </objects>
             <point key="canvasLocation" x="544" y="1511"/>
         </scene>
