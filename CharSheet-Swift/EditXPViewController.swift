@@ -8,17 +8,16 @@
 import CoreData
 import UIKit
 
-class EditXPViewController : UITableViewController, UITableViewDataSource, UITableViewDelegate {
+private let CELL_ID = "XPGainCell"
 
-    var charSheet: CharSheet!
-    var managedObjectContext: NSManagedObjectContext!
+class EditXPViewController : CharSheetViewController
+{
+    // MARK: Interface Builder
 
-    // Called when the XP view controller is dismissed.
-    var dismissCallback: VoidCallback?
-    
-    // MARK: - Interface Builder
-    
-    @IBAction func done(sender: AnyObject?) {
+	@IBOutlet weak var tableView: UITableView!
+
+    @IBAction func done(sender: AnyObject?)
+	{
         if let callback = dismissCallback {
             callback()
         }
@@ -27,22 +26,16 @@ class EditXPViewController : UITableViewController, UITableViewDataSource, UITab
         }
     }
     
-    ////- (IBAction)addXPGain: (id)sender
-    ////{
-    ////    PWXPGain *xpGain = [self.charSheet appendXPGain];
-    ////    int lastRow = self.charSheet.xp.count;
-    ////    NSCAssert(lastRow > 0, @"XP object $@ not added to the XP list %@", xpGain, self.charSheet.xp);
-    ////
-    ////    NSIndexPath *tableEndIndexPath = [NSIndexPath indexPathForRow:lastRow inSection:0];
-    ////    [self.tableView insertRowsAtIndexPaths:@[tableEndIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    ////
-    ////    self.tableView.editing = YES;
-    ////    editXPGainDetail(tableEndIndexPath, self.tableView, self.navigationController, self.charSheet);
-    ////}
-    
-    // MARK: - Overrides
-    
-    override func viewDidLoad() {
+    // MARK: Overrides
+
+	override func setEditing(editing: Bool, animated: Bool)
+	{
+		super.setEditing(editing, animated: animated)
+		tableView.setEditing(editing, animated: animated)
+	}
+
+    override func viewDidLoad()
+	{
         super.viewDidLoad()
         // Add the table view's Edit button to the left hand side.
         var array = navigationItem.leftBarButtonItems ?? [AnyObject]()
@@ -50,15 +43,17 @@ class EditXPViewController : UITableViewController, UITableViewDataSource, UITab
         navigationItem.leftBarButtonItems = array
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+	{
         let editXPGainViewController = segue.destinationViewController as! EditXPGainViewController
         editXPGainViewController.completionBlock = { self.tableView.reloadData() }
         
-        if segue.identifier == "AddNewXPGainView" {
+        switch segue.identifier! {
+		case "AddNewXPGainView":
             let xpGain = charSheet.appendXPGain()
             editXPGainViewController.xpGain = xpGain
-        }
-        else if segue.identifier == "EditExistingXPGainView" {
+
+        case "EditExistingXPGainView":
             if let cell = sender as? UITableViewCell {
                 if let selectedIndexPath = tableView.indexPathForCell(cell) {
                     editXPGainViewController.xpGain = charSheet.xp[selectedIndexPath.row] as? XPGain
@@ -70,18 +65,19 @@ class EditXPViewController : UITableViewController, UITableViewDataSource, UITab
             else {
                 assert(false, "Sender \(sender) is not a UITableViewCell, or is missing.")
             }
-        }
-        else {
+
+		default:
             assert(false, "Segue \(segue) ID \(segue.identifier) is not known in EditXPViewController \(self)")
         }
     }
-
+}
     // MARK: - Table View Data Source
-    
-    private let CELL_ID = "XPGainCell"
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
+
+extension EditXPViewController: UITableViewDataSource
+{
+    func tableView(           tableView: UITableView,
+		cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+	{
         let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) as? UITableViewCell ?? UITableViewCell()
         
         if let xpGain = charSheet.xp[indexPath.item] as? XPGain {
@@ -98,66 +94,47 @@ class EditXPViewController : UITableViewController, UITableViewDataSource, UITab
         return cell
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(         tableView: UITableView,
+		numberOfRowsInSection section: Int) -> Int
+	{
         return charSheet.xp.count
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int
+	{
         return 1
     }
-    
+}
     // MARK: - Table View Delegate
-    
-    override  func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        if let detailTextLabel = cell.detailTextLabel {
-            if let textLabel = cell.textLabel {
-                textLabel.font = detailTextLabel.font
-            }
+
+extension EditXPViewController: UITableViewDelegate
+{
+    func tableView(       tableView: UITableView,
+		willDisplayCell        cell: UITableViewCell,
+		forRowAtIndexPath indexPath: NSIndexPath)
+	{
+        if let detailTextLabel = cell.detailTextLabel, textLabel = cell.textLabel {
+			textLabel.font = detailTextLabel.font
         }
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(           tableView: UITableView,
+		commitEditingStyle editingStyle: UITableViewCellEditingStyle,
+		forRowAtIndexPath     indexPath: NSIndexPath)
+	{
         if editingStyle ==  .Delete {
             charSheet.removeXPGainAtIndex(indexPath.row)
-            // Update the table view to match the new model.
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
     }
     
-    override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+    func tableView(              tableView: UITableView,
+		moveRowAtIndexPath sourceIndexPath: NSIndexPath,
+		toIndexPath   destinationIndexPath: NSIndexPath)
+	{
         // Table view has already moved the row, so we just need to update the model.
         charSheet.xp.moveObjectsAtIndexes(NSIndexSet(index: sourceIndexPath.row), toIndex: destinationIndexPath.row)
-        //charSheet.moveXPGainFromIndex(sourceIndexPath.row, toIndex: destinationIndexPath.row)
     }
-
-////static void editXPGainDetail(NSIndexPath *indexPath,
-////                             UITableView *tableView,
-////                             UINavigationController *navigationController,
-////                             PWCharSheet *charSheet)
-////{
-////    PWEditXPGainViewController *xpGainController = [[PWEditXPGainViewController alloc] init];
-////    xpGainController.xpGain = [charSheet.xp objectAtIndex:indexPath.row];
-////    xpGainController.completionBlock = ^{
-////        [tableView reloadData];
-////    };
-////    [navigationController pushViewController:xpGainController animated:YES];
-////}
-////
-////- (void)tableView: (UITableView *)tableView accessoryButtonTappedForRowWithIndexPath: (NSIndexPath *)indexPath
-////{
-////    editXPGainDetail(indexPath, tableView, self.navigationController, self.charSheet);
-////}
-////
-////
-////-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-////{
-////    editXPGainDetail(indexPath, tableView, self.navigationController, self.charSheet);
-////}
-
-
-    
-    
-    
 }
 
 

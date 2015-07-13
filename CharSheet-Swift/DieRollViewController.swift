@@ -11,7 +11,7 @@ import UIKit
 import CoreData
 
 
-class DieRollViewController: UIViewController
+class DieRollViewController: CharSheetViewController
 {
     // MARK: IB Properties
     
@@ -87,16 +87,6 @@ class DieRollViewController: UIViewController
 	/// I need to track this so that I can add the skill it provides to the die roll when it exits.
 	var skillSelectController: SkillSelectController?
 
-	/// The character sheet whose stats and skills we are using for this die roll.
-	var charSheet: CharSheet! {
-		didSet {
-			dieRoll.charSheet = charSheet
-		}
-	}
-
-	/// If the die roll dialog wants to add a tick to a skill, it will call this block passing in the skill to be updated.
-	var dismissCallback: VoidCallback?
-
 	/// Callback type for the callback to add a tick to the character sheet.
 	typealias AddTickCallback = (skill: Skill) -> Void
 
@@ -105,6 +95,14 @@ class DieRollViewController: UIViewController
 
 
 	// MARK: Overrides
+
+	/// The character sheet whose stats and skills we are using for this die roll.
+	override var charSheet: CharSheet! {
+		didSet {
+			dieRoll.charSheet = charSheet
+		}
+	}
+
 
 	deinit
 	{

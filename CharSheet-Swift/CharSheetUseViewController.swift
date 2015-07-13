@@ -12,7 +12,8 @@ import MessageUI
 
 class CharSheetUseViewController : UIViewController
 {
-    // MARK: - Interface Builder
+    // MARK: IB Properties
+
     @IBOutlet weak var strengthBtn    : UseStatLabel!
     @IBOutlet weak var intelligenceBtn: UseStatLabel!
     @IBOutlet weak var dexterityBtn   : UseStatLabel!
@@ -29,6 +30,8 @@ class CharSheetUseViewController : UIViewController
     @IBOutlet weak var meleeAddsLabel : UILabel!
     @IBOutlet weak var rangedAddsLabel: UILabel!
     @IBOutlet weak var setHealthBtn   : UIButton!
+
+	// MARK: IB Actions
 
     @IBAction func backgroundSelected(sender: AnyObject?)
 	{
@@ -142,7 +145,7 @@ class CharSheetUseViewController : UIViewController
 
 
 
-    // MARK: - Properties
+    // MARK: Properties
 
 	/// Character sheet to display.
 	///
@@ -164,6 +167,7 @@ class CharSheetUseViewController : UIViewController
 	var defaultCharSheet: CharSheet? = nil
 
     var masterPopoverController: UIPopoverController?
+
     var managedObjectContext: NSManagedObjectContext!
     
 	/// The currently selected stat label.
@@ -221,13 +225,7 @@ class CharSheetUseViewController : UIViewController
 	{
 		func prepareDieRollView(dieRollViewController: DieRollViewController)
 		{
-			dieRollViewController.charSheet = self.charSheet
 			dieRollViewController.addTickToSkillCallback = { $0.addTick() }
-			dieRollViewController.dismissCallback = {
-				if let save = self.saveAllData {
-					save()
-				}
-			}
 
 			var selectedIndexPaths = skillsCollectionView.indexPathsForSelectedItems() as! [NSIndexPath]
 			var selectedSkills = selectedIndexPaths.map{ self.skillForIndexPath($0) }
@@ -239,56 +237,24 @@ class CharSheetUseViewController : UIViewController
 			dieRollViewController.setInitialStat(statData, skills:selectedSkills)
 		}
 
-		func prepareNotesView(editNotesViewController :EditNotesViewController)
-		{
-			editNotesViewController.managedObjectContext = managedObjectContext
-			editNotesViewController.charSheet = charSheet
-			editNotesViewController.dismissCallback = {     // Save and refresh the view when the modal popup completes.
-				self.configureView()
-				if let save = self.saveAllData {
-					save()
-				}
-			}
-		}
-
-		func prepareXPView(editXPViewController: EditXPViewController)
-		{
-			editXPViewController.managedObjectContext = managedObjectContext
-			editXPViewController.charSheet = charSheet
-			editXPViewController.dismissCallback = {     // Save and refresh the view when the modal popup completes.
-				self.configureView()
-				if let save = self.saveAllData {
-					save()
-				}
-			}
-		}
-
-
-		func prepareLogView(logViewController: LogViewController)
-		{
-			logViewController.charSheet = self.charSheet
-		}
-
-
-
+		// Get the new controller and set some common properties.
 		var navigationController = segue.destinationViewController as! UINavigationController
-		let newViewController: AnyObject = navigationController.childViewControllers[0]
-		switch segue.identifier! {
-		case "DieRoll":
+		let newViewController = navigationController.childViewControllers[0] as! CharSheetViewController
+		newViewController.charSheet = charSheet
+		newViewController.managedObjectContext = managedObjectContext
+		newViewController.dismissCallback = {
+			self.configureView()
+			if let save = self.saveAllData {
+				save()
+			}
+		}
+		if segue.identifier == "DieRoll" {  // Extra prep for the die roll view.
 			prepareDieRollView(newViewController as! DieRollViewController  )
-		case "ShowLogView":
-			prepareLogView(newViewController as! LogViewController      )
-		case "ShowNotesView":
-			prepareNotesView(newViewController as! EditNotesViewController)
-		case "ShowXPView":
-			prepareXPView(newViewController as! EditXPViewController   )
-		default:
-			assert(false, "Unknown segue \(segue) ID \(segue.identifier) passed to \(self)")
 		}
 	}
 
 
-    //MARK: - Managing the detail item
+    //MARK: Managing the detail item
 
     private func configureView()
 	{

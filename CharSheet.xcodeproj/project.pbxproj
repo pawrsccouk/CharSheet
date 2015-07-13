@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		571133D61B530F42001F0210 /* StepperAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571133D51B530F42001F0210 /* StepperAssistant.swift */; };
+		571133D81B537915001F0210 /* CharSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571133D71B537915001F0210 /* CharSheetViewController.swift */; };
 		5725DE721A0415CD00343E5F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE711A0415CD00343E5F /* AppDelegate.swift */; };
 		5725DE771A0415CD00343E5F /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE761A0415CD00343E5F /* MasterViewController.swift */; };
 		5725DE7E1A0415CD00343E5F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7D1A0415CD00343E5F /* Images.xcassets */; };
@@ -61,6 +62,7 @@
 /* Begin PBXFileReference section */
 		571133D41B4D66CA001F0210 /* Notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Notes.md; sourceTree = "<group>"; };
 		571133D51B530F42001F0210 /* StepperAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepperAssistant.swift; sourceTree = "<group>"; };
+		571133D71B537915001F0210 /* CharSheetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharSheetViewController.swift; sourceTree = "<group>"; };
 		5725DE6C1A0415CD00343E5F /* CharSheet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CharSheet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5725DE701A0415CD00343E5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5725DE711A0415CD00343E5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -264,6 +266,7 @@
 			children = (
 				577A81B91A08CFD700DA1EC8 /* CharSheetEditViewController.swift */,
 				577A81BA1A08CFD700DA1EC8 /* CharSheetUseViewController.swift */,
+				571133D71B537915001F0210 /* CharSheetViewController.swift */,
 				577A81BB1A08CFD700DA1EC8 /* DieRollResultViewController.swift */,
 				577A81BC1A08CFD700DA1EC8 /* DieRollViewController.swift */,
 				577A81BD1A08CFD700DA1EC8 /* EditNotesViewController.swift */,
@@ -357,6 +360,7 @@
 			files = (
 				577A81D31A091F8B00DA1EC8 /* SkillSelectController.swift in Sources */,
 				577A81B71A07C8F900DA1EC8 /* UseSkillCell.swift in Sources */,
+				571133D81B537915001F0210 /* CharSheetViewController.swift in Sources */,
 				577A81B31A07C8F900DA1EC8 /* CharSheetUseControl.swift in Sources */,
 				5725DEAD1A046FF800343E5F /* DDXMLNode.m in Sources */,
 				5725DECA1A07878600343E5F /* MutableSet.swift in Sources */,

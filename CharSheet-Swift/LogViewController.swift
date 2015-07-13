@@ -8,17 +8,30 @@
 
 import UIKit
 
-class LogViewController : UITableViewController, UITableViewDataSource {
-
-    var charSheet: CharSheet! {
+class LogViewController: CharSheetViewController
+{
+    override var charSheet: CharSheet! {
         didSet {
             sortedLogs = charSheet.sortedLogs
         }
     }
-    
+
+
+	override func viewWillAppear(animated: Bool)
+	{
+		super.viewWillAppear(animated)
+		// Scroll to show the last row if there is one.
+		if sortedLogs.count > 0 {
+			let lastRowPath = NSIndexPath(forRow: sortedLogs.count - 1, inSection: 0)
+			tableView.scrollToRowAtIndexPath(lastRowPath, atScrollPosition: .Bottom, animated: false)
+		}
+	}
+
+
     // Sorted array of logs to display. Taken from the char sheet.
     private var sortedLogs: [LogEntry] = []
 
+	@IBOutlet weak var tableView: UITableView!
 
     @IBAction func done(sender: AnyObject)
 	{
@@ -47,7 +60,7 @@ class LogViewController : UITableViewController, UITableViewDataSource {
 		if let cell = tableView.cellForRowAtIndexPath(indexPath) {
 			let displayFrom = CGRectMake(
 				cell.frame.origin.x + (cell.frame.size.width / 3),
-				cell.center.y + tableView.frame.origin.y - tableView.contentOffset.y - cell.frame.size.height,
+				cell.center.y + tableView.frame.origin.y - tableView.contentOffset.y,// - cell.frame.size.height,
 				1, 1)
 			popOver.presentPopoverFromRect(displayFrom, inView:view, permittedArrowDirections:.Left, animated:true)
 		} else {
@@ -69,18 +82,18 @@ class LogViewController : UITableViewController, UITableViewDataSource {
 // MARK: - Table View Data Source
 extension LogViewController: UITableViewDataSource
 {
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int
 	{
         return 1
     }
     
-    override func tableView(tableView: UITableView,
+    func tableView(         tableView: UITableView,
 		numberOfRowsInSection section: Int) -> Int
 	{
         return sortedLogs.count
     }
     
-    override func tableView(  tableView: UITableView,
+    func tableView(           tableView: UITableView,
 		cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
 	{
         
@@ -102,7 +115,7 @@ extension LogViewController: UITableViewDataSource
 // MARK: - Table View Delegate
 extension LogViewController: UITableViewDelegate
 {
-	override func tableView(    tableView: UITableView,
+	func tableView(             tableView: UITableView,
 		didSelectRowAtIndexPath indexPath: NSIndexPath)
 	{
 		openCustomPopoverForTableView(tableView, cellIndexPath:indexPath)
