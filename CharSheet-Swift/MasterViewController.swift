@@ -107,28 +107,27 @@ class MasterViewController : UITableViewController {
         
         detailViewController = splitViewController?.viewControllers.last?.topViewController as! CharSheetUseViewController
         detailViewController.managedObjectContext = managedObjectContext
+
+		// If we have a view with no character sheet set,
+		// then find the sheet we were looking at last time and set it here by default.
+		detailViewController.defaultCharSheet = lastViewedCharSheet()
     }
 
-	override func viewWillAppear(animated: Bool) {
-		super.viewWillAppear(animated)
-		// If we have a view with no character sheet set, then find the sheet we were looking at last time
-		// and set it here by default.
 
+	/// Returns the last CharSheet the user was viewing before they exited the app.
+	///
+	/// This is stored in the UserDefaults and used to pre-set the character sheet on app startup.
+	private func lastViewedCharSheet() -> CharSheet?
+	{
 		let allObjects = fetchedResultsController.sections?.flatMap({ (sectionInfo: AnyObject) in
 			return (sectionInfo as! NSFetchedResultsSectionInfo).objects as! [CharSheet]
 		})
-		let userDefaults = NSUserDefaults.standardUserDefaults()
-		let lastViewedSheetName = userDefaults.stringForKey("LastSelectedCharacter")
-		if let dvc = detailViewController where dvc.charSheet == nil {
-			if let sheetName = lastViewedSheetName {
-				if let charSheet = allObjects?.filter({ $0.name == sheetName }).first {
-					dvc.defaultCharSheet = charSheet
-				}
-			}
+		if let lastViewedSheetName = NSUserDefaults.standardUserDefaults().stringForKey("LastSelectedCharacter")
+		{
+			return allObjects?.filter({ $0.name == lastViewedSheetName }).first
 		}
+		return nil
 	}
-
-
 
 	/// Extract the error object from a Result, and present a view controller displaying the error.
 	///
@@ -139,33 +138,39 @@ class MasterViewController : UITableViewController {
 	func showAlertForResult<T>(result: Result<T>, title: String)
 	{
 		// Show nothing if this isn't an error result.
-		if result.error == nil {
+		if result.error == nil
+		{
 			return
 		}
 		let error = result.error!
 
         var errorText = "Unknown error"
-        if let userInfo = error.userInfo {
-            
-            if let fullInfo = userInfo[NSHelpAnchorErrorKey] as? String {
+        if let userInfo = error.userInfo
+		{
+            if let fullInfo = userInfo[NSHelpAnchorErrorKey] as? String
+			{
                 errorText = fullInfo
             }
-            
             // If there are multiple errors, then the userInfo of the error will have a value for NSDetailedErrors
             // and these errors show the actual problem.
             // Get the first one, and show it.
-            if let errorDetail = userInfo[NSDetailedErrorsKey] as? [NSError] {
-                if !errorDetail.isEmpty {
-                    if let fullInfo = errorDetail[0].userInfo?[NSHelpAnchorErrorKey] as? String {
+            if let errorDetail = userInfo[NSDetailedErrorsKey] as? [NSError]
+			{
+                if !errorDetail.isEmpty
+				{
+                    if let fullInfo = errorDetail[0].userInfo?[NSHelpAnchorErrorKey] as? String
+					{
                         errorText = fullInfo
-                        if errorDetail.count > 1 {
+                        if errorDetail.count > 1
+						{
                             errorText += "\nand \(errorDetail.count) more..."
                         }
                     }
                 }
                 
                 // Log them all
-                for e in errorDetail {
+                for e in errorDetail
+				{
                     NSLog("Core Data error \(e) userInfo \(e.userInfo)")
                 }
             }

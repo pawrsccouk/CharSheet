@@ -20,7 +20,8 @@ class AppDelegate: UIResponder
 
 	/// The directory the application uses to store the Core Data store file.
 	///
-	/// This code uses a directory named "Patrick-Wallace.CharSheet" in the application's documents Application Support directory.
+	/// This code uses a directory named "Patrick-Wallace.CharSheet"
+	/// in the application's documents Application Support directory.
 	lazy var applicationDocumentsDirectory: NSURL = {
 		let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
 		return urls[urls.count-1] as! NSURL
@@ -38,7 +39,7 @@ class AppDelegate: UIResponder
 	///
 	/// This implementation creates and return a coordinator, having added the store for the application to it.
 	///
-	/// :note: This property is optional since there are error conditions that could cause the creation of the store to fail.
+	/// This property is optional since there are error conditions that could cause the creation of the store to fail.
 	lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
 
 		let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
@@ -68,7 +69,8 @@ class AppDelegate: UIResponder
 	///
 	/// This is already bound to the persistent store coordinator for the application.
 	///
-	/// :note: This property is optional since there are error conditions that could cause the creation of the context to fail.
+	/// This property is optional since there are error conditions that could
+	/// cause the creation of the context to fail.
 	lazy var managedObjectContext: NSManagedObjectContext? = {
 		let coordinator = self.persistentStoreCoordinator
 		if coordinator == nil {
@@ -114,8 +116,6 @@ class AppDelegate: UIResponder
 		masterViewController = masterNavigationController.viewControllers[0] as! MasterViewController
 		masterViewController.managedObjectContext = managedObjectContext!
 	}
-
-
 }
 
 
@@ -140,12 +140,14 @@ extension AppDelegate: UIApplicationDelegate
 
 	func applicationDidEnterBackground(application: UIApplication)
 	{
-		self.saveContext()
+		saveContext()
+		NSUserDefaults.standardUserDefaults().synchronize()
 	}
 
 	func applicationWillTerminate(application: UIApplication)
 	{
-		self.saveContext()
+		saveContext()
+		NSUserDefaults.standardUserDefaults().synchronize()
 	}
 
 	func application(application: UIApplication,
