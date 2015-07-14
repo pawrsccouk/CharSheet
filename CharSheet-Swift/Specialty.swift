@@ -12,12 +12,14 @@ import CoreData
 
 class Specialty : NSManagedObject {
     
-    @NSManaged var name: String?, value: Int16, parent: Skill!
+	@NSManaged var name: String?, value: Int16, order: Int16, parent: Skill!
     
-    override func awakeFromInsert() -> Void {
+    override func awakeFromInsert() -> Void
+	{
         super.awakeFromInsert()
-        self.name = ""
+        self.name  = ""
         self.value = 0
+		self.order = 0
     }
 }
 
@@ -27,11 +29,13 @@ private enum Attribute: String { case NAME = "name", VALUE = "value" }
 
 extension Specialty: XMLClient {
 
-    var asObject: NSObject { get { return self } }
+    var asObject: NSObject { return self }
     
     
-    func asXML() -> DDXMLElement {
-        func attribute(name: Attribute, value: String) -> DDXMLNode {
+    func asXML() -> DDXMLElement
+	{
+        func attribute(name: Attribute, value: String) -> DDXMLNode
+		{
 			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
 		}
 		let this = DDXMLElement.elementWithName(SPECIALTY) as! DDXMLElement
@@ -40,7 +44,8 @@ extension Specialty: XMLClient {
         return this
     }
 
-    func updateFromXML(element: DDXMLElement) -> NilResult {
+    func updateFromXML(element: DDXMLElement) -> NilResult
+	{
 		let result = XMLSupport.validateElementName(element.name, expectedName: SPECIALTY)
 		if let e = result.error {
 			return failure(e)

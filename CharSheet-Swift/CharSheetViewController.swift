@@ -17,7 +17,4 @@ class CharSheetViewController: UIViewController
 
 	/// The ManagedObjectContext needed to make changes to the Core Data objects.
 	var managedObjectContext: NSManagedObjectContext!
-
-	/// A callback which will be called once the view controller has been dismissed.
-	var dismissCallback: VoidCallback?
 }

@@ -232,9 +232,7 @@ class DieRollViewController: CharSheetViewController
                 dieRollResultViewController.addTickAction = { callback(skill: self.dieRoll.skills[0]) }
             }
         }
-        
-        dieRollResultViewController.dismissCallback = self.dismissCallback
-    }
+	}
 }
 
     // MARK: - Navigation Controller Delegate

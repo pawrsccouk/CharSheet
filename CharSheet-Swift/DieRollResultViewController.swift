@@ -30,14 +30,9 @@ class DieRollResultViewController : UIViewController {
             let c = entry.change ?? ""
             entry.change = "\(c)\nTick added."
         }
-        
-        if let callback = self.dismissCallback {
-            callback()
-        }
-        
-        if let pvc = presentingViewController {
-            pvc.dismissViewControllerAnimated(true, completion:nil)
-        }
+
+		NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
+		presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
     }
 
 
@@ -53,10 +48,6 @@ class DieRollResultViewController : UIViewController {
             enableAddTickControl()
         }
     }
-    
-    // Called when the user dismisses the popup. Save stuff here.
-    var dismissCallback: VoidCallback?
-
 
     // MARK: Methods
     

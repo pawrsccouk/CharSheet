@@ -398,22 +398,22 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
-                        <outlet property="charismaBtn" destination="8Tk-F2-1Rm" id="RNK-mq-iBy"/>
-                        <outlet property="constitutionBtn" destination="aQ2-Fx-v2b" id="mc6-ep-vsr"/>
-                        <outlet property="dexterityBtn" destination="Y9Z-QI-VGW" id="wES-QD-4tu"/>
                         <outlet property="experienceLabel" destination="eWY-Ps-284" id="6sm-Sr-Ytf"/>
                         <outlet property="gameLabel" destination="MkC-Uv-N6M" id="3Fd-Rr-ogL"/>
-                        <outlet property="intelligenceBtn" destination="jF8-6P-By4" id="NEz-Kp-hSd"/>
                         <outlet property="levelLabel" destination="wq7-XE-GdU" id="Zhk-bP-t3A"/>
-                        <outlet property="luckBtn" destination="ge4-9I-6Nm" id="kTB-3b-LEM"/>
                         <outlet property="meleeAddsLabel" destination="VnE-g2-sAd" id="OmY-Gg-uoW"/>
-                        <outlet property="perceptionBtn" destination="lHd-po-YLq" id="vnQ-Sw-Rnj"/>
                         <outlet property="playerLabel" destination="Llb-PP-Nmq" id="N1m-Dj-Vse"/>
                         <outlet property="rangedAddsLabel" destination="Qdh-Y8-Alo" id="yMe-Cp-PbJ"/>
                         <outlet property="setHealthBtn" destination="82T-8c-Xg3" id="zgD-Zr-wfM"/>
                         <outlet property="skillsCollectionView" destination="DBA-AS-y4Q" id="Gf9-7i-MCd"/>
-                        <outlet property="speedBtn" destination="0zq-RI-JuM" id="s74-ag-WLH"/>
-                        <outlet property="strengthBtn" destination="ene-V1-JM4" id="6AL-l3-CqQ"/>
+                        <outletCollection property="statButtons" destination="ene-V1-JM4" collectionClass="NSMutableArray" id="QE9-hV-dKb"/>
+                        <outletCollection property="statButtons" destination="jF8-6P-By4" collectionClass="NSMutableArray" id="jhR-wl-dx1"/>
+                        <outletCollection property="statButtons" destination="Y9Z-QI-VGW" collectionClass="NSMutableArray" id="fsK-f6-8Df"/>
+                        <outletCollection property="statButtons" destination="8Tk-F2-1Rm" collectionClass="NSMutableArray" id="gBq-20-ZBV"/>
+                        <outletCollection property="statButtons" destination="aQ2-Fx-v2b" collectionClass="NSMutableArray" id="FFw-Wg-b2c"/>
+                        <outletCollection property="statButtons" destination="ge4-9I-6Nm" collectionClass="NSMutableArray" id="lXQ-tC-FL5"/>
+                        <outletCollection property="statButtons" destination="0zq-RI-JuM" collectionClass="NSMutableArray" id="W0L-4y-BS2"/>
+                        <outletCollection property="statButtons" destination="lHd-po-YLq" collectionClass="NSMutableArray" id="ZgW-GA-0vd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IKV-as-9TS" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -469,7 +469,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0ye-dM-tA2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="360" y="-640"/>
+            <point key="canvasLocation" x="314" y="-784"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="Vzx-zo-AWc">
@@ -524,7 +524,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yDm-UN-NNN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-88" y="-640"/>
+            <point key="canvasLocation" x="-204" y="-784"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="vgj-Ol-6Dy">
@@ -543,7 +543,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qBI-oW-YLf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-88" y="1503"/>
+            <point key="canvasLocation" x="-286" y="1461"/>
         </scene>
         <!--Die Roll-->
         <scene sceneID="Diw-DL-RFB">
@@ -759,7 +759,7 @@
                     </connections>
                 </customObject>
             </objects>
-            <point key="canvasLocation" x="544" y="1511"/>
+            <point key="canvasLocation" x="357" y="1461"/>
         </scene>
         <!--Die Roll Result View Controller-->
         <scene sceneID="cv8-KS-dAA">
@@ -823,7 +823,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Pl-Be-Dyc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1209" y="1511"/>
+            <point key="canvasLocation" x="1154" y="1461"/>
         </scene>
         <!--Logged Die Rolls-->
         <scene sceneID="Woy-cS-Z1F">
@@ -891,7 +891,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EQS-bf-z4g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1209" y="2214"/>
+            <point key="canvasLocation" x="1098" y="2207"/>
         </scene>
         <!--Statistics-->
         <scene sceneID="84e-UR-x52">
@@ -1080,7 +1080,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hU4-J8-OXv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1790" y="1320"/>
+            <point key="canvasLocation" x="1781" y="1276"/>
         </scene>
         <!--Log List Navigation Controller-->
         <scene sceneID="zoX-qT-dV2">
@@ -1100,7 +1100,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="njg-Dn-6ER" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="544" y="2248"/>
+            <point key="canvasLocation" x="49" y="2207"/>
         </scene>
         <!--Log Entry View Controller-->
         <scene sceneID="jmk-ct-4kp">
@@ -1169,7 +1169,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lHn-Jd-NtK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1442" y="2968"/>
+            <point key="canvasLocation" x="1170" y="3159"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ZoB-UW-49z">
@@ -1190,7 +1190,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iQf-ld-eVu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="544" y="2968"/>
+            <point key="canvasLocation" x="185" y="3159"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="HFP-mB-TDI">

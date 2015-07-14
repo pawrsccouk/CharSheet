@@ -31,6 +31,7 @@
     </entity>
     <entity name="Skill" representedClassName="CharSheet.Skill" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="ticks" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="parent" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="CharSheet" inverseName="skills" inverseEntity="CharSheet" syncable="YES"/>
@@ -38,19 +39,21 @@
     </entity>
     <entity name="Specialty" representedClassName="CharSheet.Specialty" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="parent" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Skill" inverseName="specialties" inverseEntity="Skill" syncable="YES"/>
     </entity>
     <entity name="XPGain" representedClassName="CharSheet.XPGain" syncable="YES">
         <attribute name="amount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="reason" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="CharSheet" inverseName="xp" inverseEntity="CharSheet" syncable="YES"/>
     </entity>
     <elements>
         <element name="CharSheet" positionX="52" positionY="135" width="128" height="360"/>
         <element name="LogEntry" positionX="439" positionY="315" width="128" height="105"/>
-        <element name="Skill" positionX="223" positionY="45" width="128" height="120"/>
-        <element name="Specialty" positionX="396" positionY="81" width="128" height="90"/>
-        <element name="XPGain" positionX="160" positionY="192" width="128" height="90"/>
+        <element name="Skill" positionX="223" positionY="45" width="128" height="135"/>
+        <element name="Specialty" positionX="396" positionY="81" width="128" height="105"/>
+        <element name="XPGain" positionX="160" positionY="192" width="128" height="105"/>
     </elements>
 </model>

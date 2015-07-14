@@ -18,12 +18,13 @@ class EditXPViewController : CharSheetViewController
 
     @IBAction func done(sender: AnyObject?)
 	{
-        if let callback = dismissCallback {
-            callback()
-        }
-        if let pvc = presentingViewController {
-            pvc.dismissViewControllerAnimated(true, completion:nil)
-        }
+		// Ensure the values saved to the DB have the same order as in the set here.
+		var i: Int16 = 0
+		for xpGain in charSheet.xp.array.map({ $0 as! XPGain }) {
+			xpGain.order = i++
+		}
+		NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
+		presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
     }
     
     // MARK: Overrides
@@ -36,13 +37,23 @@ class EditXPViewController : CharSheetViewController
 
     override func viewDidLoad()
 	{
-        super.viewDidLoad()
-        // Add the table view's Edit button to the left hand side.
-        var array = navigationItem.leftBarButtonItems ?? [AnyObject]()
-            array.insert(editButtonItem(), atIndex: 0)
-        navigationItem.leftBarButtonItems = array
+		super.viewDidLoad()
+		// Add the table view's Edit button to the left hand side.
+		var array = navigationItem.leftBarButtonItems ?? [AnyObject]()
+		array.insert(editButtonItem(), atIndex: 0)
+		navigationItem.leftBarButtonItems = array
     }
-    
+
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		// Reorder the set of XPGain objects to match the order stored in the DB.
+		charSheet.xp.sortUsingComparator { (xp1, xp2) -> NSComparisonResult in
+			if xp1.order > xp2.order { return .OrderedDescending }
+			if xp2.order > xp1.order { return .OrderedAscending  }
+			return .OrderedSame
+		}
+	}
+
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
 	{
         let editXPGainViewController = segue.destinationViewController as! EditXPGainViewController
@@ -54,16 +65,11 @@ class EditXPViewController : CharSheetViewController
             editXPGainViewController.xpGain = xpGain
 
         case "EditExistingXPGainView":
-            if let cell = sender as? UITableViewCell {
-                if let selectedIndexPath = tableView.indexPathForCell(cell) {
-                    editXPGainViewController.xpGain = charSheet.xp[selectedIndexPath.row] as? XPGain
-                }
-                else {
-                    assert(false, "Cell \(cell) not found in CharSheet.xp. ")
-                }
+            if let cell = sender as? UITableViewCell, selectedIndexPath = tableView.indexPathForCell(cell) {
+				editXPGainViewController.xpGain = charSheet.xp[selectedIndexPath.row] as? XPGain
             }
             else {
-                assert(false, "Sender \(sender) is not a UITableViewCell, or is missing.")
+                assert(false, "Cannot get the indexPath from sender: \(sender) is it a UITableViewCell?")
             }
 
 		default:
@@ -79,24 +85,22 @@ extension EditXPViewController: UITableViewDataSource
 		cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
 	{
         let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) as? UITableViewCell ?? UITableViewCell()
-        
         if let xpGain = charSheet.xp[indexPath.item] as? XPGain {
-            if let l = cell.textLabel {
-                l.text = xpGain.reason
-            }
-            if let l = cell.detailTextLabel {
-                l.text = xpGain.amount.description
-            }
+            cell.textLabel?.text = xpGain.reason
+            cell.detailTextLabel?.text = xpGain.amount.description
         } else {
             assert(false, "No XP gain object at index \(indexPath)")
         }
-        
         return cell
     }
     
     func tableView(         tableView: UITableView,
 		numberOfRowsInSection section: Int) -> Int
 	{
+		for xpGain in charSheet.xp.array.map({ $0 as! XPGain }) {
+			assert(xpGain.reason != nil, "Ensure no faulting.")
+			NSLog("XPGain reason \(xpGain.reason) amount \(xpGain.amount)")
+		}
         return charSheet.xp.count
     }
     
@@ -113,16 +117,14 @@ extension EditXPViewController: UITableViewDelegate
 		willDisplayCell        cell: UITableViewCell,
 		forRowAtIndexPath indexPath: NSIndexPath)
 	{
-        if let detailTextLabel = cell.detailTextLabel, textLabel = cell.textLabel {
-			textLabel.font = detailTextLabel.font
-        }
+		cell.textLabel?.font = cell.detailTextLabel?.font
     }
-    
+
     func tableView(           tableView: UITableView,
 		commitEditingStyle editingStyle: UITableViewCellEditingStyle,
 		forRowAtIndexPath     indexPath: NSIndexPath)
 	{
-        if editingStyle ==  .Delete {
+        if editingStyle == .Delete {
             charSheet.removeXPGainAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }

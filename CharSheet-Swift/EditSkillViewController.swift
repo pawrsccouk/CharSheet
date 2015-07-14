@@ -18,6 +18,11 @@ class EditSkillViewController : UIViewController
 
     @IBAction func done(sender: AnyObject?)
 	{
+		// Update the 'order' field in the specialties to match the order given in the set.
+		var i: Int16 = 0
+		for s in skill.specialties.array.map({ $0 as! Specialty }) {
+			s.order = i++
+		}
 		presentingViewController?.dismissViewControllerAnimated(true, completion: completionCallback)
     }
     

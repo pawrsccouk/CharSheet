@@ -16,6 +16,17 @@ class AppDelegate: UIResponder
 
 	var masterViewController: MasterViewController!
 
+	override init()
+	{
+		super.init()
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveChanges", name: "SaveChanges", object: nil)
+	}
+
+	deinit
+	{
+		NSNotificationCenter.defaultCenter().removeObserver(self)
+	}
+
 	// MARK: Core Data stack
 
 	/// The directory the application uses to store the Core Data store file.
@@ -60,7 +71,6 @@ class AppDelegate: UIResponder
 			NSUnderlyingErrorKey            : error]
 		let err = NSError(domain: "CharSheet CoreData", code: 9999, userInfo: dict)
 		// Replace this with code to handle the error appropriately.
-		// abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
 		NSLog("Unresolved error \(err), \(err.userInfo)")
 		abort()
 		}()
@@ -85,9 +95,10 @@ class AppDelegate: UIResponder
 
 	// MARK: Core Data Saving support
 
-	/// Save all changes to the current Managed Object Context.
-	/// Can be called frequently; it does nothing if nothing has changed.
-	func saveContext ()
+	/// Triggered when a "SaveChanges" notification message is received.
+	///
+	/// Saves all changes to the Managed Object Context.
+	func saveChanges()
 	{
 		if let moc = self.managedObjectContext {
 			var error: NSError? = nil
@@ -108,9 +119,7 @@ class AppDelegate: UIResponder
 		let detailNavigationController = splitViewController.viewControllers[1] as! UINavigationController
 
 		let charSheetUseViewController = detailNavigationController.viewControllers[0] as! CharSheetUseViewController
-		splitViewController.delegate = charSheetUseViewController
-
-		charSheetUseViewController.saveAllData = { self.saveContext() }
+		charSheetUseViewController.navigationItem.setLeftBarButtonItem(splitViewController.displayModeButtonItem(), animated: false)
 
 		let masterNavigationController = splitViewController.viewControllers[0] as! UINavigationController
 		masterViewController = masterNavigationController.viewControllers[0] as! MasterViewController
@@ -140,13 +149,13 @@ extension AppDelegate: UIApplicationDelegate
 
 	func applicationDidEnterBackground(application: UIApplication)
 	{
-		saveContext()
+		NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
 		NSUserDefaults.standardUserDefaults().synchronize()
 	}
 
 	func applicationWillTerminate(application: UIApplication)
 	{
-		saveContext()
+		NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
 		NSUserDefaults.standardUserDefaults().synchronize()
 	}
 

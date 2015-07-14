@@ -15,10 +15,12 @@ can click on to add the skill. Currently the "+" icon is too far away from the u
 [x] Die Roll view is adding skills instead of updating an existing skill.
 [x] Specialty says "Detail" when no specialty provided. Should say nothing.
 [x] Automatic loading of last char sheet viewed fails for Portrait as the MasterViewController is not shown.
-
+[x] Rearranging the XP Gain table doesn't persist across quit and restart.
+	Note - Core Data's *Ordered* property doesn't seem to persist across restarts. It just says to use an ordered set
+	when instanciating the data. So I've added an *order* property to the data and I sort the set on load and update
+	the order property on save.
 
 ## Ugly files
-CharSheetUseViewController
 CharSheet
 MasterViewController
 DieRoll

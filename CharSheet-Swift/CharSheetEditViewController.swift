@@ -9,8 +9,8 @@ import CoreData
 
 private let CELL_ID = "CharSheetEditSkill_Cell"
 
-class CharSheetEditViewController : UIViewController {
-
+class CharSheetEditViewController : CharSheetViewController
+{
     // MARK: IB Properties
     @IBOutlet weak var strengthTextField    : UITextField!
     @IBOutlet weak var constitutionTextField: UITextField!
@@ -36,13 +36,8 @@ class CharSheetEditViewController : UIViewController {
     @IBAction func editDone(sender: AnyObject?)
 	{
         configureData()
-        
-        if let callback = dismissCallback {
-            callback()
-        }
-        if let pvc = presentingViewController {
-            pvc.dismissViewControllerAnimated(true, completion:nil)
-        }
+		NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
+		presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
     }
     
     @IBAction func addSkill(sender: AnyObject?)
@@ -50,15 +45,7 @@ class CharSheetEditViewController : UIViewController {
         charSheet.appendSkill()
         skillsTableView.reloadData()
     }
-   
-    // MARK: Public API
-    
-    var managedObjectContext: NSManagedObjectContext!
-    
-    var charSheet: CharSheet!
-    
-    var dismissCallback: VoidCallback?
-    
+
     // MARK: Overrides
     
     override func viewWillAppear(animated: Bool)
@@ -127,6 +114,12 @@ class CharSheetEditViewController : UIViewController {
         charSheet.perception   = Int16(perceptionTextField.text.toInt()   ?? 0)
         charSheet.intelligence = Int16(intelligenceTextField.text.toInt() ?? 0)
         charSheet.luck         = Int16(luckTextField.text.toInt()         ?? 0)
+
+		// Update the 'order' attribute in the skills to match the order in the set.
+		var i: Int16 = 0
+		for sk in charSheet.skills.array.map({ $0 as! Skill }) {
+			sk.order = i++
+		}
     }
 }
 
@@ -183,7 +176,7 @@ extension CharSheetEditViewController: UITableViewDelegate
     func tableView(                              tableView: UITableView,
 		accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath)
 	{
-        let esb = UIStoryboard(name: "Edit", bundle: NSBundle.mainBundle())
+        let esb = StoryboardManager.sharedInstance().editStoryboard
 		let navId = "EditSkillNavigationController"
         let esnc = esb.instantiateViewControllerWithIdentifier(navId) as! UINavigationController
         

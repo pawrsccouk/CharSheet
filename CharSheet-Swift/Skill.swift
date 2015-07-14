@@ -14,32 +14,45 @@ func addSpecialty(managedObjectContext: NSManagedObjectContext) -> Specialty {
 		inManagedObjectContext:managedObjectContext) as! Specialty
 }
 
-class Skill : NSManagedObject {
+class Skill : NSManagedObject
+{
+    @NSManaged var name: String?, ticks: Int16, value: Int16, order: Int16
+	@NSManaged var parent: CharSheet!, specialties: NSMutableOrderedSet!
 
-    @NSManaged var name: String?, ticks: Int16, value: Int16, parent: CharSheet!, specialties: NSMutableOrderedSet!
-
-    override func awakeFromInsert() -> Void {
+    override func awakeFromInsert() -> Void
+	{
         super.awakeFromInsert()
-        self.name = ""
-        self.value = 0
+        name  = ""
+        value = 0
+		order = 0
     }
+
+	override func awakeFromFetch()
+	{
+		super.awakeFromFetch()
+		// Update the specialties array to match the order specified in the DB.
+		specialties.sortUsingDescriptors([NSSortDescriptor(key: "order", ascending: true)])
+	}
 
 	// MARK: Array of specialties.
 
-    func appendSpecialty() -> Specialty {
+    func appendSpecialty() -> Specialty
+	{
         var newSpec = addSpecialty(self.managedObjectContext!)
         newSpec.parent = self
         self.specialties.addObject(newSpec)
         return newSpec
     }
     
-    func removeSpecialtyAtIndex(index: Int) -> Void {
+    func removeSpecialtyAtIndex(index: Int) -> Void
+	{
         var spec: Specialty = self.specialties[index] as! Specialty
         self.specialties.removeObjectAtIndex(index)
         self.managedObjectContext?.deleteObject(spec)
     }
 
-    func moveSpecialtyFromIndex(sourceIndex: NSInteger, toIndex destIndex: NSInteger) -> Void {
+    func moveSpecialtyFromIndex(sourceIndex: NSInteger, toIndex destIndex: NSInteger) -> Void
+	{
         self.specialties.moveObjectsAtIndexes(NSIndexSet(index: sourceIndex), toIndex:destIndex)
     }
 
@@ -56,13 +69,15 @@ class Skill : NSManagedObject {
 
 	// MARK: Methods
 
-    func add(value: NSNumber, toAdd: NSInteger) -> NSNumber {
+    func add(value: NSNumber, toAdd: NSInteger) -> NSNumber
+	{
         return NSNumber(integer:value.integerValue + toAdd)
     }
 
 
 
-    func addTick() {
+    func addTick()
+	{
         if self.ticks >= 19 {
             self.ticks = 0
             self.value = self.value + 1
@@ -75,18 +90,22 @@ class Skill : NSManagedObject {
 
     // MARK:- PWXMLClient implementation
 
-extension Skill: XMLClient {
-
-    var asObject: NSObject { get { return self } }
+extension Skill: XMLClient
+{
+    var asObject: NSObject { return self }
     
     private enum Element: String  { case SKILL = "skill", SPECIALTIES = "specialties" }
     private enum Attribute: String { case NAME = "name", VALUE = "value", TICKS = "ticks" }
     
     
-    func asXML() -> DDXMLElement {
-        let this = DDXMLElement.elementWithName(Element.SKILL.rawValue) as! DDXMLElement
-        func attribute(name: Attribute, value: String!) -> DDXMLNode { return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode }
+    func asXML() -> DDXMLElement
+	{
+        func attribute(name: Attribute, value: String!) -> DDXMLNode
+		{
+			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
+		}
         
+        let this = DDXMLElement.elementWithName(Element.SKILL.rawValue) as! DDXMLElement
         this.addAttribute( attribute(Attribute.NAME , self.name             ) )
         this.addAttribute( attribute(Attribute.VALUE, self.value.description) )
         this.addAttribute( attribute(Attribute.TICKS, self.ticks.description) )

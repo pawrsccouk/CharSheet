@@ -18,9 +18,6 @@ class EditNotesViewController : CharSheetViewController
 	@IBAction func editDone(sender: AnyObject?)
 	{
         saveChanges()
-        if let callback = dismissCallback {
-            callback()
-        }
 		presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
     }
 
@@ -48,6 +45,7 @@ class EditNotesViewController : CharSheetViewController
     func saveChanges()
 	{
         self.charSheet.notes = notesTextView.text;
+		NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
     }
     
 

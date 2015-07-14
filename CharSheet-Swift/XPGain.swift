@@ -13,13 +13,14 @@ class XPGain : NSManagedObject
 {
     
     // MARK: - Properties - CoreData
-    @NSManaged var amount: Int16, reason: String?, parent: CharSheet!
-    
+	@NSManaged var amount: Int16, reason: String?, parent: CharSheet!, order: Int16
+
     override func awakeFromInsert() -> Void
 	{
         super.awakeFromInsert()
-        self.amount  = 0
-        self.reason  = "Reason"
+        amount = 0
+        reason = "Reason"
+		order  = 0
     }
 }
     // MARK: - XMLClient implementation
@@ -31,12 +32,13 @@ private enum Attribute: String { case AMOUNT = "amount", REASON = "reason" }
 extension XPGain: XMLClient
 {
     var asObject: NSObject {
-		get { return self }
+		return self
 	}
     
-    
-    func asXML() -> DDXMLElement {
-        func attribute(name: Attribute, value: String) -> DDXMLNode {
+    func asXML() -> DDXMLElement
+	{
+        func attribute(name: Attribute, value: String) -> DDXMLNode
+		{
 			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
 		}
         let this = DDXMLElement.elementWithName(XP_ENTRY) as! DDXMLElement
@@ -45,7 +47,8 @@ extension XPGain: XMLClient
         return this
     }
     
-    func updateFromXML(element: DDXMLElement) -> NilResult {
+    func updateFromXML(element: DDXMLElement) -> NilResult
+	{
         let result = XMLSupport.validateElementName(element.name, expectedName: XP_ENTRY)
 		if let err = result.error {
 			return failure(err)
