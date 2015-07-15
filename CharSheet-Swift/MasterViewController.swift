@@ -80,10 +80,8 @@ class MasterViewController : UITableViewController {
 	{
 		func findElement(document: DDXMLDocument, nodeName: String) -> Result<DDXMLElement>
 		{
-			for node in document.rootElement.children as! [DDXMLElement] {
-				if node.name == nodeName {
-					return success(node)
-				}
+			if let node = (document.rootElement.children as! [DDXMLElement]).filter({ $0.name == nodeName }).first {
+				return success(node)
 			}
 			return failure(XMLSupport.XMLError("XMLDocument has no node named \(nodeName)"))
 		}
@@ -138,89 +136,51 @@ class MasterViewController : UITableViewController {
 	func showAlertForResult<T>(result: Result<T>, title: String)
 	{
 		// Show nothing if this isn't an error result.
-		if result.error == nil
-		{
+		if result.error == nil {
 			return
 		}
 		let error = result.error!
 
         var errorText = "Unknown error"
-        if let userInfo = error.userInfo
-		{
-            if let fullInfo = userInfo[NSHelpAnchorErrorKey] as? String
-			{
+        if let userInfo = error.userInfo {
+            if let fullInfo = userInfo[NSHelpAnchorErrorKey] as? String {
                 errorText = fullInfo
             }
             // If there are multiple errors, then the userInfo of the error will have a value for NSDetailedErrors
             // and these errors show the actual problem.
             // Get the first one, and show it.
-            if let errorDetail = userInfo[NSDetailedErrorsKey] as? [NSError]
-			{
-                if !errorDetail.isEmpty
-				{
-                    if let fullInfo = errorDetail[0].userInfo?[NSHelpAnchorErrorKey] as? String
-					{
-                        errorText = fullInfo
-                        if errorDetail.count > 1
-						{
-                            errorText += "\nand \(errorDetail.count) more..."
-                        }
-                    }
-                }
-                
+			if let errorDetail = userInfo[NSDetailedErrorsKey] as? [NSError] {
+				if !errorDetail.isEmpty, let fullInfo = errorDetail[0].userInfo?[NSHelpAnchorErrorKey] as? String {
+					errorText = fullInfo
+					if errorDetail.count > 1 {
+						errorText += "\nand \(errorDetail.count) more..."
+					}
+				}
                 // Log them all
-                for e in errorDetail
-				{
+                for e in errorDetail {
                     NSLog("Core Data error \(e) userInfo \(e.userInfo)")
                 }
             }
         }
-		let alertController = UIAlertController(
-			title         : title,
-			message       : errorText,
-			preferredStyle: .Alert)
-		alertController.addAction(UIAlertAction(
-			title: "Close",
-			style: .Default,
-			handler: { (action: UIAlertAction?) in self.dismissViewControllerAnimated(true, completion: nil)
-		}))
+		let alertController = UIAlertController(title: title, message: errorText, preferredStyle: .Alert)
+		alertController.addAction(UIAlertAction(title: "Close",style: .Default) { (action) in
+			self.dismissViewControllerAnimated(true, completion: nil)
+		})
 		presentViewController(alertController, animated: true, completion: nil)
    }
 
-
-	/// Saves any changes made to the data since the last saveData call.
-    func saveData()
-	{
-		func saveChanges() -> NilResult
-		{
-			let c = fetchedResultsController.managedObjectContext
-			if c.hasChanges {
-				var error: NSError?
-				if !c.save(&error) {
-					NSLog("Unresolved save error \(error!), \(error!.userInfo)")
-					return failure(error!)
-				}
-			}
-			return success()
-		}
-
-
-		let result = saveChanges()
-		if !result.success {
-			showAlertForResult(result, title: "Error saving character.")
-		}
-    }
-
 	/// Creates a new CharSheet entity in Core Data's managed object context and returns it.
-	func newCharacter() -> Result<CharSheet>
+	private func newCharacter() -> Result<CharSheet>
 	{
 		let context  = fetchedResultsController.managedObjectContext
 		if let
 			entCharacter = fetchedResultsController.fetchRequest.entity,
 			entName      = entCharacter.name,
-			newCharacter = NSEntityDescription.insertNewObjectForEntityForName(entName, inManagedObjectContext:context) as? CharSheet {
-				newCharacter.name = "New Character"
-				return success(newCharacter)
+			newCharacter = NSEntityDescription.insertNewObjectForEntityForName(
+				entName, inManagedObjectContext:context) as? CharSheet
+		{
+			newCharacter.name = "New Character"
+			return success(newCharacter)
 		}
 		return failure(XMLSupport.XMLError("Error creating character sheet from Core Data"))
 	}
@@ -228,10 +188,11 @@ class MasterViewController : UITableViewController {
     @IBAction func insertNewCharSheet(sender: AnyObject?)
 	{
         newCharacter()
-        saveData()     // Save the character immediately.
+		// Save the character immediately.
+        NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
     }
     
-    func deleteCharSheet(charSheet: CharSheet)
+    private func deleteCharSheet(charSheet: CharSheet)
 	{
         fetchedResultsController.managedObjectContext.deleteObject(charSheet)
         // Blank the detail view if we were looking at this sheet when it was deleted.
@@ -282,11 +243,9 @@ extension MasterViewController: UITableViewDelegate
 		commitEditingStyle editingStyle: UITableViewCellEditingStyle,
 		forRowAtIndexPath     indexPath: NSIndexPath)
 	{
-        if (editingStyle == .Delete) {
-			if let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as? CharSheet {
-				deleteCharSheet(sheet)
-				saveData()
-			}
+        if editingStyle == .Delete, let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as? CharSheet {
+			deleteCharSheet(sheet)
+			NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
         }
     }
     
@@ -373,7 +332,7 @@ extension MasterViewController: NSFetchedResultsControllerDelegate
 
 
 
-	func configureCell(cell: UITableViewCell, atIndexPath indexPath:NSIndexPath)
+	private func configureCell(cell: UITableViewCell, atIndexPath indexPath:NSIndexPath)
 	{
 		if let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as? CharSheet {
 			if let name = sheet.name, l = cell.textLabel {

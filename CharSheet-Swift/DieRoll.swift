@@ -9,6 +9,16 @@
 import Foundation
 import CoreData
 
+private enum State
+{
+	case Preparing
+	case Rolled(
+		// The result as an HTML format string for display to the user
+		resultForDisplay: String	,
+		// The result as a simple string for displaying in the log.
+		resultForLog: String)
+}
+
 /// This object handles one roll of the dice, including both the stats and skills to roll and the final result.
 ///
 /// It contains input properties to specify which stats and skills to include.
@@ -17,21 +27,21 @@ import CoreData
 /// formatted to display to the user.
 class DieRoll : NSObject
 {
-    // MARK: - Input Properties
+    // MARK: Input Properties
 
 	typealias StatInfo = (name: String, value: Int16)
 
 	/// The stat whose value (if set) will be added to the die roll.
     var stat: StatInfo? {
         didSet {
-            resetResults()
+            state = .Preparing
         }
     }
 
 	/// Set of skills whose values will be rolled and included in this die roll.
     var skills: MutableOrderedSet<Skill> = MutableOrderedSet() {
         didSet {
-            resetResults()
+            state = .Preparing
             assert( skills.array.filter{ $0.name == nil }.isEmpty, "All skills must have a name." )
         }
     }
@@ -39,7 +49,7 @@ class DieRoll : NSObject
 	/// A total value to be added to the final die roll.
     dynamic var adds: Int = 0 {
         didSet {
-            resetResults()
+            state = .Preparing
         }
     }
 
@@ -49,7 +59,7 @@ class DieRoll : NSObject
 	/// If there is no value for a given key, it means that skill had no specialty or the specialty wasn't relevant.
     dynamic var specialties: [String: Specialty] = [:] {
         didSet {
-            resetResults()
+            state = .Preparing
         }
     }
 
@@ -59,148 +69,34 @@ class DieRoll : NSObject
 	/// However this can vary and some GMs will add extra d4s as a circumstance bonus so the user can specify it here.
     dynamic var extraD4s: Int16 = 1 {
         didSet {
-            resetResults()
+            state = .Preparing
         }
     }
     
     var charSheet: CharSheet!
 
-    // MARK: Output Properties
-    
-    // These values are only available after the die roll.
+	var resultAsHTML: String {
+		switch state {
+		case .Rolled(let (resultForDisplay, _)):
+			return resultForDisplay
+		case .Preparing:
+			assert(false, "Invalid state: Cannot call resultAsHTML until the dice have been rolled.")
+		}
+	}
 
-	/// The result of the d6s rolled.
-    var d6Rolls: [Int16] = []
+	private var state: State = .Preparing
 
-	/// The result of the d4s rolled for the each skill.
-	///
-	/// This is a dictionary. The key is the name of the skill and each value is an array of d4 roll results.
-    var dieRollsPerSkill: [String: [Int16]] = [:]
 
-	/// The result of any extra D4s rolled.
-    var extraD4Rolls: [Int16] = []
-    
-	/// Returns an HTML document with the contents of the last die roll in a readable format.
-	///
-	/// This doesn't trigger a die roll, just provides a detailed description of the last roll made.
-    var resultAsHTML: String {
-        get {
-            var log = NSMutableString()
-            log.appendString("<html><head/><style>")
-			log.appendString("div { margin-left: 25px; }")
-			log.appendString("span { margin-left: 25px; }")
-			log.appendString(".botch { color: red; }")
-			log.appendString("</style><body>")
-            log.appendString("<b>D6 Roll:</b><br/>")
-            
-            // For the D6 rolls, first check for a botch and return immediately if so.
-            if isBotch(d6Rolls) {
-                log.appendString("<div>\(d6Rolls[0]) + \(d6Rolls[1]) (<b class=botch>Botch!</b>)</div>")
-				log.appendString("</body></html>")
-				return log.description
-            }
-            
-            // Format the D6 rolls.
-            assert(d6Rolls.count % 2 == 0, "Uneven number of d6 rolls")
-            var d6Total = Int16(0)
-            log.appendString("<div>")
-            for var i = 0, c = d6Rolls.count; i < c; i += 2 {
-                let n1 = d6Rolls[i], n2 = d6Rolls[i+1]
-                var isDouble = n1 == n2
-                if i > 0 {
-                    log.appendString(", ")
-                }
-                let doubleStr = isDouble ? "(Double!)" : ""
-                log.appendString("\(n1) + \(n2) \(doubleStr)")
-                d6Total += n1 + n2
-            }
-            log.appendString("&nbsp;&nbsp;= \(d6Total)</div>")
-            
-            // Add the stat if necessary.
-            if let si = stat {
-                log.appendString("<b>Stats:</b><br/><div>\(si.name) = \(si.value)</div>")
-            }
-            // Now add the skill rolls.
-            if skills.count > 0 {
-                log.appendString("<b>Skills:</b><br/><div>")
-				let skillLines = skills.array.map { (skill) -> String in
-					assert(skill.name != nil, "Skill \(skill) has no name")
-					let skillName = skill.name!
-                    let spec = self.specialties[skillName]
-                    
-                    let rollsForSkill: [Int16] = self.dieRollsPerSkill[skillName] ?? []
-					var skillTotal = rollsForSkill.reduce(0) { $0 + $1 }
-					var specStr    = "", finalTotal = Int16(0)
-					if let specialty = spec {
-						let specName = specialty.name ?? "No name"
-						specStr = "<br/><span>(+ \(specName) = \(specialty.value))</span>"
-					}
-					finalTotal += skillTotal
-					let rollsText = " + ".join(rollsForSkill.map{$0.description})
-					let safeName = self.sanitiseHTML(skillName)
-					return "\(safeName) (\(rollsForSkill.count)) = \(rollsText) = \(finalTotal) \(specStr)"
-				}
-				log.appendString("<br/>".join(skillLines))
-				log.appendString("</div>")
-            }
-
-			// Add extra d4s.
-			if extraD4s != 0 {
-				let extraD4Text = " + ".join(extraD4Rolls.map{"\($0)"})
-				let extraD4Value = extraD4Rolls.reduce(0) { $0 + $1 }
-				log.appendString("<b>Extra D4s:</b><br/><div>\(extraD4Text) = \(extraD4Value)</div>")
-			}
-
-            // Add any final adds.
-            if(adds != 0) {
-                log.appendString("<b>Adds:</b><br/><div>\(adds)</div><br/>")
-            }
-            log.appendString("<br/><hr/>")
-            log.appendString("<b>Total = \(total)</b>")
-            log.appendString("</body></html>")
-            return log.description
-        }
-    }
-    
-	/// The total value of all the rolled dice, stats and static adds used for this roll.
-	///
-	/// This doesn't trigger a die roll, just summarises the results of the last roll.
-    var total: Int16 {
-        get {
-            if isBotch(d6Rolls) { return 0 }
-            var total = d6Rolls.reduce(0) { $0 + $1 }
-            
-            if let s = stat {
-                total += s.value
-            }
-            for skill in skills.array {
-				assert(skill.name != nil, "Skill \(skill) has no name.")
-				let skillName = skill.name!
-                if let rolls = dieRollsPerSkill[skillName] {
-                    total += rolls.reduce(0) { $0 + $1 }
-                }
-                if let spec = specialties[skillName] {
-                    total += spec.value
-                }
-            }
-            total += adds
-			total += extraD4Rolls.reduce(0) {$0 + $1}
-            return total
-        }
-    }
-    
-    
     // MARK: - Housekeeping
-    
+
     convenience init(charSheet: CharSheet) {
         self.init()
         self.charSheet = charSheet
-        resetResults()
     }
-    
+
     override init() {
         super.init()
-        resetResults()
+        state = .Preparing
     }
     
     // MARK: Public API
@@ -209,49 +105,75 @@ class DieRoll : NSObject
 	/// The log entry is added to Core Data automatically.
     func addLogEntry() -> LogEntry
 	{
-        var entry = charSheet.addLogEntry()
-        entry.summary = getSummary()
-        entry.change  = getLogDetail()
-        return entry;
+		switch state {
+		case .Rolled(let (_, resultForLog)):
+			var entry = charSheet.addLogEntry()
+			entry.summary = getSummary()
+			entry.change  = resultForLog
+			return entry;
+		case .Preparing:
+			assert(false, "Invalid state: Can't add log entry until the dice have been rolled.")
+		}
     }
-    
-	/// Roll the D6s and D4s requested and store the results in this object.
-	///
-	/// :todo: Make this into an enum state machine.
+
+	/// Roll the D6s and D4s requested and store the results.
 	func roll()
 	{
-		var intSeed: UInt32 = UInt32(NSDate.timeIntervalSinceReferenceDate())
-		srand(intSeed)
-		resetResults()
+		/// Rolls a die with numSides sides and returns the result.
+		func rollDie(numSides: Int32) -> Int16
+		{
+			return Int16(rand() % numSides) + 1
+		}
+		/// Simulate rolling 2D6, optionally rerolling on a double.
+		/// Rolling a botch (2+1 or 1+2) will abort immediately.
+		///
+		/// :param: doublesReroll If true and the dice both have the same value, then roll the dice again
+		///                       and include the result. This can happen repeatedly.
+		/// :returns: An array holding all the die rolls that were made.
+		func rollD6(doublesReroll: Bool) -> [Int16]
+		{
+			var results: [Int16] = [], firstRoll = true, n1 = Int16(0), n2 = Int16(0)
+			do {
+				(n1, n2) = (rollDie(6), rollDie(6))
+				results.append(n1)
+				results.append(n2)
+
+				// If the first roll was a botch, then return immediately.
+				if firstRoll && isBotch(results) {
+					return results
+				}
+				firstRoll = false
+			} while doublesReroll && n1 == n2
+			return results
+		}
+
+		srand(UInt32(NSDate.timeIntervalSinceReferenceDate()))
 
 		// D6 rolls
-		d6Rolls += rollD6(true)
+		let d6Rolls = rollD6(true)
 		// D4 rolls.
+		var dieRollsPerSkill: [String: [Int16]] = [:]
 		for skill in self.skills.array {
-			let d4Results = rollD4(Int16(skill.value))
-			dieRollsPerSkill[skill.name!] = d4Results
+			dieRollsPerSkill[skill.name!] = (1...skill.value).map { (_) in rollDie(4) }
 		}
-		extraD4Rolls = rollD4(self.extraD4s)
-		// Fixed values (stat & specialties) don't need to be handled here.
+		let extraD4Rolls = (extraD4s > 0) ? (1...extraD4s).map { (_) in rollDie(4) } : []
+		// Totals and display values.
+		let total      = calculateTotal(d6Rolls, dieRollsPerSkill: dieRollsPerSkill, extraD4Rolls: extraD4Rolls)
+		let htmlResult = showResultAsHTML(total, d6Rolls: d6Rolls, dieRollsPerSkill: dieRollsPerSkill, extraD4Rolls: extraD4Rolls)
+		let logResult  = getLogDetail(total, d6Rolls: d6Rolls, dieRollsPerSkill: dieRollsPerSkill, extraD4Rolls: extraD4Rolls)
+
+		state = State.Rolled(resultForDisplay: htmlResult, resultForLog: logResult)
 	}
 
 
 
     // MARK: Private API
 
-	/// Return this object to it's pre-rolled state, i.e. remove the results of all die rolls.
-	/// The fields indicating which skills to roll on are preserved.
-    private func resetResults()
-	{
-        d6Rolls = []
-        dieRollsPerSkill = [:]
-    }
-    
-    
-    
 	/// Converts characters in the input which would interferere with HTML formatting
 	/// into the equivalent escape sequences.
-	/// :param: input Any string.
+	///
+	/// :param:   input A string to convert. This must not include any HTML markup
+	///                 as it will be replaced with &lt; &gt; etc.
 	/// :returns: A string suitable to be embedded in an HTML document.
     private func sanitiseHTML(input: String) -> String
 	{
@@ -267,26 +189,21 @@ class DieRoll : NSObject
         }
         return output as String
     }
-    
-    
-    
 
-    
 	/// Returns true if the first two die rolls in the array provided indicate a botch.
 	///
-	/// :param: d6Rolls An array holding at least 2 integers, each being the result of a die roll.
+	/// :param: d6Rolls An array holding at least 2 integers, each being the result of a d6 roll.
     private func isBotch(d6Rolls: [Int16]) -> Bool
 	{
         assert(count(d6Rolls) >= 2, "Not enough d6")
         return d6Rolls[0] + d6Rolls[1] == 3
     }
     
-    
-    
-    
-	private let spacing = "&ht;&ht;"//"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-    
+
 	/// Returns a summary of a die roll suitable for adding to the logs.
+	///
+	/// :returns: A text string in the format: "stat + skill1/skill2..."
+	///           It will fit on one line.
 	private func getSummary() -> String
 	{
 		var statStr  = "<No stat>"
@@ -305,7 +222,13 @@ class DieRoll : NSObject
 
 
 	/// Returns the detail text of a die roll in a short format for adding to the logs.
-    private func getLogDetail() -> String
+	///
+	/// :returns: A multi-line text string with the full detail of the roll.
+	private func getLogDetail(
+		total: Int16,
+		d6Rolls: [Int16],
+		dieRollsPerSkill: [String: [Int16]],
+		extraD4Rolls: [Int16]) -> String
 	{
         func summariseSkillRoll(skill: Skill) -> String
 		{
@@ -336,47 +259,134 @@ class DieRoll : NSObject
         return "\(d6str)\n\(statText)\n\(skillStr)\nExtraD4s: \(extraD4Text)\nAdds: \(adds)\nTotal: \(total)"
     }
     
-	/// Simulate rolling 2D6, optionally rerolling on a double.
-	/// Rolling a botch (2+1 or 1+2) will abort immediately.
+	/// Returns an HTML document with the contents of the last die roll in a readable format.
 	///
-	/// :param: doublesReroll If true and the dice both have the same value, then roll the dice again
-	///                       and include the result. This can happen repeatedly.
-	/// :returns: An array holding all the die rolls that were made.
-    private func rollD6(doublesReroll: Bool) -> [Int16]
+	/// This doesn't trigger a die roll, just provides a detailed description of the last roll made.
+	private func showResultAsHTML(
+		total  : Int16,
+		d6Rolls: [Int16],
+		dieRollsPerSkill: [String: [Int16]],
+		extraD4Rolls    : [Int16]) -> String
 	{
-        var results: [Int16] = []
-        var firstRoll = true
-        var n1 = Int16(0), n2 = Int16(0)
-        
-        do {
-            n1 = Int16(rand() % 6) + 1
-            n2 = Int16(rand() % 6) + 1
-            results.append(n1)
-            results.append(n2)
-            
-            // If the first roll was a botch, then return immediately.
-            if firstRoll && isBotch(results) {
-                return results
-            }
-            firstRoll = false
-        } while doublesReroll && n1 == n2
-        
-        return results
-    }
-    
-    
-    
-	/// Simulate rolling a number of 4-sided dice. 
-	///
-	/// :param: numToRoll The number of dice to roll.
-	/// :returns: An array holding the results of each die roll.
-    private func rollD4(numToRoll: Int16) -> [Int16]
+		var log = NSMutableString()
+		log.appendString("<html><head/><style>")
+		log.appendString("div { margin-left: 25px; }")
+		log.appendString("span { margin-left: 25px; }")
+		log.appendString(".botch { color: red; }")
+		log.appendString("</style><body>")
+		log.appendString("<b>D6 Roll:</b><br/>")
+
+		// For the D6 rolls, first check for a botch and return immediately if so.
+		if isBotch(d6Rolls) {
+			log.appendString("<div>\(d6Rolls[0]) + \(d6Rolls[1]) (<b class=botch>Botch!</b>)</div></body></html>")
+			return log.description
+		}
+
+		// Format the D6 rolls.
+		assert(d6Rolls.count % 2 == 0, "Uneven number of d6 rolls")
+		let d6Results: [String] = group(2, d6Rolls).map {
+			let doubleStr = ($0[0] == $0[1] ? " (Double!)" : "")
+			return "\($0[0]) + \($0[1])\(doubleStr)"
+		}
+		log.appendString("<div>")
+		log.appendString(", ".join(d6Results))
+		var d6Total = d6Rolls.reduce(0) { $0 + $1 }
+		log.appendString("&nbsp;&nbsp;= \(d6Total)</div>")
+
+		// Add the stat if necessary.
+		if let si = stat {
+			log.appendString("<b>Stats:</b><br/><div>\(si.name) = \(si.value)</div>")
+		}
+		// Now add the skill rolls.
+		if skills.count > 0 {
+			log.appendString("<b>Skills:</b><br/><div>")
+			let skillLines = skills.array.map { (skill) -> String in
+				if let skillName = skill.name {
+					let rollsForSkill: [Int16] = dieRollsPerSkill[skillName] ?? []
+					var specStr    = "", finalTotal = Int16(0)
+					if let specialty = self.specialties[skillName] {
+						let specName = specialty.name ?? "No name"
+						specStr = "<br/><span>(+ \(specName) = \(specialty.value))</span>"
+					}
+					finalTotal += rollsForSkill.reduce(0) { $0 + $1 }
+					let rollsText = " + ".join(rollsForSkill.map{$0.description})
+					let safeName = self.sanitiseHTML(skillName)
+					return "\(safeName) (\(rollsForSkill.count)) = \(rollsText) = \(finalTotal) \(specStr)"
+				} else {
+					fatalError("Skill \(skill) has no name!")
+				}
+			}
+			log.appendString("<br/>".join(skillLines))
+			log.appendString("</div>")
+		}
+
+		// Add extra d4s.
+		if extraD4s != 0 {
+			let extraD4Text = " + ".join(extraD4Rolls.map{"\($0)"})
+			let extraD4Value = extraD4Rolls.reduce(0) { $0 + $1 }
+			log.appendString("<b>Extra D4s:</b><br/><div>\(extraD4Text) = \(extraD4Value)</div>")
+		}
+
+		// Add any final adds.
+		if(adds != 0) {
+			log.appendString("<b>Adds:</b><br/><div>\(adds)</div><br/>")
+		}
+		log.appendString("<br/><hr/>")
+		log.appendString("<b>Total = \(total)</b>")
+		log.appendString("</body></html>")
+		return log.description
+	}
+
+	/// The total value of all the rolled dice, stats and static adds used for this roll.
+	private func calculateTotal(
+		d6Rolls: [Int16],
+		dieRollsPerSkill: [String: [Int16]],
+		extraD4Rolls: [Int16]) -> Int16
 	{
-        var results: [Int16] = []
-        for var i: Int16 = 0, c: Int16 = numToRoll; i < c; ++i {
-            results.append((Int(rand()) % 4) + 1)
-        }
-        return results
-    }
-    
+		if isBotch(d6Rolls) { return 0 }
+		var total = d6Rolls.reduce(0) { $0 + $1 }
+
+		if let s = stat {
+			total += s.value
+		}
+		for skill in skills.array {
+			if let skillName = skill.name {
+				if let rolls = dieRollsPerSkill[skillName] {
+					total += rolls.reduce(0) { $0 + $1 }
+				}
+				if let spec = specialties[skillName] {
+					total += spec.value
+				}
+			} else { fatalError("Skill \(skill) has no name!") }
+		}
+		total += adds
+		total += extraD4Rolls.reduce(0) { $0 + $1 }
+		return total
+	}
+}
+
+/// Given an array, split it into groups and return an array of all the groups.
+///
+/// :param: groupSize The size of each group. Must be greater than zero or we return an empty array.
+/// :param: collection The collection to split into groups.
+///
+/// If the number of items in the collection isn't an exact multiple of *groupSize*
+/// then the remaining items are simply ignored.  For example:
+///   group(2, [1, 2, 3, 4]) would return [[1, 2], [3, 4]]
+///   group(2, [1, 2, 3]) would return [[1, 2]] and 3 would be missing.
+func group<T>(groupSize: Int, collection: Array<T>) -> [Array<T>]
+{
+	assert(groupSize > 0, "groupSize(\(groupSize)) must be greater than zero")
+	if groupSize <= 0 { return [] }
+
+	var result: [Array<T>] = []
+	for var i = 0, c = collection.count; i < c; i += groupSize {
+		if i+(groupSize-1) < c {
+			// Copy the values out of the slice and into a home of their own.
+			var arr: [T] = []
+			for t in collection[i...i+(groupSize-1)] { arr.append(t) }
+			result.append(arr)
+		}
+	}
+	return result
 }
