@@ -9,23 +9,23 @@
 import Foundation
 
 
-// Protocol for objects that load and save via XML.
-
+/// Protocol for model objects that load and save via XML.
 protocol XMLClient
 {
-    // Update the object data from the XML element given. Call recursively for child objects.
+	/// Update the object data from the XML element given. Call recursively for child objects.
     func updateFromXML(element: DDXMLElement) -> Result<()>
     
-    // Output the object (and it's children) as an XML element for inclusion in an XML tree.
+	/// Output the object (and it's children) as an XML element for inclusion in an XML tree.
     func asXML() -> DDXMLElement
     
-    // The object cast to an NSObject (so that it can go in an NSArray)
-    // TODO: If I mark the protocol as @objc, can I then just cast it?
+	/// The object cast to an NSObject (so that it can go in an NSArray)
+	///
+	/// :TODO: If I mark the protocol as @objc, can I then just cast it?
 	var asObject: NSObject{ get }
 }
 
-struct XMLSupport {
-
+struct XMLSupport
+{
     static func XMLFailure(text: String) -> NilResult
 	{
         return failure(XMLError(text))

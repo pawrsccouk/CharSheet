@@ -235,7 +235,7 @@ class MasterViewController : UITableViewController {
 	{
         fetchedResultsController.managedObjectContext.deleteObject(charSheet)
         // Blank the detail view if we were looking at this sheet when it was deleted.
-        if(detailViewController.charSheet == charSheet) {
+        if let dcs = detailViewController.charSheet where dcs == charSheet {
             detailViewController.charSheet = nil
         }
     }

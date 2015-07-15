@@ -35,16 +35,12 @@ class CharSheet : NSManagedObject {
 
 	// Sorted copy of the log entries, sorted by date & time.
 	var sortedLogs: [LogEntry] {
-
-		func byDate(l1: LogEntry, l2: LogEntry) -> Bool
-		{
-			let d1 = l1.dateTime, d2 = l2.dateTime
-			return d1.earlierDate(d2) == d1
-		}
-
 		return logs.allObjects
 			.map { $0 as! LogEntry }
-			.sorted(byDate)
+			.sorted{
+				let d1 = $0.dateTime
+				return d1.earlierDate($1.dateTime) == d1
+		}
 	}
 
 	// Returns a string indicating the character's health in both physical and subdual, as a fraction of their CON.
@@ -55,15 +51,7 @@ class CharSheet : NSManagedObject {
 	}
 
 
-    // MARK: - PrivateMethods
-    
-//    // Checks if any extra D4s are needed for this skill.  Returns the number of D4s to add.
-//    func extraDiceForSkill(skill: Skill) -> Int16
-//	{
-//        // TODO: Either (a) set this in Preferences app-wide, or (b) allow the users to select it when creating the skills
-//        // or (c) make it a property of the game itself and have the users set the game when creating the character.
-//        return 1   // Default is +1D4 for all except magic skills.
-//    }
+    // MARK: PrivateMethods
 
 	override var description: String {
 		return self.fault
@@ -86,36 +74,24 @@ class CharSheet : NSManagedObject {
 		woundsSubdual  = 0
 	}
 
-
-	func statValueForName(name: String) -> Int16?
-	{
-		switch name {
-		case "Strength"    : return strength
-		case "Dexterity"   : return dexterity
-		case "Speed"       : return speed
-		case "Constitution": return constitution
-		case "Perception"  : return perception
-		case "Intelligence": return intelligence
-		case "Luck"        : return luck
-		case "Charisma"    : return charisma
-		default            : return nil
-		}
-	}
-
     // Skills
 
-    func addSkill(managedObjectContext: NSManagedObjectContext) -> Skill {
-        return NSEntityDescription.insertNewObjectForEntityForName("Skill", inManagedObjectContext:managedObjectContext) as! Skill
+    func addSkill(managedObjectContext: NSManagedObjectContext) -> Skill
+	{
+        return NSEntityDescription.insertNewObjectForEntityForName(
+			"Skill", inManagedObjectContext:managedObjectContext) as! Skill
     }
 
-    func removeSkillAtIndex(index: Int) {
+    func removeSkillAtIndex(index: Int)
+	{
 		if let skill = self.skills[index] as? Skill {
 			self.skills.removeObject(skill)
 			self.managedObjectContext?.deleteObject(skill)
 		}
     }
 
-    func appendSkill() -> Skill {
+    func appendSkill() -> Skill
+	{
         var newSkill = addSkill(self.managedObjectContext!)
         newSkill.parent = self
         self.skills.addObject(newSkill)
@@ -125,28 +101,32 @@ class CharSheet : NSManagedObject {
 
     // Log Entries
 
-    func addLogEntry() -> LogEntry {
-        let entry = NSEntityDescription.insertNewObjectForEntityForName("LogEntry",
-			inManagedObjectContext:self.managedObjectContext!) as! LogEntry
+    func addLogEntry() -> LogEntry
+	{
+        let entry = NSEntityDescription.insertNewObjectForEntityForName(
+			"LogEntry", inManagedObjectContext:self.managedObjectContext!) as! LogEntry
         entry.parent  = self
         self.logs.addObject(entry)
         return entry
     }
     
-    func removeLogEntry(entry: LogEntry) {
+    func removeLogEntry(entry: LogEntry)
+	{
         self.logs.removeObject(entry)
         entry.parent = nil
     }
 
     // XP Gains
 
-    func addXPGain(context: NSManagedObjectContext) -> XPGain {
-        return NSEntityDescription.insertNewObjectForEntityForName("XPGain",
-			inManagedObjectContext:context) as! XPGain
+    func addXPGain(context: NSManagedObjectContext) -> XPGain
+	{
+        return NSEntityDescription.insertNewObjectForEntityForName(
+			"XPGain", inManagedObjectContext:context) as! XPGain
     }
 
     // Create a new xp entry and append it to the list. Returns the new xp.
-    func appendXPGain() -> XPGain {
+    func appendXPGain() -> XPGain
+	{
         var xpGain = addXPGain(self.managedObjectContext!)
         xpGain.parent  = self
         self.xp.addObject(xpGain)
@@ -154,7 +134,8 @@ class CharSheet : NSManagedObject {
     }
 
         // Remove the xp entry at the given index. It will be destroyed at the next commit.
-	func removeXPGainAtIndex(index: Int) {
+	func removeXPGainAtIndex(index: Int)
+	{
 		if let xpGain = self.xp[index] as? XPGain {
 			self.xp.removeObject(xpGain)
 			xpGain.parent = nil
@@ -165,7 +146,7 @@ class CharSheet : NSManagedObject {
 
 
 
-    // MARK: - Misc
+    // MARK: Misc
 
 
     func exportToXML() -> Result<NSData>
@@ -174,8 +155,7 @@ class CharSheet : NSManagedObject {
 		return
 			DDXMLDocument.documentWithXMLString(rawXML, options: 0)
 			.andThen {
-				let rootElement = $0.rootElement as! DDXMLElement
-				rootElement.addChild(self.asXML())
+				($0.rootElement as! DDXMLElement).addChild(self.asXML())
 				return $0.xmlDataWithOptions(UInt(DDXMLNodeCompactEmptyElement))
 			}
     }
@@ -220,120 +200,81 @@ class CharSheet : NSManagedObject {
 		}
 	}
 }
-    // MARK: - XMLClient implementation
 
-extension CharSheet: XMLClient {
+// MARK: - XMLClient implementation
 
-    var asObject: NSObject {
-		get { return self }
+private enum AttrType { case String, Integer }
+
+/// Collection of attribute names and the associated attribute type.
+///
+/// :todo: Can this be got from the entity?
+///
+/// This assumes the attributes in the XML are named the same as the attributes on the object.
+private let attributes: [(String, AttrType)] = [
+		("name", .String), ("gender", .String), ("game", .String), ("player", .String), ("level", .Integer), ("experience", .Integer),
+		("strength", .Integer), ("speed", .Integer), ("dexterity", .Integer), ("constitution", .Integer),
+		("perception", .Integer), ("intelligence", .Integer), ("charisma", .Integer), ("luck", .Integer)
+	]
+
+extension CharSheet: XMLClient
+{
+	var asObject: NSObject {
+		return self
 	}
 
-    private enum Element: String {
+    private enum Element: String
+	{
         case CHAR_SHEET = "charSheet"
 		case SKILLS = "skills", LOGS = "logs", NOTES = "notes", XP_GAINS = "xp_gains"
     }
     
-    private enum Attribute: String {
-        case NAME  = "name", SEX = "gender", GAME  = "game", PLAYER = "player"
-		case LEVEL = "level" , EXPERIENCE = "experience"
-		case STRENGTH = "strength", SPEED = "speed", DEXTERITY = "dexterity", CONSTITUTION = "constitution"
-		case PERCEPTION = "perception", INTELLIGENCE = "intelligence", CHARISMA = "charisma", LUCK = "luck"
-    }
-    
-
-
-    func asXML() -> DDXMLElement {
-        
-        func addXMLAttributeStr(element: DDXMLElement, attrName: Attribute, attrValue: String)
+    func asXML() -> DDXMLElement
+	{
+        func saveChildrenAsXML(parent: DDXMLElement, elementName: Element, collection: NSArray)
 		{
-            let attr = DDXMLNode.attributeWithName(attrName.rawValue, stringValue:attrValue) as! DDXMLNode
-            element.addAttribute(attr)
-        }
-
-        func addXMLAttributeInt(element: DDXMLElement, attrName: Attribute, attrValue: Int16)
-		{
-			let strValue = attrValue.description
-            let attr = DDXMLNode.attributeWithName(attrName.rawValue, stringValue:strValue) as! DDXMLNode
-            element.addAttribute(attr)
-        }
-        
-        func saveChildrenAsXML(parent: DDXMLElement, elementName: Element, collection: NSArray) {
             var element = DDXMLElement.elementWithName(elementName.rawValue) as! DDXMLElement
             parent.addChild(element)
             collection.enumerateObjectsUsingBlock { obj, index, stop in element.addChild(obj.asXML()) }
         }
        
-        var this = DDXMLElement.elementWithName(Element.CHAR_SHEET.rawValue) as! DDXMLElement
-        addXMLAttributeStr(this, .NAME      , name   ?? "Unknown")
-        addXMLAttributeStr(this, .SEX       , gender ?? "Unknown")
-        addXMLAttributeStr(this, .GAME      , game   ?? "Unknown")
-        addXMLAttributeStr(this, .PLAYER    , player ?? "Unknown")
-        addXMLAttributeStr(this, .LEVEL     , level.description     )
-        addXMLAttributeStr(this, .EXPERIENCE, experience.description)
-
-		// The stats
-		addXMLAttributeInt(this, .STRENGTH    , strength)
-		addXMLAttributeInt(this, .SPEED       , speed)
-		addXMLAttributeInt(this, .DEXTERITY   , dexterity)
-		addXMLAttributeInt(this, .CONSTITUTION, constitution)
-		addXMLAttributeInt(this, .PERCEPTION  , perception)
-		addXMLAttributeInt(this, .INTELLIGENCE, intelligence)
-		addXMLAttributeInt(this, .LUCK        , luck)
-		addXMLAttributeInt(this, .CHARISMA    , charisma)
-        
-        saveChildrenAsXML(this, .LOGS    , logs.allObjects )
-        saveChildrenAsXML(this, .SKILLS  , skills.array    )
-        saveChildrenAsXML(this, .XP_GAINS, xp.array        )
+        var thisElement = DDXMLElement.elementWithName(Element.CHAR_SHEET.rawValue) as! DDXMLElement
+		// Use KVO to get the attribute data.
+		for (attrName, _) in attributes {
+			let sv = (valueForKey(attrName) ?? "").description
+			thisElement.addAttribute(DDXMLNode.attributeWithName(attrName, stringValue:sv) as! DDXMLNode)
+		}
+        saveChildrenAsXML(thisElement, .LOGS    , logs.allObjects )
+        saveChildrenAsXML(thisElement, .SKILLS  , skills.array    )
+        saveChildrenAsXML(thisElement, .XP_GAINS, xp.array        )
         
         // Store notes as a separate element as it's too big to go as an attribute.
-        var elemNotes = DDXMLElement.elementWithName(Element.NOTES.rawValue, stringValue:self.notes) as! DDXMLElement
-        this.addChild(elemNotes)
-        
-        return this
+        let elemNotes = DDXMLElement.elementWithName(
+			Element.NOTES.rawValue, stringValue:self.notes) as! DDXMLElement
+        thisElement.addChild(elemNotes)
+        return thisElement
     }
 
 
     
     func updateFromXML(element: DDXMLElement) -> NilResult
 	{
-        // Check the name of the XML node, and set the appropriate CharSheet attribute to its value.
-        // Returns true if successful, false if the attribute was not recognised.
-        func setAttributeFromXML(this: CharSheet, node: DDXMLNode) -> Bool
-		{
-            if let attributeName = Attribute(rawValue: node.name) {
-                switch attributeName {
-                case .NAME       : this.name       = node.stringValue
-                case .SEX        : this.gender     = node.stringValue
-                case .GAME       : this.game       = node.stringValue
-                case .PLAYER     : this.player     = node.stringValue
-                case .LEVEL      : this.level      = Int16(node.stringValue.toInt() ?? 0)
-                case .EXPERIENCE : this.experience = Int32(node.stringValue.toInt() ?? 0)
-
-				case .PERCEPTION   : this.perception   = Int16(node.stringValue.toInt() ?? 0)
-				case .INTELLIGENCE : this.intelligence = Int16(node.stringValue.toInt() ?? 0)
-				case .CHARISMA     : this.charisma     = Int16(node.stringValue.toInt() ?? 0)
-				case .LUCK         : this.luck         = Int16(node.stringValue.toInt() ?? 0)
-				case .STRENGTH     : this.strength     = Int16(node.stringValue.toInt() ?? 0)
-				case .DEXTERITY    : this.dexterity    = Int16(node.stringValue.toInt() ?? 0)
-				case .SPEED        : this.speed        = Int16(node.stringValue.toInt() ?? 0)
-				case .CONSTITUTION : this.constitution = Int16(node.stringValue.toInt() ?? 0)
-                }
-                return true
-            }
-            return false // Error - attribute not recognised.
-        }
-
 		if let err = XMLSupport.validateElementName(element.name, expectedName: Element.CHAR_SHEET.rawValue).error {
 			return failure(err)
 		}
-        
-        // Set each attribute.
-        for attrNode in (element.attributes as! [DDXMLNode]) {
-            if !setAttributeFromXML(self, attrNode) {
-                return XMLSupport.XMLFailure("XML Attribute \(attrNode.name) not recognised in \(Element.CHAR_SHEET)")
-            }
-        }
-        
+		// Use KVO to set the attributes from the XML element provided.
+		for (attrName, attrType) in attributes {
+			if let node = element.attributeForName(attrName) {
+				switch attrType {
+				case .String:
+					setValue(node.stringValue, forKey: attrName)
+				case .Integer:
+					setValue(node.stringValue.toInt() ?? 0, forKey: attrName)
+				}
+			} else {
+				NSLog("CharSheet import: Attribute named \(attrName) not found in the XML we are importing. Skipping it.")
+			}
+		}
+
         // Stats will have already been created, so just find each stat and update it.
         // Otherwise create a collection of the appropriate element and then replace the existing collection with it.
         for node in (element.children as! [DDXMLElement]) {

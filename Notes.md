@@ -21,7 +21,6 @@ can click on to add the skill. Currently the "+" icon is too far away from the u
 	the order property on save.
 
 ## Ugly files
-CharSheet
 MasterViewController
 DieRoll
 DieRollViewController

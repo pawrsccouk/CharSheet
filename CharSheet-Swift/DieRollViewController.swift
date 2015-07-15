@@ -207,9 +207,11 @@ class DieRollViewController: CharSheetViewController
 	{
 		var statInfo: DieRoll.StatInfo? = nil
 		// Find the stat that name represents, and select it as dieRoll.stat.
-		if let newName = newStatName,
-			statValue = charSheet.statValueForName(newName) {
-				statInfo = (newName, statValue)
+		if let
+			newName = newStatName,
+			statValue = charSheet.valueForKey(newName.lowercaseString)?.integerValue
+		{
+			statInfo = (newName, Int16(statValue))
 		}
 		dieRoll.stat = statInfo
 	}
