@@ -49,12 +49,12 @@ extension LogEntry: XMLClient
         func attribute(name: Attribute, value: String) -> DDXMLNode {
 			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
 		}
-        var this = DDXMLElement.elementWithName(LOG_ENTRY, stringValue:self.change) as! DDXMLElement
-        this.addAttribute( attribute(.DATE_TIME, fullDateFormatter.stringFromDate(self.dateTime)) )
-        this.addAttribute( attribute(.SUMMARY  , self.summary!) )
+        let this = DDXMLElement.elementWithName(LOG_ENTRY, stringValue:self.change) as! DDXMLElement
+        this.addAttribute( attribute(.DATE_TIME, value: fullDateFormatter.stringFromDate(self.dateTime)) )
+        this.addAttribute( attribute(.SUMMARY  , value: self.summary!) )
         return this;
     }
-    
+
     
     
     func updateFromXML(element: DDXMLElement) -> NilResult

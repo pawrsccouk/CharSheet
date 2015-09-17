@@ -168,8 +168,8 @@ final class CharSheetUseViewController : CharSheetViewController
 		{
 			dieRollViewController.addTickToSkillCallback = { $0.addTick() }
 
-			var selectedIndexPaths = skillsCollectionView.indexPathsForSelectedItems() as! [NSIndexPath]
-			var selectedSkills = selectedIndexPaths.map{ self.skillForIndexPath($0) }
+			let selectedIndexPaths = skillsCollectionView.indexPathsForSelectedItems() ?? [NSIndexPath]()
+			let selectedSkills = selectedIndexPaths.map{ self.skillForIndexPath($0) }
 
 			var statData: DieRoll.StatInfo? = nil
 			if let selectedLabel = statButtons.filter({ $0.selected }).first {
@@ -179,7 +179,7 @@ final class CharSheetUseViewController : CharSheetViewController
 		}
 
 		// Get the new controller and set some common properties.
-		var navigationController = segue.destinationViewController as! UINavigationController
+		let navigationController = segue.destinationViewController as! UINavigationController
 		let newViewController = navigationController.childViewControllers[0] as! CharSheetViewController
 		newViewController.charSheet = charSheet
 		newViewController.managedObjectContext = managedObjectContext
@@ -246,7 +246,7 @@ final class CharSheetUseViewController : CharSheetViewController
 
 	private func deselectEverySkill()
 	{
-		if let ips = skillsCollectionView.indexPathsForSelectedItems() as? [NSIndexPath] {
+		if let ips = skillsCollectionView.indexPathsForSelectedItems() {
 			for selectionPath in ips {
 				skillsCollectionView.deselectItemAtIndexPath(selectionPath, animated:true)
 			}
@@ -278,16 +278,16 @@ extension CharSheetUseViewController: UICollectionViewDataSource
     //MARK: - Mail Composer delegate
 extension CharSheetUseViewController: MFMailComposeViewControllerDelegate
 {
-    func mailComposeController(controller: MFMailComposeViewController!,
+    func mailComposeController(controller: MFMailComposeViewController,
 		didFinishWithResult    result    : MFMailComposeResult,
-		error                            : NSError!) {
+		error                            : NSError?) {
 
-        NSLog("Mail composer finished. Result: %d, error: %@", result.value, error ?? "nil")
+        NSLog("Mail composer finished. Result: %d, error: %@", result.rawValue, error ?? "nil")
         
         controller.dismissViewControllerAnimated(true, completion:nil)
         
         // If something went wrong, produce an alert to say what.
-        if (result.value == MFMailComposeResultFailed.value) || (error != nil) {
+        if (result.rawValue == MFMailComposeResultFailed.rawValue) || (error != nil) {
             let localisedDescription = error?.localizedDescription ?? "No error given"
             let alertView = UIAlertController(
 				title          : "Error sending email",

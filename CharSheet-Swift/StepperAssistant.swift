@@ -43,7 +43,7 @@ class StepperAssistant: NSObject
 	/// or to stepper.minimumValue if textField.text is not parseable.
 	func updateStepperFromTextField()
 	{
-		if let txt = textField.text, val = txt.toInt() {
+		if let txt = textField.text, val = Int(txt) {
 			stepper.value = Double(val)
 		} else {
 			stepper.value = stepper.minimumValue

@@ -26,7 +26,7 @@ extension NSArray {
     // Returns a new array where each element is formed by calling block() on the item
     // in the existing array.
     func transformedArrayUsingBlock(block: ArrayTransformBlock) -> NSArray {
-        var results = NSMutableArray(capacity: self.count)
+        let results = NSMutableArray(capacity: self.count)
         self.enumerateObjectsUsingBlock { obj, idx, stop in  results[idx] = block(obj) }
         return results;
     }

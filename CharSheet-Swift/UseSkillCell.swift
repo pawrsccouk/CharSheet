@@ -60,15 +60,15 @@ class UseSkillCell : UICollectionViewCell {
         if arrayOfViews.count >= 1 {
             
 			if let content = arrayOfViews[0] as? UIView {
-				self.contentView.addSubview(content)
+				contentView.addSubview(content)
 			}
-            self.selectedBackgroundView = UIView(frame:frame)
-            self.selectedBackgroundView.backgroundColor = UIColor(red:0.25, green:0.25, blue:0.75, alpha:0.25)
+            selectedBackgroundView = UIView(frame:frame)
+            selectedBackgroundView?.backgroundColor = UIColor(red:0.25, green:0.25, blue:0.75, alpha:0.25)
         }
         
     }
    
-    required init(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
     
@@ -84,7 +84,7 @@ class UseSkillCell : UICollectionViewCell {
         }
     }
 
-    override func observeValueForKeyPath(keyPath: String, ofObject object:AnyObject, change:[NSObject: AnyObject], context:UnsafeMutablePointer<Void>) {
+    override func observeValueForKeyPath(keyPath: String?, ofObject object:AnyObject?, change:[String: AnyObject]?, context:UnsafeMutablePointer<Void>) {
         if      keyPath == "name"        { setLabelViaTag(.Name       , value: skill.name ?? "") }
         else if keyPath == "value"       { setLabelViaTag(.Value      , value: skill.value.description) }
         else if keyPath == "specialties" { setLabelViaTag(.Specialties, value: skill.specialtiesAsString) }
@@ -106,11 +106,11 @@ class UseSkillCell : UICollectionViewCell {
         
         // Grey underline.
         UIColor.lightGrayColor().set()
-        var path = UIBezierPath()
+        let path = UIBezierPath()
         
-        var bounds = self.bounds
-        var lineOrigin = CGPointMake(bounds.origin.x, bounds.origin.y + bounds.size.height)
-        var lineEnd    = CGPointMake(lineOrigin.x + bounds.size.width, lineOrigin.y)
+        let bounds = self.bounds
+        let lineOrigin = CGPointMake(bounds.origin.x, bounds.origin.y + bounds.size.height)
+        let lineEnd    = CGPointMake(lineOrigin.x + bounds.size.width, lineOrigin.y)
         
         path.moveToPoint(lineOrigin)
         path.addLineToPoint(lineEnd)

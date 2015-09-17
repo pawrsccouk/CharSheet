@@ -39,7 +39,7 @@ class SkillSelectController : UIViewController
 	/// Factory function to get a new skill select controller from the Nib file.
 	/// Use in place of an initializer.
 	///
-	/// :returns: A new SkillSelectController.
+	/// - returns: A new SkillSelectController.
     class func skillSelectControllerFromNib() -> SkillSelectController
 	{
         let allObjects = NSBundle.mainBundle().loadNibNamed("SkillSelectView", owner: self, options: nil)
@@ -56,7 +56,7 @@ class SkillSelectController : UIViewController
         // If we have been given a selected skill or specialty, then set the pickers to show those values by default.
 		// Note that both picker rows are off by 1 due to having the "None" as the first entry.
         if let skill = selectedSkill {
-            var indexOfObject = skillsToPick.indexOfObject(skill)
+            let indexOfObject = skillsToPick.indexOfObject(skill)
             assert(indexOfObject != NSNotFound, "Skill \(skill) is not in the list of skills to pick \(skillsToPick)")
             skillPicker.selectRow(indexOfObject + 1, inComponent: 0, animated: false)
         
@@ -103,7 +103,7 @@ extension SkillSelectController: UIPickerViewDelegate
 {
     func pickerView(pickerView: UIPickerView,
 		titleForRow        row: Int,
-		forComponent component: Int) -> String
+		forComponent component: Int) -> String?
 	{
         assert(component == 0, "Component ID \(component) is not 0")
 

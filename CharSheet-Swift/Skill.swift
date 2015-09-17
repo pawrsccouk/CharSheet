@@ -38,7 +38,7 @@ class Skill : NSManagedObject
 
     func appendSpecialty() -> Specialty
 	{
-        var newSpec = addSpecialty(self.managedObjectContext!)
+        let newSpec = addSpecialty(self.managedObjectContext!)
         newSpec.parent = self
         self.specialties.addObject(newSpec)
         return newSpec
@@ -46,7 +46,7 @@ class Skill : NSManagedObject
     
     func removeSpecialtyAtIndex(index: Int) -> Void
 	{
-        var spec: Specialty = self.specialties[index] as! Specialty
+        let spec: Specialty = self.specialties[index] as! Specialty
         self.specialties.removeObjectAtIndex(index)
         self.managedObjectContext?.deleteObject(spec)
     }
@@ -61,7 +61,7 @@ class Skill : NSManagedObject
 		var str = ""
 		if let specArray = self.specialties?.array {
 			let specs = specArray.map{ $0 as! Specialty }
-			str = "; ".join(specs.map{ "\($0.name!) + \($0.value)" })
+			str = specs.map{ "\($0.name!) + \($0.value)" }.joinWithSeparator("; ")
 		}
 		return str
 	}
@@ -106,9 +106,9 @@ extension Skill: XMLClient
 		}
         
         let this = DDXMLElement.elementWithName(Element.SKILL.rawValue) as! DDXMLElement
-        this.addAttribute( attribute(Attribute.NAME , self.name             ) )
-        this.addAttribute( attribute(Attribute.VALUE, self.value.description) )
-        this.addAttribute( attribute(Attribute.TICKS, self.ticks.description) )
+        this.addAttribute( attribute(Attribute.NAME , value: self.name             ) )
+        this.addAttribute( attribute(Attribute.VALUE, value: self.value.description) )
+        this.addAttribute( attribute(Attribute.TICKS, value: self.ticks.description) )
         
         let specialties = DDXMLElement.elementWithName(Element.SPECIALTIES.rawValue) as! DDXMLElement
         this.addChild(specialties)
@@ -126,8 +126,8 @@ extension Skill: XMLClient
             if let nodeName = Attribute(rawValue: attrNode.name) {
                 switch nodeName {
                 case .NAME  : self.name  = attrNode.stringValue
-                case .VALUE : self.value = Int16(attrNode.stringValue.toInt() ?? 0)
-                case .TICKS : self.ticks = Int16(attrNode.stringValue.toInt() ?? 0)
+                case .VALUE : self.value = Int16(Int(attrNode.stringValue) ?? 0)
+                case .TICKS : self.ticks = Int16(Int(attrNode.stringValue) ?? 0)
                 }
             }
             else {

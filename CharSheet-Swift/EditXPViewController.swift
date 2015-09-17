@@ -39,7 +39,7 @@ class EditXPViewController : CharSheetViewController
 	{
 		super.viewDidLoad()
 		// Add the table view's Edit button to the left hand side.
-		var array = navigationItem.leftBarButtonItems ?? [AnyObject]()
+		var array = navigationItem.leftBarButtonItems ?? [UIBarButtonItem]()
 		array.insert(editButtonItem(), atIndex: 0)
 		navigationItem.leftBarButtonItems = array
     }
@@ -84,7 +84,7 @@ extension EditXPViewController: UITableViewDataSource
     func tableView(           tableView: UITableView,
 		cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
 	{
-        let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) as? UITableViewCell ?? UITableViewCell()
+        let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) ?? UITableViewCell()
         if let xpGain = charSheet.xp[indexPath.item] as? XPGain {
             cell.textLabel?.text = xpGain.reason
             cell.detailTextLabel?.text = xpGain.amount.description
@@ -99,7 +99,6 @@ extension EditXPViewController: UITableViewDataSource
 	{
 		for xpGain in charSheet.xp.array.map({ $0 as! XPGain }) {
 			assert(xpGain.reason != nil, "Ensure no faulting.")
-			NSLog("XPGain reason \(xpGain.reason) amount \(xpGain.amount)")
 		}
         return charSheet.xp.count
     }

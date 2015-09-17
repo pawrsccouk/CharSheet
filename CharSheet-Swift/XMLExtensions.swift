@@ -12,16 +12,22 @@ extension DDXMLDocument {
 
 	class func documentWithXMLString(string: String, options: UInt) -> Result<DDXMLDocument> {
 		var error: NSError? = nil
-		if let doc = DDXMLDocument(XMLString: string, options: options, error: &error) {
+		do {
+			let doc = try DDXMLDocument(XMLString: string, options: options)
 			return success(doc)
+		} catch let error1 as NSError {
+			error = error1
 		}
 		return failure(error!)
 	}
 
 	class func documentWithData(data: NSData, options: UInt) -> Result<DDXMLDocument> {
 		var error: NSError? = nil
-		if let doc = DDXMLDocument(data: data, options: options, error: &error) {
+		do {
+			let doc = try DDXMLDocument(data: data, options: options)
 			return success(doc)
+		} catch let error1 as NSError {
+			error = error1
 		}
 		return failure(error!)
 	}

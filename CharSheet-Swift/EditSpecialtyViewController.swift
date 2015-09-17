@@ -35,9 +35,13 @@ class EditSpecialtyViewController : UIViewController
     
     override func viewDidDisappear(animated: Bool)
 	{
-        var spec = specialty
+        let spec = specialty
         spec.name = nameField.text
-        spec.value = Int16(valueField.text.toInt() ?? 0)
+		if let s = valueField.text, i = Int(s) {
+        spec.value = Int16(i)
+		} else {
+			spec.value = 0
+		}
         super.viewDidDisappear(animated)
     }
 }

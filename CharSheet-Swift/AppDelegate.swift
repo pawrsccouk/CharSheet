@@ -35,7 +35,7 @@ class AppDelegate: UIResponder
 	/// in the application's documents Application Support directory.
 	lazy var applicationDocumentsDirectory: NSURL = {
 		let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-		return urls[urls.count-1] as! NSURL
+		return urls[urls.count-1] 
 		}()
 
 	/// The managed object model for the application.
@@ -60,8 +60,13 @@ class AppDelegate: UIResponder
 		let userInfo = [
 			NSMigratePersistentStoresAutomaticallyOption: true,
 			NSInferMappingModelAutomaticallyOption      : true]
-		if let persistentStore = coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: userInfo, error: &error) {
+		do {
+			let persistentStore = try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: userInfo)
 			return coordinator
+		} catch var error1 as NSError {
+			error = error1
+		} catch {
+			fatalError()
 		}
 
 		// Report any error we got.
@@ -102,10 +107,15 @@ class AppDelegate: UIResponder
 	{
 		if let moc = self.managedObjectContext {
 			var error: NSError? = nil
-			if moc.hasChanges && !moc.save(&error) {
-				// Replace this implementation with code to handle the error appropriately.
-				NSLog("Unresolved error \(error), \(error!.userInfo)")
-				abort()
+			if moc.hasChanges {
+				do {
+					try moc.save()
+				} catch let error1 as NSError {
+					error = error1
+					// Replace this implementation with code to handle the error appropriately.
+					NSLog("Unresolved error \(error), \(error!.userInfo)")
+					abort()
+				}
 			}
 		}
 	}
@@ -162,7 +172,7 @@ extension AppDelegate: UIApplicationDelegate
 	func application(application: UIApplication,
 		openURL      url        : NSURL,
 		sourceApplication       : String?,
-		annotation              : AnyObject?) -> Bool
+		annotation              : AnyObject) -> Bool
 	{
 		// Triggered when the user opens a .charSheet attachment in an email.
 		// Import the data from the URL.

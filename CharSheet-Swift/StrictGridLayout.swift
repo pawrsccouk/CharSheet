@@ -47,8 +47,8 @@ class StrictGridLayout : UICollectionViewLayout {
 //    }
     
     func attributesForIndex(i: Int, withFrame itemFrame: CGRect) -> UICollectionViewLayoutAttributes {
-        var indexPath = NSIndexPath(forItem: i, inSection:0)
-        var attributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
+        let indexPath = NSIndexPath(forItem: i, inSection:0)
+        let attributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
         attributes.frame = itemFrame;
         return attributes;
     }
@@ -89,7 +89,7 @@ class StrictGridLayout : UICollectionViewLayout {
         return contentSize
     }
     
-    override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject] {
+    override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes] {
         //assert(collectionItemAttributes != nil, "collectionItemAttributes is missing. prepareLayout was not called properly")
         return collectionItemAttributes.filter{ object in CGRectIntersectsRect(rect, object.frame) }
     }
@@ -120,11 +120,11 @@ class StrictGridLayout : UICollectionViewLayout {
         
         // Get one of the rightmost cells and use its bounds to get the width of the content as a whole.
         // Get the last cell and use it's bounds to get the height.
-        var rightmostItemIndex = min(itemCount - 1, columns - 1)
-        var bottomItemIndex    = itemCount - 1
+        let rightmostItemIndex = min(itemCount - 1, columns - 1)
+        let bottomItemIndex    = itemCount - 1
         
-        var rightmostFrame = collectionItemAttributes[rightmostItemIndex].frame
-        var bottomFrame    = collectionItemAttributes[bottomItemIndex].frame
+        let rightmostFrame = collectionItemAttributes[rightmostItemIndex].frame
+        let bottomFrame    = collectionItemAttributes[bottomItemIndex].frame
         
         return CGSizeMake(CGRectGetMaxX(rightmostFrame) + (contentInsets.width  * 2), CGRectGetMaxY(bottomFrame) + (contentInsets.height * 2))
     }

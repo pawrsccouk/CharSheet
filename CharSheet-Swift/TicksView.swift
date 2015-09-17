@@ -30,12 +30,12 @@ class TicksView : UIView {
         super.init(frame: frame)
     }
     
-    required init(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
 
     
-    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change:[NSObject: AnyObject], context:UnsafeMutablePointer<Void>) {
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change:[String: AnyObject]?, context:UnsafeMutablePointer<Void>) {
         if keyPath  == "ticks" {
             setNeedsDisplay()
         }
@@ -43,14 +43,14 @@ class TicksView : UIView {
     
     override func drawRect(rect: CGRect) {
         //    NSLog(@"TicksView:drawRect: Drawing %d ticks", [self numberOfTicks]);
-        var bounds = self.bounds
-        var fgCol = UIColor.darkTextColor()
+        let bounds = self.bounds
+        let fgCol = UIColor.darkTextColor()
         
         // 4 rows of 5 boxes.
         // 1 find which is smaller, width / 5, or height / 4
-        var boxSize: CGFloat = min(bounds.size.width / 5, bounds.size.height / 4);
+        let boxSize: CGFloat = min(bounds.size.width / 5, bounds.size.height / 4);
         
-        var ctx = UIGraphicsGetCurrentContext();
+        let ctx = UIGraphicsGetCurrentContext();
         CGContextSetLineWidth(ctx, 1);
         fgCol.set()
         

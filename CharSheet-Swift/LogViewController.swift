@@ -40,8 +40,8 @@ class LogViewController: CharSheetViewController
 
 	/// Loads a Log Entry View Controller from the storyboard, populates it and presents it as a popover.
 	///
-	/// :param: tableView The table view to overlay with the popover. 
-	/// :param: indexPath Index to the table-view row which triggered the popup.
+	/// - parameter tableView: The table view to overlay with the popover. 
+	/// - parameter indexPath: Index to the table-view row which triggered the popup.
 	///                   The popover will display the LogEntry associated with this row.
 	/// We use a custom popover instead of a Storyboard Segue as the segue points the popover
 	/// at the bottom of the table view and not the row that was selected.
@@ -96,20 +96,12 @@ extension LogViewController: UITableViewDataSource
     func tableView(           tableView: UITableView,
 		cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
 	{
-        
-        if var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as? UITableViewCell {
-            let entry = sortedLogs[indexPath.row] as LogEntry
-            if let l = cell.textLabel {
-                l.text = dateFormatter.stringFromDate(entry.dateTime)
-            }
-            if let l = cell.detailTextLabel {
-                l.text = entry.summary
-            }
-            return cell
-        }
-        assert(false, "TableViewCell not found for identifier \(cellIdentifier)")
-        return UITableViewCell()
-    }
+		let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) ?? UITableViewCell()
+		let entry = sortedLogs[indexPath.row] as LogEntry
+		cell.textLabel?.text = dateFormatter.stringFromDate(entry.dateTime)
+		cell.detailTextLabel?.text = entry.summary
+		return cell
+	}
 }
 
 // MARK: - Table View Delegate

@@ -10,28 +10,33 @@ import UIKit
 
 private let noStatText = "None"
 
-class StatSelectViewController : UITableViewController, UITableViewDataSource, UITableViewDelegate
+class StatSelectViewController : UITableViewController
 {
     var selectedStat = noStatText
     
     typealias SelectionChangedCallback = (newStat: String?, oldStat: String) -> Void
     var selectionChangedCallback: SelectionChangedCallback?
     
-    // MARK: - Table view data source
-    
-    
+}
+
+// MARK: - Table view Data source
+
+extension StatSelectViewController
+{
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) ->UITableViewCell {
         // Mark the selected stat with a check.
-        var cell = super.tableView(tableView, cellForRowAtIndexPath:indexPath)
+        let cell = super.tableView(tableView, cellForRowAtIndexPath:indexPath)
         if let l = cell.textLabel {
             cell.accessoryType = l.text == self.selectedStat ? .Checkmark : .None
         }
         return cell
     }
+}
     
-    
-    
-    
+// MARK: - Table view Delegate
+
+extension StatSelectViewController
+{
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath) {
         let oldStat = selectedStat
         if let selectedCell = tableView.cellForRowAtIndexPath(indexPath) {

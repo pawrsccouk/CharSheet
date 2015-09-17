@@ -103,17 +103,17 @@ class CharSheetEditViewController : CharSheetViewController
         charSheet.name   = charNameTextField.text
         charSheet.game   = gameTextField.text
         charSheet.player = playerTextField.text
-        charSheet.experience = Int32(experienceTextField.text.toInt() ?? 0)
-        charSheet.level      = Int16(levelTextField.text.toInt() ?? 0)
+        charSheet.experience   = Int32(Int(experienceTextField.text   ?? "") ?? 0)
+        charSheet.level        = Int16(Int(levelTextField.text        ?? "") ?? 0)
         
-        charSheet.strength     = Int16(strengthTextField.text.toInt()     ?? 0)
-        charSheet.dexterity    = Int16(dexterityTextField.text.toInt()    ?? 0)
-        charSheet.constitution = Int16(constitutionTextField.text.toInt() ?? 0)
-        charSheet.speed        = Int16(speedTextField.text.toInt()        ?? 0)
-        charSheet.charisma     = Int16(charismaTextField.text.toInt()     ?? 0)
-        charSheet.perception   = Int16(perceptionTextField.text.toInt()   ?? 0)
-        charSheet.intelligence = Int16(intelligenceTextField.text.toInt() ?? 0)
-        charSheet.luck         = Int16(luckTextField.text.toInt()         ?? 0)
+        charSheet.strength     = Int16(Int(strengthTextField.text     ?? "") ?? 0)
+        charSheet.dexterity    = Int16(Int(dexterityTextField.text    ?? "") ?? 0)
+        charSheet.constitution = Int16(Int(constitutionTextField.text ?? "") ?? 0)
+        charSheet.speed        = Int16(Int(speedTextField.text        ?? "") ?? 0)
+        charSheet.charisma     = Int16(Int(charismaTextField.text     ?? "") ?? 0)
+        charSheet.perception   = Int16(Int(perceptionTextField.text   ?? "") ?? 0)
+        charSheet.intelligence = Int16(Int(intelligenceTextField.text ?? "") ?? 0)
+        charSheet.luck         = Int16(Int(luckTextField.text         ?? "") ?? 0)
 
 		// Update the 'order' attribute in the skills to match the order in the set.
 		var i: Int16 = 0

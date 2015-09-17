@@ -39,8 +39,8 @@ extension Specialty: XMLClient {
 			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
 		}
 		let this = DDXMLElement.elementWithName(SPECIALTY) as! DDXMLElement
-        this.addAttribute( attribute(.NAME , self.name ?? "No name") )
-        this.addAttribute( attribute(.VALUE, self.value.description) )
+        this.addAttribute( attribute(.NAME , value: self.name ?? "No name") )
+        this.addAttribute( attribute(.VALUE, value: self.value.description) )
         return this
     }
 
@@ -54,7 +54,7 @@ extension Specialty: XMLClient {
             if let nodeName = Attribute(rawValue: attrNode.name) {
                 switch nodeName {
                 case .NAME: self.name  = attrNode.stringValue
-                case .VALUE:self.value = Int16(attrNode.stringValue.toInt() ?? 0)
+                case .VALUE:self.value = Int16(Int(attrNode.stringValue) ?? 0)
                 }
             }
             else {

@@ -30,13 +30,13 @@ class DieRollViewController: CharSheetViewController
 
     @IBAction func editSkillTable(sender: AnyObject?)
 	{
-        var newEditing = !skillsTable.editing
+        let newEditing = !skillsTable.editing
         skillsTable.editing = newEditing
     }
     
 	@IBAction func addSkill(sender: AnyObject?)
 	{
-		var skillsToAdd = (charSheet!.skills.array)
+		let skillsToAdd = (charSheet!.skills.array)
 			.map { $0 as! Skill }
 			.filter{ !self.dieRoll.skills.contains($0) }
 
@@ -110,35 +110,40 @@ class DieRollViewController: CharSheetViewController
 		dieRoll.removeObserver(self, forKeyPath: "extraD4s")
 	}
 
-	 override func observeValueForKeyPath(keyPath: String,
-		ofObject                           object: AnyObject,
-		change                                   : [NSObject : AnyObject],
-		context                                  : UnsafeMutablePointer<Void>)
+	override func observeValueForKeyPath(keyPath: String?,
+		ofObject                         object: AnyObject?,
+		change                                 : [String : AnyObject]?,
+		context                                : UnsafeMutablePointer<Void>)
 	{
-		switch keyPath {
-		case "adds" where context == &myContext:
-			addsTextField.text = "\(dieRoll.adds)"
-			for s in stepperAssistants {
-				s.updateStepperFromTextField()
-			}
+		if let key = keyPath {
+			switch key {
+			case "adds" where context == &myContext:
+				addsTextField.text = "\(dieRoll.adds)"
+				for s in stepperAssistants {
+					s.updateStepperFromTextField()
+				}
+				return
 
-		case "extraD4s" where context == &myContext:
-			extraDiceTextField.text = "\(dieRoll.extraD4s)"
-			for s in stepperAssistants {
-				s.updateStepperFromTextField()
-			}
+			case "extraD4s" where context == &myContext:
+				extraDiceTextField.text = "\(dieRoll.extraD4s)"
+				for s in stepperAssistants {
+					s.updateStepperFromTextField()
+				}
+				return
 
-		default:
-			super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+			default:
+				break
+			}
 		}
+		super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
 	}
 
 
 	override func viewDidLoad()
 	{
 		super.viewDidLoad()
-		dieRoll.addObserver(self, forKeyPath: "adds",     options: (.Initial | .New), context: &myContext)
-		dieRoll.addObserver(self, forKeyPath: "extraD4s", options: (.Initial | .New), context: &myContext)
+		dieRoll.addObserver(self, forKeyPath: "adds",     options: ([.Initial, .New]), context: &myContext)
+		dieRoll.addObserver(self, forKeyPath: "extraD4s", options: ([.Initial, .New]), context: &myContext)
 		updateStatLabel()
 
 		if let navc = navigationController {
@@ -154,11 +159,11 @@ class DieRollViewController: CharSheetViewController
 	{
 		switch segue.identifier! {
 		case "ShowDieRollResult":
-			var dieRollResultViewController = segue.destinationViewController as! DieRollResultViewController
+			let dieRollResultViewController = segue.destinationViewController as! DieRollResultViewController
 			rollTheDieAndShowResultsInViewController(dieRollResultViewController)
 
 		case "PushStatSelect":
-			var statSelectViewController = segue.destinationViewController as! StatSelectViewController
+			let statSelectViewController = segue.destinationViewController as! StatSelectViewController
 			statSelectViewController.selectedStat = dieRoll.stat?.name ?? "No name"
 			statSelectViewController.selectionChangedCallback = { newName, _ in
 				self.statNameChanged(newName)
@@ -197,7 +202,7 @@ class DieRollViewController: CharSheetViewController
             if let stat = dieRoll.stat {
                 statButtonText = "\(stat.name): \(stat.value)"
             }
-            statButton.setTitle(statButtonText, forState: .Normal)
+            button.setTitle(statButtonText, forState: .Normal)
         }
     }
 
@@ -218,22 +223,31 @@ class DieRollViewController: CharSheetViewController
 
 	/// Callback. Trigger a die roll with the settings in DieRoll, and present a view controller to show the results.
 	///
-	/// :param: dieRollResultViewController The controller to push to display the die roll result.
+	/// - parameter dieRollResultViewController: The controller to push to display the die roll result.
     private func rollTheDieAndShowResultsInViewController(dieRollResultViewController: DieRollResultViewController)
 	{
-        dieRoll.adds = addsTextField.text.toInt() ?? 0
-        dieRoll.extraD4s = Int16(extraDiceTextField.text.toInt() ?? 0)
-        
-        dieRoll.roll()
-        dieRollResultViewController.dieRoll = dieRoll
-        
-        // Add the option to tick the skill if there is only one selected.
-        assert(self.addTickToSkillCallback != nil)
-        if dieRoll.skills.count == 1 {
-            if let callback = addTickToSkillCallback {
-                dieRollResultViewController.addTickAction = { callback(skill: self.dieRoll.skills[0]) }
-            }
-        }
+		if let s = addsTextField.text, adds = Int(s) {
+			dieRoll.adds = adds
+		} else {
+			dieRoll.adds = 0
+		}
+		if let s = extraDiceTextField.text, d4s = Int(s) {
+			dieRoll.extraD4s = Int16(d4s)
+		}
+		else {
+			dieRoll.extraD4s = 0
+		}
+
+		dieRoll.roll()
+		dieRollResultViewController.dieRoll = dieRoll
+
+		// Add the option to tick the skill if there is only one selected.
+		assert(self.addTickToSkillCallback != nil)
+		if dieRoll.skills.count == 1 {
+			if let callback = addTickToSkillCallback {
+				dieRollResultViewController.addTickAction = { callback(skill: self.dieRoll.skills[0]) }
+			}
+		}
 	}
 }
 
@@ -307,7 +321,7 @@ extension DieRollViewController: UITableViewDataSource
 	{
 		let CELL_ID = "PWDieRollView_Cell"
 
-		let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) as? UITableViewCell
+		let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID)
 			?? UITableViewCell(style: .Value1, reuseIdentifier:CELL_ID)
 
 		let skill = dieRoll.skills.objectAtIndex(indexPath.row)

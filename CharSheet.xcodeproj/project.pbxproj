@@ -310,7 +310,9 @@
 		5725DE641A0415CC00343E5F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Patrick Wallace";
 				TargetAttributes = {
 					5725DE6B1A0415CD00343E5F = {
@@ -437,6 +439,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -503,6 +506,7 @@
 				"HEADER_SEARCH_PATHS[arch=*]" = /usr/include/libxml2;
 				INFOPLIST_FILE = "CharSheet-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.paw.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = CharSheet;
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = Bridging_Header.h;
 			};
@@ -515,6 +519,7 @@
 				"HEADER_SEARCH_PATHS[arch=*]" = /usr/include/libxml2;
 				INFOPLIST_FILE = "CharSheet-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.paw.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = CharSheet;
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = Bridging_Header.h;
 			};

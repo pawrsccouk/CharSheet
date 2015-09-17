@@ -19,7 +19,7 @@ class MasterViewController : UITableViewController {
 	/// Triggers a Fetch in CoreData of all the CharSheet objects available to the system.
 	private func fetchAllCharacters() -> NSFetchedResultsController
 	{
-		var fetchRequest = NSFetchRequest()
+		let fetchRequest = NSFetchRequest()
 		fetchRequest.entity = NSEntityDescription.entityForName("CharSheet", inManagedObjectContext:self.managedObjectContext)
 		fetchRequest.fetchBatchSize = 20    // Set the batch size to a suitable number.
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key:"name", ascending:false)]
@@ -33,7 +33,10 @@ class MasterViewController : UITableViewController {
 		fetchedResultsController.delegate = self
 
 		var error: NSError? //Pointer()
-		if !fetchedResultsController.performFetch(&error) {
+		do {
+			try fetchedResultsController.performFetch()
+		} catch let error1 as NSError {
+			error = error1
 			// Replace this implementation with code to handle the error appropriately.
 			if let err = error {
 				NSLog("MasterViewController: Error performing fetch: %@, %@", err, err.userInfo ?? "[]");
@@ -52,8 +55,8 @@ class MasterViewController : UITableViewController {
 
 	/// Creates a CharSheet object and pulls all the data from the XML element provided to initialize it.
 	///
-	/// :param: element The root element holding all the sub-elements for this character sheet.
-	/// :returns: A newly-created CharSheet object which has been added to Core Data.
+	/// - parameter element: The root element holding all the sub-elements for this character sheet.
+	/// - returns: A newly-created CharSheet object which has been added to Core Data.
 	/// :note: This deletes the new char sheet if anything goes wrong during the loading process.
 
 	private func createCharSheetFromElement(element: DDXMLElement) -> Result<CharSheet>
@@ -72,7 +75,7 @@ class MasterViewController : UITableViewController {
 
 	/// Import a character sheet.
 	///
-	/// :param: URL A file URL pointing at the document to load.
+	/// - parameter URL: A file URL pointing at the document to load.
 	/// :todo: This should be in the model somewhere, not in a view controller.
 	///        I need to create a class to represent "all the character sheets".
 	/// :note: This decides whether the loaded data represents a new character or replaces an existing one.
@@ -93,7 +96,7 @@ class MasterViewController : UITableViewController {
 
 		let xmlData = NSData(contentsOfURL:url)
 		return DDXMLDocument.documentWithData(xmlData!, options: 0)
-			.andThen { findElement($0, "charSheet") }
+			.andThen { findElement($0, nodeName: "charSheet") }
 			.andThen { self.createCharSheetFromElement($0).nilResult() }
 	}
 
@@ -102,9 +105,18 @@ class MasterViewController : UITableViewController {
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = false
         navigationItem.leftBarButtonItem = editButtonItem()
-        
-        detailViewController = splitViewController?.viewControllers.last?.topViewController as! CharSheetUseViewController
-        detailViewController.managedObjectContext = managedObjectContext
+
+		if let
+			viewControllers = splitViewController?.viewControllers,
+			navController = viewControllers.last as? UINavigationController,
+			useViewController = navController.topViewController as? CharSheetUseViewController
+		{
+			useViewController.managedObjectContext = managedObjectContext
+			detailViewController = useViewController
+		} else {
+			let detailView = splitViewController?.viewControllers.first
+			fatalError("Failed to get detail view controller from split view array. Is \(detailView)")
+		}
 
 		// If we have a view with no character sheet set,
 		// then find the sheet we were looking at last time and set it here by default.
@@ -127,45 +139,55 @@ class MasterViewController : UITableViewController {
 		return nil
 	}
 
+	/// Find the most appropriate error text by searching the userInfo dicts of any nested errors.
+	///
+	/// The userInfo dict of the error can have an array of other error under the NSDetailedErrorsKey.
+	/// If so, search that array and add to the text returned.
+	///
+	/// - parameter error: The error to search.
+	/// - returns: Text formatted for a user to read describing the error.
+	private func textFromError(error: NSError) -> String
+	{
+        var errorText = "Unknown error"
+		if let fullInfo = error.userInfo[NSHelpAnchorErrorKey] as? String {
+			errorText = fullInfo
+		}
+		// If there are multiple errors, then the userInfo of the error will have a value for NSDetailedErrors
+		// and these errors show the actual problem.
+		// Get the first one, and show it.
+		if let
+			errorDetail = error.userInfo[NSDetailedErrorsKey] as? [NSError],
+			fullInfo    = errorDetail.first?.userInfo[NSHelpAnchorErrorKey] as? String
+		{
+			errorText = fullInfo
+			if errorDetail.count > 1 {
+				errorText += "\nand \(errorDetail.count) more..."
+			}
+			// Log them all
+			for e in errorDetail {
+				NSLog("Core Data error \(e) userInfo \(e.userInfo)")
+			}
+		}
+		return errorText
+	}
+
 	/// Extract the error object from a Result, and present a view controller displaying the error.
 	///
 	/// Does nothing if result is successful.
 	///
-	/// :param: result The result to display.
-	/// :param: title  The title displayed on the error window.
+	/// - parameter result: The result to display.
+	/// - parameter title:  The title displayed on the error window.
 	func showAlertForResult<T>(result: Result<T>, title: String)
 	{
 		// Show nothing if this isn't an error result.
-		if result.error == nil {
+		guard let error = result.error else {
 			return
 		}
-		let error = result.error!
-
-        var errorText = "Unknown error"
-        if let userInfo = error.userInfo {
-            if let fullInfo = userInfo[NSHelpAnchorErrorKey] as? String {
-                errorText = fullInfo
-            }
-            // If there are multiple errors, then the userInfo of the error will have a value for NSDetailedErrors
-            // and these errors show the actual problem.
-            // Get the first one, and show it.
-			if let errorDetail = userInfo[NSDetailedErrorsKey] as? [NSError] {
-				if !errorDetail.isEmpty, let fullInfo = errorDetail[0].userInfo?[NSHelpAnchorErrorKey] as? String {
-					errorText = fullInfo
-					if errorDetail.count > 1 {
-						errorText += "\nand \(errorDetail.count) more..."
-					}
-				}
-                // Log them all
-                for e in errorDetail {
-                    NSLog("Core Data error \(e) userInfo \(e.userInfo)")
-                }
-            }
-        }
+		let errorText = textFromError(error)
 		let alertController = UIAlertController(title: title, message: errorText, preferredStyle: .Alert)
 		alertController.addAction(UIAlertAction(title: "Close",style: .Default) { (action) in
 			self.dismissViewControllerAnimated(true, completion: nil)
-		})
+			})
 		presentViewController(alertController, animated: true, completion: nil)
    }
 
@@ -205,7 +227,7 @@ class MasterViewController : UITableViewController {
 
 // MARK: - Table View Data Source
 
-extension MasterViewController: UITableViewDataSource
+extension MasterViewController // : UITableViewDataSource
 {
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int
     {
@@ -222,8 +244,7 @@ extension MasterViewController: UITableViewDataSource
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) -> UITableViewCell
 	{
 		let CELL_ID = "MasterViewController_Cell"
-        let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) as? UITableViewCell
-			?? UITableViewCell(style:.Subtitle, reuseIdentifier:CELL_ID)
+        let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) ?? UITableViewCell(style:.Subtitle, reuseIdentifier:CELL_ID)
         configureCell(cell, atIndexPath:indexPath)
         return cell
     }
@@ -231,7 +252,7 @@ extension MasterViewController: UITableViewDataSource
 
 // MARK: - Table View Delegate
 
-extension MasterViewController: UITableViewDelegate
+extension MasterViewController // : UITableViewDelegate
 {
     override func tableView(  tableView: UITableView,
 		canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
@@ -290,7 +311,8 @@ extension MasterViewController: NSFetchedResultsControllerDelegate
             break
         }
     }
-    
+
+
 	func controller(  controller: NSFetchedResultsController,
 		didChangeObject anObject: AnyObject,
 		atIndexPath    indexPath: NSIndexPath?,

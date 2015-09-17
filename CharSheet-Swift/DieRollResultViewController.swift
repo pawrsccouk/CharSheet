@@ -25,7 +25,7 @@ class DieRollResultViewController : UIViewController {
         }
         
         // Log the roll.
-        var entry = dieRoll.addLogEntry()
+        let entry = dieRoll.addLogEntry()
         if addTickSwitch.on {
             let c = entry.change ?? ""
             entry.change = "\(c)\nTick added."

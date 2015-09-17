@@ -42,8 +42,8 @@ extension XPGain: XMLClient
 			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
 		}
         let this = DDXMLElement.elementWithName(XP_ENTRY) as! DDXMLElement
-        this.addAttribute( attribute( .AMOUNT, self.amount.description) )
-        this.addAttribute( attribute( .REASON, self.reason!) )
+        this.addAttribute( attribute( .AMOUNT, value: self.amount.description) )
+        this.addAttribute( attribute( .REASON, value: self.reason!) )
         return this
     }
     
@@ -56,7 +56,7 @@ extension XPGain: XMLClient
         for attrNode in (element.attributes as! [DDXMLNode]) {
             if let nodeName = Attribute(rawValue: attrNode.name) {
                 switch nodeName {
-                case .AMOUNT : self.amount = Int16(attrNode.stringValue.toInt() ?? 0)
+                case .AMOUNT : self.amount = Int16(Int(attrNode.stringValue) ?? 0)
                 case .REASON : self.reason = attrNode.stringValue
                 }
             }

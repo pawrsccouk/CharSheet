@@ -107,7 +107,7 @@ class DieRoll : NSObject
 	{
 		switch state {
 		case .Rolled(let (_, resultForLog)):
-			var entry = charSheet.addLogEntry()
+			let entry = charSheet.addLogEntry()
 			entry.summary = getSummary()
 			entry.change  = resultForLog
 			return entry;
@@ -127,13 +127,13 @@ class DieRoll : NSObject
 		/// Simulate rolling 2D6, optionally rerolling on a double.
 		/// Rolling a botch (2+1 or 1+2) will abort immediately.
 		///
-		/// :param: doublesReroll If true and the dice both have the same value, then roll the dice again
+		/// - parameter doublesReroll: If true and the dice both have the same value, then roll the dice again
 		///                       and include the result. This can happen repeatedly.
-		/// :returns: An array holding all the die rolls that were made.
+		/// - returns: An array holding all the die rolls that were made.
 		func rollD6(doublesReroll: Bool) -> [Int16]
 		{
 			var results: [Int16] = [], firstRoll = true, n1 = Int16(0), n2 = Int16(0)
-			do {
+			repeat {
 				(n1, n2) = (rollDie(6), rollDie(6))
 				results.append(n1)
 				results.append(n2)
@@ -172,13 +172,13 @@ class DieRoll : NSObject
 	/// Converts characters in the input which would interferere with HTML formatting
 	/// into the equivalent escape sequences.
 	///
-	/// :param:   input A string to convert. This must not include any HTML markup
+	/// - parameter   input: A string to convert. This must not include any HTML markup
 	///                 as it will be replaced with &lt; &gt; etc.
-	/// :returns: A string suitable to be embedded in an HTML document.
+	/// - returns: A string suitable to be embedded in an HTML document.
     private func sanitiseHTML(input: String) -> String
 	{
-        var output = NSMutableString(capacity: count(input))
-        for c in input {
+        let output = NSMutableString(capacity: input.characters.count)
+        for c in input.characters {
             switch c {
             case "<" : output.appendString("&lt;" )
             case ">" : output.appendString("&gt;" )
@@ -192,30 +192,30 @@ class DieRoll : NSObject
 
 	/// Returns true if the first two die rolls in the array provided indicate a botch.
 	///
-	/// :param: d6Rolls An array holding at least 2 integers, each being the result of a d6 roll.
+	/// - parameter d6Rolls: An array holding at least 2 integers, each being the result of a d6 roll.
     private func isBotch(d6Rolls: [Int16]) -> Bool
 	{
-        assert(count(d6Rolls) >= 2, "Not enough d6")
+        assert(d6Rolls.count >= 2, "Not enough d6")
         return d6Rolls[0] + d6Rolls[1] == 3
     }
     
 
 	/// Returns a summary of a die roll suitable for adding to the logs.
 	///
-	/// :returns: A text string in the format: "stat + skill1/skill2..."
+	/// - returns: A text string in the format: "stat + skill1/skill2..."
 	///           It will fit on one line.
 	private func getSummary() -> String
 	{
 		var statStr  = "<No stat>"
 		if let statName = stat?.name {
-			var prefix = statName.substringToIndex(advance(statName.startIndex, 3))
+			var prefix = statName.substringToIndex(statName.startIndex.advancedBy(3))
 			if prefix == "Luc" {
 				prefix = "Lck"
 			}
 			statStr = prefix
 		}
-		var skillNames: NSArray = skills.array.map{ obj in (obj as Skill).name! }
-		var skillStr = skillNames.componentsJoinedByString("/")
+		let skillNames: NSArray = skills.array.map{ obj in (obj as Skill).name! }
+		let skillStr = skillNames.componentsJoinedByString("/")
 		return "\(statStr) + \(skillStr)"
 	}
 
@@ -223,7 +223,7 @@ class DieRoll : NSObject
 
 	/// Returns the detail text of a die roll in a short format for adding to the logs.
 	///
-	/// :returns: A multi-line text string with the full detail of the roll.
+	/// - returns: A multi-line text string with the full detail of the roll.
 	private func getLogDetail(
 		total: Int16,
 		d6Rolls: [Int16],
@@ -236,7 +236,7 @@ class DieRoll : NSObject
             if let dieRollsForSkill = dieRollsPerSkill[skill.name!] {
                 d4Rolls = dieRollsForSkill
             }
-            let d4rollStr = " + ".join(d4Rolls.map{ $0.description })
+            let d4rollStr = d4Rolls.map{ $0.description }.joinWithSeparator(" + ")
             var specValue: Int16 = 0
             if let spec = specialties[skill.name!] {
                 specValue = spec.value
@@ -249,12 +249,12 @@ class DieRoll : NSObject
 		if let s = stat {
 			statText = "Stat: \(s.name) = \(s.value)"
 		}
-        let d6s     = " + ".join(d6Rolls.map{ $0.description })
+        let d6s     = d6Rolls.map{ $0.description }.joinWithSeparator(" + ")
         let d6str   = "D6 Rolls: \(d6s)"
         let skillResults: NSArray = skills.array.map(summariseSkillRoll)
         let skillStr = skillResults.componentsJoinedByString("\n")
 
-		let extraD4Text = " + ".join(extraD4Rolls.map{ "\($0)" })
+		let extraD4Text = extraD4Rolls.map{ "\($0)" }.joinWithSeparator(" + ")
 
         return "\(d6str)\n\(statText)\n\(skillStr)\nExtraD4s: \(extraD4Text)\nAdds: \(adds)\nTotal: \(total)"
     }
@@ -268,7 +268,7 @@ class DieRoll : NSObject
 		dieRollsPerSkill: [String: [Int16]],
 		extraD4Rolls    : [Int16]) -> String
 	{
-		var log = NSMutableString()
+		let log = NSMutableString()
 		log.appendString("<html><head/><style>")
 		log.appendString("div { margin-left: 25px; }")
 		log.appendString("span { margin-left: 25px; }")
@@ -284,13 +284,13 @@ class DieRoll : NSObject
 
 		// Format the D6 rolls.
 		assert(d6Rolls.count % 2 == 0, "Uneven number of d6 rolls")
-		let d6Results: [String] = group(2, d6Rolls).map {
+		let d6Results: [String] = group(2, collection: d6Rolls).map {
 			let doubleStr = ($0[0] == $0[1] ? " (Double!)" : "")
 			return "\($0[0]) + \($0[1])\(doubleStr)"
 		}
 		log.appendString("<div>")
-		log.appendString(", ".join(d6Results))
-		var d6Total = d6Rolls.reduce(0) { $0 + $1 }
+		log.appendString(d6Results.joinWithSeparator(", "))
+		let d6Total = d6Rolls.reduce(0) { $0 + $1 }
 		log.appendString("&nbsp;&nbsp;= \(d6Total)</div>")
 
 		// Add the stat if necessary.
@@ -309,20 +309,20 @@ class DieRoll : NSObject
 						specStr = "<br/><span>(+ \(specName) = \(specialty.value))</span>"
 					}
 					finalTotal += rollsForSkill.reduce(0) { $0 + $1 }
-					let rollsText = " + ".join(rollsForSkill.map{$0.description})
+					let rollsText = rollsForSkill.map{$0.description}.joinWithSeparator(" + ")
 					let safeName = self.sanitiseHTML(skillName)
 					return "\(safeName) (\(rollsForSkill.count)) = \(rollsText) = \(finalTotal) \(specStr)"
 				} else {
 					fatalError("Skill \(skill) has no name!")
 				}
 			}
-			log.appendString("<br/>".join(skillLines))
+			log.appendString(skillLines.joinWithSeparator("<br/>"))
 			log.appendString("</div>")
 		}
 
 		// Add extra d4s.
 		if extraD4s != 0 {
-			let extraD4Text = " + ".join(extraD4Rolls.map{"\($0)"})
+			let extraD4Text = extraD4Rolls.map{"\($0)"}.joinWithSeparator(" + ")
 			let extraD4Value = extraD4Rolls.reduce(0) { $0 + $1 }
 			log.appendString("<b>Extra D4s:</b><br/><div>\(extraD4Text) = \(extraD4Value)</div>")
 		}
@@ -367,8 +367,8 @@ class DieRoll : NSObject
 
 /// Given an array, split it into groups and return an array of all the groups.
 ///
-/// :param: groupSize The size of each group. Must be greater than zero or we return an empty array.
-/// :param: collection The collection to split into groups.
+/// - parameter groupSize: The size of each group. Must be greater than zero or we return an empty array.
+/// - parameter collection: The collection to split into groups.
 ///
 /// If the number of items in the collection isn't an exact multiple of *groupSize*
 /// then the remaining items are simply ignored.  For example:

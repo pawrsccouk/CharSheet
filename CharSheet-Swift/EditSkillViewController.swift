@@ -46,8 +46,8 @@ class EditSkillViewController : UIViewController
 	{
         if let s = skill {
             s.name = nameTextField.text;
-            s.value = Int16(valueTextField.text.toInt() ?? 0)
-            s.ticks = Int16(ticksTextField.text.toInt() ?? 0)
+            s.value = Int16(Int(valueTextField.text ?? "") ?? 0)
+            s.ticks = Int16(Int(ticksTextField.text ?? "") ?? 0)
         }
         super.viewDidDisappear(animated)
     }
@@ -103,7 +103,7 @@ extension EditSkillViewController: UITableViewDataSource
 	{
 		let CELL_ID = "PWEditSkillViewController_Cell"
 
-        let cell = specialtiesTableView.dequeueReusableCellWithIdentifier(CELL_ID) as? UITableViewCell
+        let cell = specialtiesTableView.dequeueReusableCellWithIdentifier(CELL_ID)
 			?? UITableViewCell(style: .Value1, reuseIdentifier: CELL_ID)
         let spec = skill.specialties.objectAtIndex(indexPath.row) as! Specialty
         if let l = cell.textLabel {

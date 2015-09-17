@@ -43,9 +43,8 @@ class CharSheetUseControl : UIControl {
         if let view = viewOrNil {
             var viewFrame = view.frame;
             viewFrame = CGRectOffset(viewFrame, 0, viewFrame.size.height);
-            var lineOrigin = viewFrame.origin, lineEnd = CGPointMake(lineOrigin.x + viewFrame.size.width, lineOrigin.y);
-            path.moveToPoint(lineOrigin)
-            path.addLineToPoint(lineEnd)
+			path.moveToPoint(viewFrame.origin)
+            path.addLineToPoint(CGPoint(x: viewFrame.origin.x + viewFrame.size.width, y: viewFrame.origin.y))
         }
     }
     
@@ -56,7 +55,7 @@ class CharSheetUseControl : UIControl {
         UIColor.blackColor().set()
         
         // Find the subviews corresponding to the stats block and skills blocks, and draw decoration around them.
-        var path = UIBezierPath()
+        let path = UIBezierPath()
         underlineView(path, viewOrNil: findLabel(.Stats))
         underlineView(path, viewOrNil: findLabel(.Skills))
         path.stroke()

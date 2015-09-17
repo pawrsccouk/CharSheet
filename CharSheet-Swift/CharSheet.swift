@@ -37,7 +37,7 @@ class CharSheet : NSManagedObject {
 	var sortedLogs: [LogEntry] {
 		return logs.allObjects
 			.map { $0 as! LogEntry }
-			.sorted{
+			.sort{
 				let d1 = $0.dateTime
 				return d1.earlierDate($1.dateTime) == d1
 		}
@@ -92,7 +92,7 @@ class CharSheet : NSManagedObject {
 
     func appendSkill() -> Skill
 	{
-        var newSkill = addSkill(self.managedObjectContext!)
+        let newSkill = addSkill(self.managedObjectContext!)
         newSkill.parent = self
         self.skills.addObject(newSkill)
         return newSkill
@@ -127,7 +127,7 @@ class CharSheet : NSManagedObject {
     // Create a new xp entry and append it to the list. Returns the new xp.
     func appendXPGain() -> XPGain
 	{
-        var xpGain = addXPGain(self.managedObjectContext!)
+        let xpGain = addXPGain(self.managedObjectContext!)
         xpGain.parent  = self
         self.xp.addObject(xpGain)
         return xpGain
@@ -169,15 +169,16 @@ class CharSheet : NSManagedObject {
 		/// Checks if parameter NAME already exists as the name of any other character.
 		func nameAlreadyExists(name: String) -> Bool
 		{
-			var request = NSFetchRequest()
+			let request = NSFetchRequest()
 			request.entity = NSEntityDescription.entityForName("CharSheet", inManagedObjectContext:managedObjectContext!)
 			request.predicate = NSPredicate(format:"(name == %@)  AND (self != %@)", name, self)
 
-			var error = NSErrorPointer()
-			if var array = managedObjectContext!.executeFetchRequest(request, error:error) {
+			let error = NSErrorPointer()
+			do {
+				let array = try managedObjectContext!.executeFetchRequest(request)
 				return array.isEmpty
-			}
-			else {  // Deal with error. Log it and assume the name already exists for safety's sake.
+			} catch let error1 as NSError {  // Deal with error. Log it and assume the name already exists for safety's sake.
+				error.memory = error1
 				if let err = error.memory {
 					NSLog("nameAlreadyExists: Fetch returned error: %@ / %@", err, err.userInfo ?? "nil")
 				} else {
@@ -193,7 +194,7 @@ class CharSheet : NSManagedObject {
 		// so the user can compare it to the existing version and delete whichever they prefer.
 		name = name ?? "Unknown"
 		if nameAlreadyExists(name!) {
-			var dateFormatter = NSDateFormatter()
+			let dateFormatter = NSDateFormatter()
 			dateFormatter.dateStyle = .MediumStyle
 			dateFormatter.timeStyle = .MediumStyle
 			name = String(format:"%@ : %@", name!, dateFormatter.stringFromDate(NSDate()))
@@ -232,20 +233,20 @@ extension CharSheet: XMLClient
 	{
         func saveChildrenAsXML(parent: DDXMLElement, elementName: Element, collection: NSArray)
 		{
-            var element = DDXMLElement.elementWithName(elementName.rawValue) as! DDXMLElement
+            let element = DDXMLElement.elementWithName(elementName.rawValue) as! DDXMLElement
             parent.addChild(element)
             collection.enumerateObjectsUsingBlock { obj, index, stop in element.addChild(obj.asXML()) }
         }
        
-        var thisElement = DDXMLElement.elementWithName(Element.CHAR_SHEET.rawValue) as! DDXMLElement
+        let thisElement = DDXMLElement.elementWithName(Element.CHAR_SHEET.rawValue) as! DDXMLElement
 		// Use KVO to get the attribute data.
 		for (attrName, _) in attributes {
 			let sv = (valueForKey(attrName) ?? "").description
 			thisElement.addAttribute(DDXMLNode.attributeWithName(attrName, stringValue:sv) as! DDXMLNode)
 		}
-        saveChildrenAsXML(thisElement, .LOGS    , logs.allObjects )
-        saveChildrenAsXML(thisElement, .SKILLS  , skills.array    )
-        saveChildrenAsXML(thisElement, .XP_GAINS, xp.array        )
+        saveChildrenAsXML(thisElement, elementName: .LOGS    , collection: logs.allObjects )
+        saveChildrenAsXML(thisElement, elementName: .SKILLS  , collection: skills.array    )
+        saveChildrenAsXML(thisElement, elementName: .XP_GAINS, collection: xp.array        )
         
         // Store notes as a separate element as it's too big to go as an attribute.
         let elemNotes = DDXMLElement.elementWithName(
@@ -268,7 +269,7 @@ extension CharSheet: XMLClient
 				case .String:
 					setValue(node.stringValue, forKey: attrName)
 				case .Integer:
-					setValue(node.stringValue.toInt() ?? 0, forKey: attrName)
+					setValue(Int(node.stringValue) ?? 0, forKey: attrName)
 				}
 			} else {
 				NSLog("CharSheet import: Attribute named \(attrName) not found in the XML we are importing. Skipping it.")

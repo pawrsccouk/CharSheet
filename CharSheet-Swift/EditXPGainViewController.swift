@@ -41,8 +41,12 @@ class EditXPGainViewController: UIViewController
 
 	private func configureData()
 	{
-        xpGain.amount = Int16(amountTextField.text.toInt() ?? 0)
-        xpGain.reason = reasonTextField.text
+		if let amtStr = amountTextField.text, amt = Int(amtStr) {
+			xpGain.amount = Int16(amt)
+		} else {
+			xpGain.amount = 0
+		}
+		xpGain.reason = reasonTextField.text
 	}
-    
+
 }

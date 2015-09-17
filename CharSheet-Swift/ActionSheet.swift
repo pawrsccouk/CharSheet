@@ -98,12 +98,12 @@ class ActionSheet : NSObject, UIActionSheetDelegate
         }
         
         // Otherwise the user clicked a button. Get the action for that button and execute it.
-        let buttonTitle = sheet.buttonTitleAtIndex(buttonIndex)
-        let action = buttonTitlesAndBlocks[buttonTitle]
-        assert(action != nil, "No action found for button title [\(buttonTitle)] index \(buttonIndex)")
-        if let actionBlock = action {
-            actionBlock()
-        }
+		guard let
+			buttonTitle = sheet.buttonTitleAtIndex(buttonIndex),
+			action      = buttonTitlesAndBlocks[buttonTitle]
+		else {
+			fatalError("No action found for button at index \(buttonIndex)")
+		}
+		action()
     }
-    
 }

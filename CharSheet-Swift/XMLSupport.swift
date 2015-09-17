@@ -43,8 +43,8 @@ struct XMLSupport
     static func dataFromNodes(parent: DDXMLElement,
 		createFunc                  : CreateFunc) -> Result<NSOrderedSet>
 	{
-        var xmlChildren: [DDXMLElement] = parent.children as! [DDXMLElement]
-        var newLogs = NSMutableOrderedSet(capacity: xmlChildren.count)
+        let xmlChildren: [DDXMLElement] = parent.children as! [DDXMLElement]
+        let newLogs = NSMutableOrderedSet(capacity: xmlChildren.count)
         for element: DDXMLElement in xmlChildren  {
             let newEntry: XMLClient = createFunc()
 			let result = newEntry.updateFromXML(element)
