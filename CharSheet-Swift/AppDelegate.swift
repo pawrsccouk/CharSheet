@@ -55,30 +55,31 @@ class AppDelegate: UIResponder
 
 		let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
 		let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("CharSheet.sqlite")
-		var error: NSError?
 		// A userInfo dictionary which can be passed to addPersistentStoreWithType:configuration:url:options:error to request that Core Data automatically migrate the application to the latest version if necessary.
 		let userInfo = [
 			NSMigratePersistentStoresAutomaticallyOption: true,
 			NSInferMappingModelAutomaticallyOption      : true]
 		do {
-			let persistentStore = try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: userInfo)
+			let persistentStore = try coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
+				configuration: nil,
+				URL          : url,
+				options      : userInfo)
 			return coordinator
-		} catch var error1 as NSError {
-			error = error1
+		} catch var error as NSError {
+			// Report any error we got.
+			let dict: [NSObject: AnyObject!] = [
+				NSLocalizedDescriptionKey       : "Failed to initialize the application's saved data",
+				NSLocalizedFailureReasonErrorKey: "There was an error creating or loading the application's saved data.",
+				NSUnderlyingErrorKey            : error]
+			let err = NSError(domain: "CharSheet CoreData", code: 9999, userInfo: dict)
+			// Replace this with code to handle the error appropriately.
+			NSLog("Unresolved error \(err), \(err.userInfo)")
+			abort()
 		} catch {
 			fatalError()
 		}
 
-		// Report any error we got.
-		let dict: [NSObject: AnyObject!] = [
-			NSLocalizedDescriptionKey       : "Failed to initialize the application's saved data",
-			NSLocalizedFailureReasonErrorKey: "There was an error creating or loading the application's saved data.",
-			NSUnderlyingErrorKey            : error]
-		let err = NSError(domain: "CharSheet CoreData", code: 9999, userInfo: dict)
-		// Replace this with code to handle the error appropriately.
-		NSLog("Unresolved error \(err), \(err.userInfo)")
-		abort()
-		}()
+	}()
 
 	/// Returns the managed object context for the application
 	///
@@ -91,7 +92,7 @@ class AppDelegate: UIResponder
 		if coordinator == nil {
 			return nil
 		}
-		var managedObjectContext = NSManagedObjectContext()
+		var managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
 		managedObjectContext.persistentStoreCoordinator = coordinator
 		return managedObjectContext
 		}()
