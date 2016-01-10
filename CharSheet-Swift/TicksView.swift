@@ -8,9 +8,16 @@
 
 import UIKit
 
-class TicksView : UIView {
+/// Custom view which takes a Skill object and draws a grid of 20 squares with some of them 'ticked' (i.e. filled in).
+/// The number filled in is the number of ticks this skill has.
+///
+/// This object sets itself as an Observer of the Skill object's 'ticks' parameter using KVO, so it is automatically updated
+/// when the number of ticks changes.
+class TicksView : UIView
+{
+	// MARK: Properties
 
-
+	/// The skill to display. We use the 'ticks' property to get how many ticks to display.
     var skill: Skill! {
         didSet {
             if oldValue != self.skill {
@@ -25,24 +32,30 @@ class TicksView : UIView {
         }
     }
 
-    required init(frame: CGRect, skill: Skill) {
+	// MARK: Construction.
+
+    required init(frame: CGRect, skill: Skill)
+	{
         self.skill = skill
         super.init(frame: frame)
     }
     
-    required init?(coder: NSCoder) {
+    required init?(coder: NSCoder)
+	{
         super.init(coder: coder)
     }
 
-    
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change:[String: AnyObject]?, context:UnsafeMutablePointer<Void>) {
+	// MARK: Overrides
+
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change:[String: AnyObject]?, context:UnsafeMutablePointer<Void>)
+	{
         if keyPath  == "ticks" {
             setNeedsDisplay()
         }
     }
     
-    override func drawRect(rect: CGRect) {
-        //    NSLog(@"TicksView:drawRect: Drawing %d ticks", [self numberOfTicks]);
+    override func drawRect(rect: CGRect)
+	{
         let bounds = self.bounds
         let fgCol = UIColor.darkTextColor()
         

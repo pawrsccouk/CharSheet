@@ -8,19 +8,30 @@
 
 import UIKit
 
-class UseStatLabel : UIControl {
+/// Control showing the text for a given pair of (name, value), used for showing stats.
+///
+/// Displays <NAME> = <VALUE> in a given font (currently hard codes as System-17).  E.g. "Stealth = 7".
+/// If clicked, draws itself highlighted.
 
+class UseStatLabel : UIControl
+{
+	// MARK: Properties
+
+	/// The name of the stat to display.  Example "strength"
 	var name: String = "" {
 		didSet {
 			setNeedsDisplay()
 		}
 	}
 
+	/// The value of the stat.
 	var value: Int16 = 0 {
 		didSet {
 			setNeedsDisplay()
 		}
 	}
+
+	// MARK: Overrides
 
     override func drawRect(rect: CGRect)
 	{
@@ -47,5 +58,4 @@ class UseStatLabel : UIControl {
     override var description: String {
         return "<\(super.description) name=\(name), value =\(value)>"
     }
-
 }
