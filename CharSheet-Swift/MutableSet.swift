@@ -8,7 +8,9 @@
 
 import Foundation
 
-// Type-safe wrappers around NSMutableSet and NSMutableOrderedSet for Swift.
+/// Type-safe wrapper around NSMutableSet for Swift.
+///
+/// - todo: This may not be necessary as sets may now be part of the Swift standard library.
 
 class MutableSet<T: AnyObject> {
     private var _set: NSMutableSet
@@ -56,18 +58,21 @@ class MutableSet<T: AnyObject> {
     }
 }
 
-// Add an array of items to the existing set.
+/// Add an array of items to the existing set.
 func += <T: AnyObject> (inout set: MutableSet<T>, newItems: [T]) {
     set.addObjects(newItems)
 }
 
-// Return a new set with the new items included.
+/// Return a new set with the new items included.
 func + <T: AnyObject> (set: MutableSet<T>, newItems: [T]) -> MutableSet<T> {
     let s = set.mutableCopy()
     s.addObjects(newItems)
     return s
 }
 
+/// Type-safe wrapper around NSMutableOrderedSet for Swift.
+///
+/// - todo: This may not be necessary as sets may now be part of the Swift standard library.
 
 class MutableOrderedSet<T: AnyObject> {
     private var _set: NSMutableOrderedSet
@@ -77,7 +82,7 @@ class MutableOrderedSet<T: AnyObject> {
         _set = NSMutableOrderedSet()
     }
     
-    // Constructor. Construct from an array of items.
+	/// Constructor. Construct from an array of items.
     init(array: [T]) {
         _set = NSMutableOrderedSet(array: array)
     }
@@ -137,12 +142,12 @@ class MutableOrderedSet<T: AnyObject> {
     }
 }
 
-// Add an array of items to the existing set.
+/// Add an array of items to the existing set.
 func += <T: AnyObject> (inout set: MutableOrderedSet<T>, newItems: [T]) {
     set.addObjects(newItems)
 }
 
-// Return a new set with the new items included.
+/// Return a new set with the new items included.
 func + <T: AnyObject> (set: MutableOrderedSet<T>, newItems: [T]) -> MutableOrderedSet<T> {
     let s = set.mutableCopy()
     s.addObjects(newItems)

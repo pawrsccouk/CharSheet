@@ -103,7 +103,7 @@ class MasterViewController : UITableViewController
         }
 
 		let xmlData = NSData(contentsOfURL:url)
-		let document = try DDXMLDocument.documentWithData(xmlData!, options: 0)
+		let document = try DDXMLDocument(data: xmlData!, options: 0)
 		let rootNode = try findElement(document, nodeName: "charSheet")
 		try createCharSheetFromElement(rootNode)
 	}

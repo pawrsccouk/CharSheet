@@ -9,6 +9,10 @@
 import Foundation
 import CoreData
 
+/// This model object represents one entry in the log of dice rolled.
+///
+/// This is a subclass of NSManagedObject, adding XML support and direct access to the properties.
+
 class LogEntry : NSManagedObject
 {
     // MARK: CoreData dynamic properties.
@@ -27,7 +31,7 @@ private var fullDateFormatter: NSDateFormatter = {
 	cachedFormatter.dateStyle = .FullStyle
 	cachedFormatter.timeStyle = .FullStyle
 	return cachedFormatter
-	}()
+}()
 
 // XML entity and attribute tags for this object.
 private let LOG_ENTRY = "logEntry"

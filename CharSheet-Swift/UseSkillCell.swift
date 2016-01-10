@@ -78,7 +78,10 @@ class UseSkillCell : UICollectionViewCell
         super.init(coder: coder)
     }
 
-    override func observeValueForKeyPath(keyPath: String?, ofObject object:AnyObject?, change:[String: AnyObject]?, context:UnsafeMutablePointer<Void>)
+    override func observeValueForKeyPath(keyPath: String?
+		, 					     ofObject object: AnyObject?
+		,								  change: [String: AnyObject]?
+		,								 context: UnsafeMutablePointer<Void>)
 	{
         if      keyPath == "name"        { setLabelViaTag(.Name       , value: skill.name ?? "") }
         else if keyPath == "value"       { setLabelViaTag(.Value      , value: skill.value.description) }

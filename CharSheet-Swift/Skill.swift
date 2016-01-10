@@ -9,10 +9,18 @@
 import Foundation
 import CoreData
 
-func addSpecialty(managedObjectContext: NSManagedObjectContext) -> Specialty {
-    return NSEntityDescription.insertNewObjectForEntityForName("Specialty",
-		inManagedObjectContext:managedObjectContext) as! Specialty
+private func addSpecialty(managedObjectContext: NSManagedObjectContext) -> Specialty
+{
+    return NSEntityDescription
+		.insertNewObjectForEntityForName("Specialty",
+			inManagedObjectContext:managedObjectContext) as! Specialty
 }
+
+/// This Model object represents one skill. A character will have an array of these.
+///
+/// Each skill can have an array of specialties attached to it.
+///
+/// This class derives from NSManagedObject to add XML support and direct property access.
 
 class Skill : NSManagedObject
 {
@@ -35,6 +43,7 @@ class Skill : NSManagedObject
 	}
 
 	// MARK: Array of specialties.
+	private let specialtiesKey = "specialties"
 
     func appendSpecialty() -> Specialty
 	{
@@ -48,12 +57,12 @@ class Skill : NSManagedObject
 	{
         let spec: Specialty = self.specialties[index] as! Specialty
         self.specialties.removeObjectAtIndex(index)
-        self.managedObjectContext?.deleteObject(spec)
+		self.managedObjectContext?.deleteObject(spec)
     }
 
     func moveSpecialtyFromIndex(sourceIndex: NSInteger, toIndex destIndex: NSInteger) -> Void
 	{
-        self.specialties.moveObjectsAtIndexes(NSIndexSet(index: sourceIndex), toIndex:destIndex)
+        specialties.moveObjectsAtIndexes(NSIndexSet(index: sourceIndex), toIndex:destIndex)
     }
 
 

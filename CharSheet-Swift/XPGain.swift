@@ -9,6 +9,12 @@
 import CoreData
 import Foundation
 
+/// This Model object represents one time the character gained XP. A character will have an array of these.
+///
+/// Each XP Gain has an amount and a reason.
+///
+/// This class derives from NSManagedObject to add XML support and direct property access.
+
 class XPGain : NSManagedObject
 {
     

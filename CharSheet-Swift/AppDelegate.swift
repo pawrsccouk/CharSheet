@@ -107,15 +107,12 @@ class AppDelegate: UIResponder
 	func saveChanges()
 	{
 		if let moc = self.managedObjectContext {
-			var error: NSError? = nil
 			if moc.hasChanges {
 				do {
 					try moc.save()
-				} catch let error1 as NSError {
-					error = error1
+				} catch let error as NSError {
 					// Replace this implementation with code to handle the error appropriately.
-					NSLog("Unresolved error \(error), \(error!.userInfo)")
-					abort()
+					fatalError("Unresolved error \(error), \(error.userInfo)")
 				}
 			}
 		}

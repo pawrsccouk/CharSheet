@@ -25,6 +25,7 @@ private enum State
 /// Once you call the roll() method, it also contains output properties indicating the result of the roll.
 /// Primarily you use the *total* field to get the final value and the *resultAsHTML* field to get the final result
 /// formatted to display to the user.
+
 class DieRoll : NSObject
 {
     // MARK: Input Properties

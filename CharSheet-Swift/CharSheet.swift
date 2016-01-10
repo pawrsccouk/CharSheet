@@ -9,6 +9,10 @@
 import Foundation
 import CoreData
 
+/// Model object for a character sheet, the root of the datamodel.
+///
+/// This subclasses NSManagedObject to give XML support and direct access to the entity properties.
+
 class CharSheet : NSManagedObject
 {    
     // MARK: Properties - Core Data
@@ -33,7 +37,7 @@ class CharSheet : NSManagedObject
 		return max(0, luck - 12)
 	}
 
-	// Sorted copy of the log entries, sorted by date & time.
+	/// Sorted copy of the log entries, sorted by date & time.
 	var sortedLogs: [LogEntry] {
 		return logs.allObjects
 			.map { $0 as! LogEntry }
@@ -43,7 +47,7 @@ class CharSheet : NSManagedObject
 		}
 	}
 
-	// Returns a string indicating the character's health in both physical and subdual, as a fraction of their CON.
+	/// Returns a string indicating the character's health in both physical and subdual, as a fraction of their CON.
 	var health: String {
 		let physHealth = constitution - woundsPhysical
 		let subdHealth = constitution - woundsSubdual
@@ -51,7 +55,7 @@ class CharSheet : NSManagedObject
 	}
 
 
-    // MARK: PrivateMethods
+    // MARK: Overrides
 
 	override var description: String {
 		return self.fault
@@ -151,12 +155,15 @@ class CharSheet : NSManagedObject
 
     func exportToXML() throws -> NSData
 	{
-		let document = try DDXMLDocument.documentWithXMLString("<xml></xml>", options: 0)
+		let document = try DDXMLDocument(XMLString: "<xml></xml>", options: 0)
 		guard let root = document.rootElement as? DDXMLElement else {
 			fatalError("Document \(document) has invalid root element \(document.rootElement)")
 		}
 		root.addChild(self.asXML())
-		return try document.xmlDataWithOptions(UInt(DDXMLNodeCompactEmptyElement))
+		guard let documentData = document.XMLDataWithOptions(UInt(DDXMLNodeCompactEmptyElement)) else {
+			throw XMLSupport.XMLError("document.XMLDataWithOptions failed for document \(document)")
+		}
+		return documentData
     }
 
 
@@ -172,19 +179,13 @@ class CharSheet : NSManagedObject
 			request.entity = NSEntityDescription.entityForName("CharSheet", inManagedObjectContext:managedObjectContext!)
 			request.predicate = NSPredicate(format:"(name == %@)  AND (self != %@)", name, self)
 
-			let error = NSErrorPointer()
 			do {
 				let array = try managedObjectContext!.executeFetchRequest(request)
 				return array.isEmpty
-			} catch let error1 as NSError {  // Deal with error. Log it and assume the name already exists for safety's sake.
-				error.memory = error1
-				if let err = error.memory {
-					NSLog("nameAlreadyExists: Fetch returned error: %@ / %@", err, err.userInfo ?? "nil")
-				} else {
-					NSLog("nameAlreadyExists: Fetch failed with an unknown error")
-				}
-				return true
+			} catch let error as NSError {  // Deal with error. Log it and assume the name already exists for safety's sake.
+				NSLog("nameAlreadyExists: Fetch returned error: %@ / %@", error, error.userInfo ?? "nil")
 			}
+			return true
 		}
 
 
@@ -207,9 +208,10 @@ private enum AttrType { case String, Integer }
 
 /// Collection of attribute names and the associated attribute type.
 ///
-/// :todo: Can this be got from the entity?
-///
 /// This assumes the attributes in the XML are named the same as the attributes on the object.
+///
+/// - todo: Can this be got from the entity?
+
 private let attributes: [(String, AttrType)] = [
 		("name", .String), ("gender", .String), ("game", .String), ("player", .String), ("level", .Integer), ("experience", .Integer),
 		("strength", .Integer), ("speed", .Integer), ("dexterity", .Integer), ("constitution", .Integer),
