@@ -6,7 +6,9 @@
 
 import UIKit
 
-/// View controller for editing a single specialty object, which must be set before the view is displayed.
+/// View controller for editing a single specialty object.
+///
+/// The Specialty must be set before the view is displayed.
 class EditSpecialtyViewController : UIViewController
 {
     @IBOutlet weak var valueField: UITextField!

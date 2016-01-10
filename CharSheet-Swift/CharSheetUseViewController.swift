@@ -12,6 +12,13 @@ import MessageUI
 
 private let COLLECTION_CELL_ID = "SkillsCollection_Cell"
 
+/// This view controller is the main view controller for the 'viewing and using' part of the app.
+///
+/// This displays a collection of stats, skills and other attributes such as name and XP.
+/// It includes a toolbar with general commands such as 'export via Email' and 'make a die roll'.
+///
+/// See also **CharSheetEditViewController**, which handles changing the stats and skills of the character.
+
 final class CharSheetUseViewController : CharSheetViewController
 {
     // MARK: IB Properties
@@ -101,8 +108,8 @@ final class CharSheetUseViewController : CharSheetViewController
 
 	/// Character sheet to display.
 	///
-	/// :note: Table view callbacks will occur before this is set, so will have to test for it.
-	///        Otherwise it must be set before any methods are called.
+	/// - note: Table view callbacks will occur before this is set, so we will have to test for it.
+	///         Otherwise a CharSheet object must be set before any methods are called.
     override var charSheet: CharSheet! {
         didSet {
             if charSheet != oldValue {
@@ -118,7 +125,8 @@ final class CharSheetUseViewController : CharSheetViewController
 	var defaultCharSheet: CharSheet? = nil
 
     // MARK: Private Methods
-    
+
+	/// Present a mail composer view with a default email message and the contents of the character exported as XML into an attachment.
 	private func exportToEmail() throws
 	{
 		let bodyHTMLFormat =
@@ -149,6 +157,7 @@ final class CharSheetUseViewController : CharSheetViewController
 		presentViewController(mailVC, animated:true, completion:nil)
 	}
 
+	/// Given an index path return the Skill object that corresponds to the index in the skills array.
 	private func skillForIndexPath(indexPath: NSIndexPath) -> Skill
 	{
 		assert(indexPath.length == 2 && indexPath.indexAtPosition(0) == 0, "Invalid index path \(indexPath)")
@@ -250,6 +259,7 @@ final class CharSheetUseViewController : CharSheetViewController
 }
 
     // MARK: - Collection View Data Source
+
 extension CharSheetUseViewController: UICollectionViewDataSource
 {
 	func collectionView(  collectionView: UICollectionView,
@@ -271,6 +281,7 @@ extension CharSheetUseViewController: UICollectionViewDataSource
 }
 
     //MARK: - Mail Composer delegate
+
 extension CharSheetUseViewController: MFMailComposeViewControllerDelegate
 {
     func mailComposeController(controller: MFMailComposeViewController,

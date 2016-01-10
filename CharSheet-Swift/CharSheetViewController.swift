@@ -9,7 +9,9 @@
 import UIKit
 import CoreData
 
-/// Base-class for view controllers that use Managed Object Contexts and CharSheet objects.
+/// Abstract base-class for view controllers that use Managed Object Contexts and CharSheet objects.
+///
+/// This just ensures there is a charSheet property and a managedObjectContext properties on each subclass.
 class CharSheetViewController: UIViewController
 {
 	/// The char sheet this controller will manage.

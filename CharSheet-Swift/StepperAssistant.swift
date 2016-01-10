@@ -16,10 +16,13 @@ import UIKit
 ///    @IBOutlet var stepperAssistants: [StepperAssistant]!
 /// This will appear in Interface Builder and I can add the assistants in there.
 /// 
-/// You'll need this as you need to set the starting value for the stepper to match the text field, e.g.
-/// with:
-///    for s in stepperAssistants { s.updateStepperFromTextField() }
+/// You'll need this as you need to set the starting value for the stepper to match the text field
+/// e.g. with:
 ///
+///		for s in stepperAssistants { 
+///		    s.updateStepperFromTextField() 
+///		}
+
 class StepperAssistant: NSObject
 {
 	@IBOutlet weak var stepper: UIStepper!

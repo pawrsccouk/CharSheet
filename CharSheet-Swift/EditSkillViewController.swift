@@ -7,9 +7,14 @@
 import CoreData
 import UIKit
 
+/// This controller manages a view which displays the Skill object in a series of text fields and allows the user to update them.
+///
+/// This view is usually displayed as a pop-up when you select 'new skill' or edit a skill in the skills table.
+
 class EditSkillViewController : UIViewController
 {
-    // MARK: - Interface Builder
+    // MARK: Interface Builder
+	
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var valueTextField: UITextField!
     @IBOutlet weak var ticksTextField: UITextField!
@@ -33,7 +38,8 @@ class EditSkillViewController : UIViewController
 
 	/// Callback triggered once the view controller has been dismissed with the *done* action.
     var completionCallback: VoidCallback?
-    
+
+	// MARK: Overrides
     
     override func viewWillAppear(animated: Bool)
 	{
@@ -59,6 +65,8 @@ class EditSkillViewController : UIViewController
         specialtiesTableView.reloadData()
     }
 
+	// MARK: Private methods
+
 	/// Update the controls in the view from the values in *skill*.
     private func configureView()
 	{
@@ -83,7 +91,7 @@ class EditSkillViewController : UIViewController
     }
 }
     
-    // MARK: - Table View Data
+// MARK: - Table View Data
 
 extension EditSkillViewController: UITableViewDataSource
 {

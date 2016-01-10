@@ -10,9 +10,13 @@ import UIKit
 import CoreData
 
 
+/// This controller manages a table view showing all the characters available in the database.
+/// Selecting one updates the detail view (a **CharSheetUseViewController**) setting a new Character into it.
+///
+/// The user can also add and delete characters with the toolbar icons.
 
-class MasterViewController : UITableViewController {
-
+class MasterViewController : UITableViewController
+{
     var detailViewController: CharSheetUseViewController!
     var managedObjectContext: NSManagedObjectContext!
 

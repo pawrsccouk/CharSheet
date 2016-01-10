@@ -9,6 +9,14 @@ import CoreData
 
 private let CELL_ID = "CharSheetEditSkill_Cell"
 
+/// This is the main controller for editing the values on a character sheet.
+/// 
+/// It provides the stats and skills as editable text fields with steppers where necessary.
+/// It also provides a table for the skills which allows users to add new skills or remove existing ones.
+///
+/// - note: See also **CharSheetUseViewController** which is used when the character sheet has been edited successfully
+///         and the user just wants to roll dice and view logs etc.
+
 class CharSheetEditViewController : CharSheetViewController
 {
     // MARK: IB Properties
@@ -124,6 +132,8 @@ class CharSheetEditViewController : CharSheetViewController
 }
 
     // MARK: - Table View Data Source
+
+
 extension CharSheetEditViewController: UITableViewDataSource
 {
     func tableView(           tableView: UITableView,

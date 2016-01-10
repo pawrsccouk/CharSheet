@@ -10,12 +10,18 @@ import UIKit
 
 private let CELL_ID = "XPGainCell"
 
+/// This controller manages a table of XP Gains, allowing the user to add, remove and modify the entries in it.
+///
+/// This class pops up a **EditXPGainViewController** to allow the user to specify details for the rows in the table.
+
 class EditXPViewController : CharSheetViewController
 {
     // MARK: Interface Builder
 
+	/// The table view displayed in this view.
 	@IBOutlet weak var tableView: UITableView!
 
+	/// Action to dismiss this view and update the model with the changes.
     @IBAction func done(sender: AnyObject?)
 	{
 		// Ensure the values saved to the DB have the same order as in the set here.

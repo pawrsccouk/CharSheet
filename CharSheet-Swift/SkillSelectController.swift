@@ -9,6 +9,14 @@
 import UIKit
 import CoreData
 
+/// This controller handles a view used to select a skill from a list.
+/// Once you select a skill, a second list allows you to select a specialty.
+///
+/// When a skill or specialty changes, a callback 'selectionChangedBlock' is triggered with the new selected skill and specialty.
+/// This allows the caller to update it's model in time with the updates.
+///
+/// The view is taken from the **SkillSelectView** NIB file.
+
 class SkillSelectController : UIViewController
 {
     // MARK: Interface Builder
@@ -87,12 +95,12 @@ extension SkillSelectController: UIPickerViewDataSource
     func pickerView(           pickerView: UIPickerView,
 		numberOfRowsInComponent component: NSInteger) -> Int
     {
-        assert(pickerView == skillPicker || pickerView == specialtyPicker, "Unknown picker \(pickerView) passed to numberOfRowsInComponent for SkillSelectController \(self)")
 		// Both pickers have an extra row "None" in their list.
 		switch pickerView {
 		case skillPicker:     return skillsToPick.count + 1
 		case specialtyPicker: return (selectedSkill?.specialties?.count ?? 0) + 1
-		default: return 0
+		default:
+			fatalError("Unknown picker \(pickerView) passed to numberOfRowsInComponent for SkillSelectController \(self)")
 		}
     }
 }
@@ -122,7 +130,7 @@ extension SkillSelectController: UIPickerViewDelegate
             }
 
 		default:
-			assert(false, "Unknown picker \(pickerView) passed to numberOfRowsInComponent for SkillSelectController \(self)")
+			fatalError("Unknown picker \(pickerView) passed to numberOfRowsInComponent for SkillSelectController \(self)")
 		}
 		return text
 	}
@@ -143,7 +151,7 @@ extension SkillSelectController: UIPickerViewDelegate
             selectedSpecialty = (row == 0) ? nil : self.selectedSkill?.specialties[row - 1] as? Specialty
 
 		default:
-			assert(false, "Unknown picker \(pickerView) passed to numberOfRowsInComponent for SkillSelectController \(self)")
+			fatalError("Unknown picker \(pickerView) passed to numberOfRowsInComponent for SkillSelectController \(self)")
 		}
     }
 }

@@ -9,6 +9,9 @@
 import UIKit
 import CoreData
 
+/// This view controller takes a CharSheet object and displays the 'notes' text in a big text field.
+///
+/// This also has support for resizing the view to fit the keyboard as this should be a full-screen text field.
 class EditNotesViewController : CharSheetViewController
 {
 	// MARK: Interface Builder
@@ -40,8 +43,12 @@ class EditNotesViewController : CharSheetViewController
 		NSNotificationCenter.defaultCenter().removeObserver(self)
 	}
 
+	// MARK: Methods
 
-
+	/// Write the contents of the text field back into the model's 'text' property.
+	/// This overwrites anything that was previously there.
+	///
+	/// This also posts a 'SaveChanges' notification.
     func saveChanges()
 	{
         self.charSheet.notes = notesTextView.text;
@@ -109,16 +116,16 @@ class EditNotesViewController : CharSheetViewController
     
     private func registerForKeyboardNotifications()
 	{
-        NSNotificationCenter.defaultCenter().addObserver(
-			self,
-			selector: "keyboardWasShown:"    ,
-			name    : UIKeyboardDidShowNotification ,
-			object  : nil)
-        NSNotificationCenter.defaultCenter().addObserver(
-			self,
-			selector: "keyboardWillBeHidden:",
-			name    : UIKeyboardWillHideNotification,
-			object  : nil)
+        NSNotificationCenter.defaultCenter()
+			.addObserver(self,
+				selector: "keyboardWasShown:"    ,
+				name    : UIKeyboardDidShowNotification ,
+				object  : nil)
+		NSNotificationCenter.defaultCenter()
+			.addObserver(self,
+				selector: "keyboardWillBeHidden:",
+				name    : UIKeyboardWillHideNotification,
+				object  : nil)
     }
     
 }

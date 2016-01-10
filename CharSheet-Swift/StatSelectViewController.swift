@@ -10,6 +10,11 @@ import UIKit
 
 private let noStatText = "None"
 
+/// This controller handles a view with the names of the stats in a table.
+/// The user can select one or more stats.
+/// 
+/// When the user changes the selection, a callback is triggered allowing the caller to update the model.
+
 class StatSelectViewController : UITableViewController
 {
     var selectedStat = noStatText

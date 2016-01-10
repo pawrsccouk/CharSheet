@@ -8,11 +8,14 @@
 
 import UIKit
 
+/// This controller manages a view which displays one LogEntry object.
+/// This view is read-only. Log entries can't be edited.
+///
+/// It is typically presented as a popover when the user selects a row from the log table.
 
-class LogEntryViewController : UIViewController {
-        
+class LogEntryViewController : UIViewController
+{
     @IBOutlet weak var textView: UITextView!
-    
     
     var logEntry: LogEntry? {
         didSet {
@@ -26,11 +29,11 @@ class LogEntryViewController : UIViewController {
     }
     
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+	{
         super.viewDidLoad()
         if let l = logEntry {
-            let c = l.change ?? ""
-            textView.text = c
+            textView.text = l.change ?? ""
         }
     }
 }

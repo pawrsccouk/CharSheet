@@ -10,6 +10,8 @@
 import UIKit
 import CoreData
 
+/// This object allows the user to specify the stat, skill(s), extra d4s and static adds for a given die roll.
+/// We then trigger a method on the model to roll the dice and push a **DieRollResultViewController** on the stack to display the result.
 
 class DieRollViewController: CharSheetViewController
 {
@@ -38,7 +40,7 @@ class DieRollViewController: CharSheetViewController
 	{
 		let skillsToAdd = (charSheet!.skills.array)
 			.map { $0 as! Skill }
-			.filter{ !self.dieRoll.skills.contains($0) }
+			.filter { !self.dieRoll.skills.contains($0) }
 
         // Quit early if there are no more skills we can add.
 		if(skillsToAdd.count == 0) {

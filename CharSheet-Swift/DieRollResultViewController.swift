@@ -9,8 +9,12 @@
 import UIKit
 import CoreData
 
-class DieRollResultViewController : UIViewController {
+/// This view controller displays the result of a given die roll.
+/// The result is formatted into HTML and then displayed in a web view. 
+/// There is also the option to add a tick to the roll. If the user wishes to do this, then a callback is triggered to add the tick to the skill.
 
+class DieRollResultViewController : UIViewController
+{
     // MARK: Interface Builder
     
     @IBOutlet weak var webView: UIWebView!
@@ -37,10 +41,11 @@ class DieRollResultViewController : UIViewController {
 
 
     // MARK: - Properties
-    
+
+	/// The die roll model object to display.
     var dieRoll: DieRoll!
 
-    // Called when the user wants to add a tick to a skill.
+	/// Action called when the user wants to add a tick to a skill.
     var addTickAction: VoidCallback? {
         didSet {
             // Always re-check the controls just in case
@@ -50,7 +55,8 @@ class DieRollResultViewController : UIViewController {
     }
 
     // MARK: Methods
-    
+
+	/// Enable or disable the 'add tick' switch depending if we have an 'addTick' action set or not.
     func enableAddTickControl()
 	{
         if let s = addTickSwitch {

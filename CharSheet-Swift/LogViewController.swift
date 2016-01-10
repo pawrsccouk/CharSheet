@@ -8,6 +8,12 @@
 
 import UIKit
 
+/// This manages a view which contains a table showing all the entries in the log for the given character.
+/// 
+/// The user can then click on a row in that table and launch a **LogEntryViewController** to see that row in detail.
+///
+/// Logs are not user-editable so this view controller is read-only.
+
 class LogViewController: CharSheetViewController
 {
     override var charSheet: CharSheet! {
@@ -16,6 +22,16 @@ class LogViewController: CharSheetViewController
         }
     }
 
+	// MARK: Interface Builder
+
+	@IBOutlet weak var tableView: UITableView!
+
+    @IBAction func done(sender: AnyObject)
+	{
+        presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
+    }
+
+	// MARK: Overrides
 
 	override func viewWillAppear(animated: Bool)
 	{
@@ -27,28 +43,24 @@ class LogViewController: CharSheetViewController
 		}
 	}
 
+	// MARK: Private
 
-    // Sorted array of logs to display. Taken from the char sheet.
+	/// Sorted array of logs to display. Taken from the char sheet.
     private var sortedLogs: [LogEntry] = []
 
-	@IBOutlet weak var tableView: UITableView!
-
-    @IBAction func done(sender: AnyObject)
-	{
-        presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
-    }
 
 	/// Loads a Log Entry View Controller from the storyboard, populates it and presents it as a popover.
 	///
 	/// - parameter tableView: The table view to overlay with the popover. 
 	/// - parameter indexPath: Index to the table-view row which triggered the popup.
-	///                   The popover will display the LogEntry associated with this row.
+	///                        The popover will display the LogEntry associated with this row.
+	///
 	/// We use a custom popover instead of a Storyboard Segue as the segue points the popover
 	/// at the bottom of the table view and not the row that was selected.
 	///
-	/// **NB** This assumes the LogEntryViewController object is in the same storyboard as this controller is.
+	/// - note: This assumes the LogEntryViewController object is in the same storyboard as this controller is.
 
-	func openCustomPopoverForTableView(tableView: UITableView, cellIndexPath indexPath: NSIndexPath)
+	private func openCustomPopoverForTableView(tableView: UITableView, cellIndexPath indexPath: NSIndexPath)
 	{
 		let logEntryController = storyboard!.instantiateViewControllerWithIdentifier("Log Entry View Controller")
 			as! LogEntryViewController
