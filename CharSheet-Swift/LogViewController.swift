@@ -54,15 +54,17 @@ class LogViewController: CharSheetViewController
 			as! LogEntryViewController
 		logEntryController.logEntry = sortedLogs[indexPath.row]
 
-		let popOver = UIPopoverController(contentViewController:logEntryController)
-
 		//Get the cell that presents the popover and use the cell frame to calculate the popover's origin.
 		if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-			let displayFrom = CGRectMake(
-				cell.frame.origin.x + (cell.frame.size.width / 3),
-				cell.center.y + tableView.frame.origin.y - tableView.contentOffset.y,// - cell.frame.size.height,
-				1, 1)
-			popOver.presentPopoverFromRect(displayFrom, inView:view, permittedArrowDirections:.Left, animated:true)
+
+			// Presenting the popover creates a popoverPresentationController which we can then configure.
+			logEntryController.modalPresentationStyle = .Popover
+			presentViewController(logEntryController, animated: true, completion: nil)
+			guard let popoverPresentationController = logEntryController.popoverPresentationController else {
+				fatalError("No popover presentation controller.")
+			}
+			popoverPresentationController.sourceView = tableView
+			popoverPresentationController.sourceRect = cell.frame
 		} else {
 			assert(false, "Table view \(tableView) failed to get a cell for index path \(indexPath)")
 		}

@@ -10,6 +10,10 @@ can click on to add the skill. Currently the "+" icon is too far away from the u
 [x] Find out how Steppers & Input Fields are supposted to work.
 
 ## Bugs
+[ ] Disable the Edit, Notes, XP etc. in the Use Controller when there are no characters selected in the table view controller.
+[ ] Dates in the XML files use the locale-dependent full format, which means you can get crashes reading back older XML files.
+    We should use a canonical format, such as YYYY-MM-DD HH:MM which has no ambiguity.
+	(We can try and parse the full format as well, for backwards compatibility but only if the canonical format isn't found)
 [x] ExtraD4 initial value should default to 1 or be taken from the die roll object.
 [x] Cannot remove skill once added to die roll view.
 [x] Die Roll view is adding skills instead of updating an existing skill.
