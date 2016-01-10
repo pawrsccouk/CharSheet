@@ -34,7 +34,6 @@
 		577A81A71A07C73600DA1EC8 /* EditSkillCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A41A07C73600DA1EC8 /* EditSkillCellView.xib */; };
 		577A81A81A07C73600DA1EC8 /* SkillSelectView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A51A07C73600DA1EC8 /* SkillSelectView.xib */; };
 		577A81A91A07C73600DA1EC8 /* UseSkillCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A61A07C73600DA1EC8 /* UseSkillCellView.xib */; };
-		577A81B21A07C8F900DA1EC8 /* ActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81AB1A07C8F900DA1EC8 /* ActionSheet.swift */; };
 		577A81B31A07C8F900DA1EC8 /* CharSheetUseControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81AC1A07C8F900DA1EC8 /* CharSheetUseControl.swift */; };
 		577A81B41A07C8F900DA1EC8 /* EditSkillCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81AD1A07C8F900DA1EC8 /* EditSkillCell.swift */; };
 		577A81B51A07C8F900DA1EC8 /* StoryboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81AE1A07C8F900DA1EC8 /* StoryboardManager.swift */; };
@@ -98,7 +97,6 @@
 		577A81A41A07C73600DA1EC8 /* EditSkillCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditSkillCellView.xib; sourceTree = "<group>"; };
 		577A81A51A07C73600DA1EC8 /* SkillSelectView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SkillSelectView.xib; sourceTree = "<group>"; };
 		577A81A61A07C73600DA1EC8 /* UseSkillCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UseSkillCellView.xib; sourceTree = "<group>"; };
-		577A81AB1A07C8F900DA1EC8 /* ActionSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSheet.swift; sourceTree = "<group>"; };
 		577A81AC1A07C8F900DA1EC8 /* CharSheetUseControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharSheetUseControl.swift; sourceTree = "<group>"; };
 		577A81AD1A07C8F900DA1EC8 /* EditSkillCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditSkillCell.swift; sourceTree = "<group>"; };
 		577A81AE1A07C8F900DA1EC8 /* StoryboardManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryboardManager.swift; sourceTree = "<group>"; };
@@ -247,7 +245,6 @@
 				577A81AF1A07C8F900DA1EC8 /* StrictGridLayout.swift */,
 				577A81B01A07C8F900DA1EC8 /* UseSkillCell.swift */,
 				577A81B11A07C8F900DA1EC8 /* UseStatLabel.swift */,
-				577A81AB1A07C8F900DA1EC8 /* ActionSheet.swift */,
 				577A81AC1A07C8F900DA1EC8 /* CharSheetUseControl.swift */,
 				577A81AD1A07C8F900DA1EC8 /* EditSkillCell.swift */,
 				5725DED71A07935A00343E5F /* TicksView.swift */,
@@ -379,7 +376,6 @@
 				5755E1B81B432FF600E466D4 /* Result.swift in Sources */,
 				577A81C71A08CFD700DA1EC8 /* DieRollResultViewController.swift in Sources */,
 				5725DEB71A0473EC00343E5F /* CharSheet.swift in Sources */,
-				577A81B21A07C8F900DA1EC8 /* ActionSheet.swift in Sources */,
 				5725DEC41A04A1D000343E5F /* Skill.swift in Sources */,
 				577A81C61A08CFD700DA1EC8 /* CharSheetUseViewController.swift in Sources */,
 				577A81CB1A08CFD700DA1EC8 /* EditSpecialtyViewController.swift in Sources */,
