@@ -29,7 +29,6 @@
 		5725DEC81A07679900343E5F /* DieRoll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB11A0473EC00343E5F /* DieRoll.swift */; };
 		5725DECA1A07878600343E5F /* MutableSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEC91A07878600343E5F /* MutableSet.swift */; };
 		5725DED81A07935A00343E5F /* TicksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DED71A07935A00343E5F /* TicksView.swift */; };
-		5755E1B81B432FF600E466D4 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5755E1B71B432FF600E466D4 /* Result.swift */; };
 		5755E1BA1B43439D00E466D4 /* XMLExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5755E1B91B43439D00E466D4 /* XMLExtensions.swift */; };
 		577A81A71A07C73600DA1EC8 /* EditSkillCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A41A07C73600DA1EC8 /* EditSkillCellView.xib */; };
 		577A81A81A07C73600DA1EC8 /* SkillSelectView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A51A07C73600DA1EC8 /* SkillSelectView.xib */; };
@@ -92,7 +91,6 @@
 		5725DEC21A0493F100343E5F /* Misc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
 		5725DEC91A07878600343E5F /* MutableSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableSet.swift; sourceTree = "<group>"; };
 		5725DED71A07935A00343E5F /* TicksView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicksView.swift; sourceTree = "<group>"; };
-		5755E1B71B432FF600E466D4 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		5755E1B91B43439D00E466D4 /* XMLExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLExtensions.swift; sourceTree = "<group>"; };
 		577A81A41A07C73600DA1EC8 /* EditSkillCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditSkillCellView.xib; sourceTree = "<group>"; };
 		577A81A51A07C73600DA1EC8 /* SkillSelectView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SkillSelectView.xib; sourceTree = "<group>"; };
@@ -160,7 +158,6 @@
 				577A81AA1A07C74F00DA1EC8 /* Views */,
 				5725DE711A0415CD00343E5F /* AppDelegate.swift */,
 				5725DEC11A047F3500343E5F /* Bridging_Header.h */,
-				5755E1B71B432FF600E466D4 /* Result.swift */,
 				577A81AE1A07C8F900DA1EC8 /* StoryboardManager.swift */,
 				5755E1B91B43439D00E466D4 /* XMLExtensions.swift */,
 				5725DEBE1A04740A00343E5F /* Model */,
@@ -373,7 +370,6 @@
 				5725DEC51A04AFF800343E5F /* Specialty.swift in Sources */,
 				5725DE771A0415CD00343E5F /* MasterViewController.swift in Sources */,
 				5725DEC31A0493F100343E5F /* Misc.swift in Sources */,
-				5755E1B81B432FF600E466D4 /* Result.swift in Sources */,
 				577A81C71A08CFD700DA1EC8 /* DieRollResultViewController.swift in Sources */,
 				5725DEB71A0473EC00343E5F /* CharSheet.swift in Sources */,
 				5725DEC41A04A1D000343E5F /* Skill.swift in Sources */,

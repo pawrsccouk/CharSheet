@@ -10,33 +10,21 @@ import Foundation
 
 extension DDXMLDocument {
 
-	class func documentWithXMLString(string: String, options: UInt) -> Result<DDXMLDocument> {
-		var error: NSError? = nil
-		do {
-			let doc = try DDXMLDocument(XMLString: string, options: options)
-			return success(doc)
-		} catch let error1 as NSError {
-			error = error1
-		}
-		return failure(error!)
+	class func documentWithXMLString(string: String, options: UInt) throws -> DDXMLDocument
+	{
+		return try DDXMLDocument(XMLString: string, options: options)
 	}
 
-	class func documentWithData(data: NSData, options: UInt) -> Result<DDXMLDocument> {
-		var error: NSError? = nil
-		do {
-			let doc = try DDXMLDocument(data: data, options: options)
-			return success(doc)
-		} catch let error1 as NSError {
-			error = error1
-		}
-		return failure(error!)
+	class func documentWithData(data: NSData, options: UInt) throws -> DDXMLDocument
+	{
+		return try DDXMLDocument(data: data, options: options)
 	}
 
-	func xmlDataWithOptions(options: UInt) -> Result<NSData> {
-		let data = self.XMLDataWithOptions(options)
-		if data != nil {
-			return success(data)
+	func xmlDataWithOptions(options: UInt) throws -> NSData
+	{
+		guard let data = self.XMLDataWithOptions(options) else {
+			throw XMLSupport.XMLError("XMLDataWithOptions failed with no error message")
 		}
-		return failure(XMLSupport.XMLError("XMLDataWithOptions failed with no error message"))
+		return data
 	}
 }

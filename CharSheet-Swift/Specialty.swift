@@ -9,9 +9,17 @@
 import Foundation
 import CoreData
 
+/// Class representing a Specialty in the CharSheet model.
+/// A Specialty has a name and a value (e.g. for the skill ES: Mountain, the specialty might be "Find Food").
+///
+/// Generally specialties are completely user-defined as opposed to Skills which are mostly chosen from a set.
+/// Each skill can have any number of specialties. The total value of all specialties attached to the skill
+/// should not be more than the number of points in the skill.
+///
+/// This is a subclass of NSManagedObject adding XML support and direct access to the fields.
 
-class Specialty : NSManagedObject {
-    
+class Specialty : NSManagedObject
+{
 	@NSManaged var name: String?, value: Int16, order: Int16, parent: Skill!
     
     override func awakeFromInsert() -> Void
@@ -24,14 +32,12 @@ class Specialty : NSManagedObject {
 }
 
 // MARK: - PWXMLClient implementation
+
 private let SPECIALTY = "specialty"
 private enum Attribute: String { case NAME = "name", VALUE = "value" }
 
-extension Specialty: XMLClient {
-
-    var asObject: NSObject { return self }
-    
-    
+extension Specialty: XMLClient
+{
     func asXML() -> DDXMLElement
 	{
         func attribute(name: Attribute, value: String) -> DDXMLNode
@@ -44,13 +50,11 @@ extension Specialty: XMLClient {
         return this
     }
 
-    func updateFromXML(element: DDXMLElement) -> NilResult
+    func updateFromXML(element: DDXMLElement) throws
 	{
-		let result = XMLSupport.validateElementName(element.name, expectedName: SPECIALTY)
-		if let e = result.error {
-			return failure(e)
-		}
-        for attrNode in (element.attributes as! [DDXMLNode]) {
+		try XMLSupport.validateElementName(element.name, expectedName: SPECIALTY)
+
+		for attrNode in (element.attributes as! [DDXMLNode]) {
             if let nodeName = Attribute(rawValue: attrNode.name) {
                 switch nodeName {
                 case .NAME: self.name  = attrNode.stringValue
@@ -58,10 +62,9 @@ extension Specialty: XMLClient {
                 }
             }
             else {
-				return XMLSupport.XMLFailure("Attribute \(attrNode.name) unrecognised in \(SPECIALTY)")
+				throw XMLSupport.XMLError("Attribute \(attrNode.name) unrecognised in \(SPECIALTY)")
 			}
         }
-        return success()
     }
 }
 

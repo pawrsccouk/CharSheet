@@ -31,10 +31,6 @@ private enum Attribute: String { case AMOUNT = "amount", REASON = "reason" }
 
 extension XPGain: XMLClient
 {
-    var asObject: NSObject {
-		return self
-	}
-    
     func asXML() -> DDXMLElement
 	{
         func attribute(name: Attribute, value: String) -> DDXMLNode
@@ -47,13 +43,11 @@ extension XPGain: XMLClient
         return this
     }
     
-    func updateFromXML(element: DDXMLElement) -> NilResult
+    func updateFromXML(element: DDXMLElement) throws
 	{
-        let result = XMLSupport.validateElementName(element.name, expectedName: XP_ENTRY)
-		if let err = result.error {
-			return failure(err)
-		}
-        for attrNode in (element.attributes as! [DDXMLNode]) {
+        try XMLSupport.validateElementName(element.name, expectedName: XP_ENTRY)
+
+		for attrNode in (element.attributes as! [DDXMLNode]) {
             if let nodeName = Attribute(rawValue: attrNode.name) {
                 switch nodeName {
                 case .AMOUNT : self.amount = Int16(Int(attrNode.stringValue) ?? 0)
@@ -61,9 +55,8 @@ extension XPGain: XMLClient
                 }
             }
             else {
-				return XMLSupport.XMLFailure("Unrecognised XP entry attribute: \(attrNode.name)")
+				throw XMLSupport.XMLError("Unrecognised XP entry attribute: \(attrNode.name)")
 			}
         }
-        return success()
     }
 }

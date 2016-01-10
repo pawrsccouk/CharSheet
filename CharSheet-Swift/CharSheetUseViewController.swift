@@ -61,8 +61,10 @@ final class CharSheetUseViewController : CharSheetViewController
 			return
 		}
 
-		switch exportToEmail() {
-		case .Error(let error):
+		do {
+			try exportToEmail()
+		}
+		catch let error as NSError {
 			let localisedDescription = error.localizedDescription ?? "Unknown error"
 			let alertView = UIAlertController(
 				title         : "Error converting \(charSheet.name) to XML",
@@ -70,8 +72,6 @@ final class CharSheetUseViewController : CharSheetViewController
 				preferredStyle: .Alert)
 			alertView.addAction(UIAlertAction(title: "Close", style: .Default, handler: nil))
 			presentViewController(alertView, animated: true, completion: nil)
-		case .Success:
-			break
 		}
 	}
 
@@ -119,7 +119,7 @@ final class CharSheetUseViewController : CharSheetViewController
 
     // MARK: Private Methods
     
-	private func exportToEmail() -> NilResult
+	private func exportToEmail() throws
 	{
 		let bodyHTMLFormat =
 		"<html>\n" +
@@ -134,24 +134,19 @@ final class CharSheetUseViewController : CharSheetViewController
 		"</html>"
 
 		assert(MFMailComposeViewController.canSendMail(), "Device cannot send mail.")
-		switch charSheet.exportToXML() {
-		case .Error(let error): return failure(error)
-		case .Success(let value):
-			charSheet.name = charSheet.name ?? "Unknown"
-			let bodyHTML = String(format: bodyHTMLFormat, charSheet.name!, charSheet.name!, NSDate())
+		let value = try charSheet.exportToXML()
+		charSheet.name = charSheet.name ?? "Unknown"
+		let bodyHTML = String(format: bodyHTMLFormat, charSheet.name!, charSheet.name!, NSDate())
 
-			// Present a mail compose view with the data as an attachment.
-			let mailVC = MFMailComposeViewController()
-			mailVC.mailComposeDelegate = self
-			mailVC.setSubject("\(charSheet.name!) exported from CharSheet.")
-			mailVC.setMessageBody(bodyHTML, isHTML:true)
-			mailVC.addAttachmentData(
-				value.unwrap,
-				mimeType: "application/charsheet+xml",
-				fileName: "\(charSheet.name!).charSheet")
-			presentViewController(mailVC, animated:true, completion:nil)
-			return success()
-		}
+		// Present a mail compose view with the data as an attachment.
+		let mailVC = MFMailComposeViewController()
+		mailVC.mailComposeDelegate = self
+		mailVC.setSubject("\(charSheet.name!) exported from CharSheet.")
+		mailVC.setMessageBody(bodyHTML, isHTML:true)
+		mailVC.addAttachmentData(value,
+			mimeType: "application/charsheet+xml",
+			fileName: "\(charSheet.name!).charSheet")
+		presentViewController(mailVC, animated:true, completion:nil)
 	}
 
 	private func skillForIndexPath(indexPath: NSIndexPath) -> Skill

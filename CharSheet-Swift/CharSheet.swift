@@ -9,8 +9,8 @@
 import Foundation
 import CoreData
 
-class CharSheet : NSManagedObject {
-    
+class CharSheet : NSManagedObject
+{    
     // MARK: Properties - Core Data
 
     @NSManaged var age: Int16, level: Int16
@@ -149,15 +149,14 @@ class CharSheet : NSManagedObject {
     // MARK: Misc
 
 
-    func exportToXML() -> Result<NSData>
+    func exportToXML() throws -> NSData
 	{
-        let rawXML = "<xml></xml>"
-		return
-			DDXMLDocument.documentWithXMLString(rawXML, options: 0)
-			.andThen {
-				($0.rootElement as! DDXMLElement).addChild(self.asXML())
-				return $0.xmlDataWithOptions(UInt(DDXMLNodeCompactEmptyElement))
-			}
+		let document = try DDXMLDocument.documentWithXMLString("<xml></xml>", options: 0)
+		guard let root = document.rootElement as? DDXMLElement else {
+			fatalError("Document \(document) has invalid root element \(document.rootElement)")
+		}
+		root.addChild(self.asXML())
+		return try document.xmlDataWithOptions(UInt(DDXMLNodeCompactEmptyElement))
     }
 
 
@@ -219,10 +218,6 @@ private let attributes: [(String, AttrType)] = [
 
 extension CharSheet: XMLClient
 {
-	var asObject: NSObject {
-		return self
-	}
-
     private enum Element: String
 	{
         case CHAR_SHEET = "charSheet"
@@ -257,11 +252,10 @@ extension CharSheet: XMLClient
 
 
     
-    func updateFromXML(element: DDXMLElement) -> NilResult
+    func updateFromXML(element: DDXMLElement) throws
 	{
-		if let err = XMLSupport.validateElementName(element.name, expectedName: Element.CHAR_SHEET.rawValue).error {
-			return failure(err)
-		}
+		try XMLSupport.validateElementName(element.name, expectedName: Element.CHAR_SHEET.rawValue)
+
 		// Use KVO to set the attributes from the XML element provided.
 		for (attrName, attrType) in attributes {
 			if let node = element.attributeForName(attrName) {
@@ -282,37 +276,29 @@ extension CharSheet: XMLClient
             if let elementName = Element(rawValue: node.name) {
                 switch elementName {
                 case .LOGS:
-					switch XMLSupport.dataFromNodes(node, createFunc: { self.addLogEntry() }) {
-					case .Success(let value): self.logs = NSMutableSet(array: value.unwrap.array)
-					case .Error(let err): return failure(err)
-					}
+					let value = try XMLSupport.dataFromNodes(node, createFunc: { self.addLogEntry() })
+					self.logs = NSMutableSet(array: value.array)
                 case .SKILLS:
-					switch XMLSupport.dataFromNodes(node, createFunc: { self.addSkill(self.managedObjectContext!) }) {
-					case .Success(let value): self.skills = NSMutableOrderedSet(orderedSet: value.unwrap)
-					case .Error(let err): return failure(err)
-					}
+					let value = try XMLSupport.dataFromNodes(node, createFunc: { self.addSkill(self.managedObjectContext!) })
+					self.skills = NSMutableOrderedSet(orderedSet: value)
                 case .XP_GAINS:
-					switch XMLSupport.dataFromNodes(node, createFunc: { self.addXPGain(self.managedObjectContext!) }) {
-					case .Success(let value): self.xp = NSMutableOrderedSet(orderedSet: value.unwrap)
-					case .Error(let err): return failure(err)
-
-					}
+					let value = try XMLSupport.dataFromNodes(node, createFunc: { self.addXPGain(self.managedObjectContext!) })
+					self.xp = NSMutableOrderedSet(orderedSet: value)
                     // Notes are stored as elements as they are too big to hold in attributes.
                 case .NOTES:
 					self.notes = node.stringValue
                     
                 case .CHAR_SHEET:
-					return XMLSupport.XMLFailure("XML CharSheet entity cannot contain another CharSheet entity.")
+					throw XMLSupport.XMLError("XML CharSheet entity cannot contain another CharSheet entity.")
                 }
             }
             else {
-				return XMLSupport.XMLFailure("XML entity \(node.name) not recognised as child of \(Element.CHAR_SHEET)")
+				throw XMLSupport.XMLError("XML entity \(node.name) not recognised as child of \(Element.CHAR_SHEET)")
             }
         }
         
- 		// Rename the sheet to avoid name clashes with an already-existing one, if any.
+ 		// Rename the new sheet to avoid name clashes with an already-existing one, if any.
 		renameIfNecessary()
-		return success()
     }
 }
 

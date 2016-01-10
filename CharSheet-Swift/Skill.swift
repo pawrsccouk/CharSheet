@@ -92,8 +92,6 @@ class Skill : NSManagedObject
 
 extension Skill: XMLClient
 {
-    var asObject: NSObject { return self }
-    
     private enum Element: String  { case SKILL = "skill", SPECIALTIES = "specialties" }
     private enum Attribute: String { case NAME = "name", VALUE = "value", TICKS = "ticks" }
     
@@ -116,12 +114,10 @@ extension Skill: XMLClient
         return this
     }
 
-    func updateFromXML(element: DDXMLElement) -> NilResult
+    func updateFromXML(element: DDXMLElement) throws
 	{
-        if let err = XMLSupport.validateElementName(element.name, expectedName: Element.SKILL.rawValue).error {
-			return failure(err)
-		}
-        
+        try XMLSupport.validateElementName(element.name, expectedName: Element.SKILL.rawValue)
+
         for attrNode in (element.attributes as! [DDXMLNode]) {
             if let nodeName = Attribute(rawValue: attrNode.name) {
                 switch nodeName {
@@ -131,7 +127,7 @@ extension Skill: XMLClient
                 }
             }
             else {
-				return XMLSupport.XMLFailure("Unrecognised attribute \(attrNode.name) in skill")
+				throw XMLSupport.XMLError("Unrecognised attribute \(attrNode.name) in skill")
 			}
         }
 
@@ -142,19 +138,19 @@ extension Skill: XMLClient
         if(element.childCount > 0) {
             for specGroup in (element.children as! [DDXMLElement]) {
                 if specGroup.name == Element.SPECIALTIES.rawValue {
-					switch XMLSupport.dataFromNodes(specGroup, createFunc: { addSpecialty(self.managedObjectContext!) }) {
-					case .Success(let value): self.specialties = value.unwrap.mutableCopy() as! NSMutableOrderedSet
-					case .Error(let err): return failure(err)
-					}
+					let value = try XMLSupport.dataFromNodes(specGroup, createFunc: { addSpecialty(self.managedObjectContext!) })
+					self.specialties = value.mutableCopy() as! NSMutableOrderedSet
                 }
                 else {
-					return XMLSupport.XMLFailure("Unrecognised child \(specGroup.name) of skill element.")
+					throw XMLSupport.XMLError("Unrecognised child \(specGroup.name) of skill element.")
 				}
             }
         }
-        return success()
     }
 }
+
+
+
 
 
 

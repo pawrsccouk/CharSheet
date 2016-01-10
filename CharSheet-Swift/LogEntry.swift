@@ -33,18 +33,11 @@ private var fullDateFormatter: NSDateFormatter = {
 private let LOG_ENTRY = "logEntry"
 private enum Attribute: String { case DATE_TIME = "dateTime", SUMMARY = "summary" }
 
-extension LogEntry: XMLClient
-{
     // MARK: - PWXMLClient implementation
     
-    
-    var asObject: NSObject { get { return self } }
-    
-
-
-
-
-    func asXML() -> DDXMLElement
+extension LogEntry: XMLClient
+{
+	func asXML() -> DDXMLElement
 	{
         func attribute(name: Attribute, value: String) -> DDXMLNode {
 			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
@@ -57,12 +50,9 @@ extension LogEntry: XMLClient
 
     
     
-    func updateFromXML(element: DDXMLElement) -> NilResult
+    func updateFromXML(element: DDXMLElement) throws
 	{
-        let result = XMLSupport.validateElementName(element.name, expectedName: LOG_ENTRY)
-			if let e = result.error {
-				return failure(e)
-		}
+        try XMLSupport.validateElementName(element.name, expectedName: LOG_ENTRY)
         for attrNode in (element.attributes as! [DDXMLNode]) {
             if let nodeName = Attribute(rawValue: attrNode.name) {
                 switch nodeName {
@@ -71,10 +61,9 @@ extension LogEntry: XMLClient
                 }
             }
             else {
-				return XMLSupport.XMLFailure("Unrecognised log entry attribute: \(attrNode.name)")
+				throw XMLSupport.XMLError("Unrecognised log entry attribute: \(attrNode.name)")
 			}
         }
         self.change = element.stringValue
-        return success()
     }
 }

@@ -176,13 +176,14 @@ extension AppDelegate: UIApplicationDelegate
 		annotation              : AnyObject) -> Bool
 	{
 		// Triggered when the user opens a .charSheet attachment in an email.
-		// Import the data from the URL.
+		// Import the data from the URL. Display an error if it fails.
 		if url.fileURL {
-			let result = masterViewController.importURL(url)
-			if !result.success {
-				masterViewController.showAlertForResult(result, title: "Error importing character sheet.")
+			do {
+				try masterViewController.importURL(url)
 			}
-			return result.success
+			catch let error as NSError {
+				masterViewController.showAlertForError(error, title: "Error importing character sheet.")
+			}
 		}
 		return false // Not a URL type we support.
 	}

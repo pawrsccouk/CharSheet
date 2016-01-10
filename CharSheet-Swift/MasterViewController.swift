@@ -59,17 +59,21 @@ class MasterViewController : UITableViewController {
 	/// - returns: A newly-created CharSheet object which has been added to Core Data.
 	/// :note: This deletes the new char sheet if anything goes wrong during the loading process.
 
-	private func createCharSheetFromElement(element: DDXMLElement) -> Result<CharSheet>
+	private func createCharSheetFromElement(element: DDXMLElement) throws -> CharSheet
 	{
-		return newCharacter()
-		.andThen { charSheet in
-			switch charSheet.updateFromXML(element) {
-			case .Error(let error):
-				self.deleteCharSheet(charSheet)
-				return failure(error)
-			case .Success:
-				return success(charSheet)
+		do {
+			let newSheet = try newCharacter()
+			do {
+				try newSheet.updateFromXML(element)
+				return newSheet
 			}
+			catch let error as NSError {
+				deleteCharSheet(newSheet)
+				throw error
+			}
+		}
+		catch let error as NSError {
+			fatalError("Error creating a new empty CharSheet object: \(error), \(error.localizedDescription)")
 		}
 	}
 
@@ -79,25 +83,25 @@ class MasterViewController : UITableViewController {
 	/// :todo: This should be in the model somewhere, not in a view controller.
 	///        I need to create a class to represent "all the character sheets".
 	/// :note: This decides whether the loaded data represents a new character or replaces an existing one.
-    func importURL(url: NSURL) -> NilResult
+    func importURL(url: NSURL) throws
 	{
-		func findElement(document: DDXMLDocument, nodeName: String) -> Result<DDXMLElement>
+		func findElement(document: DDXMLDocument, nodeName: String) throws -> DDXMLElement
 		{
 			if let node = (document.rootElement.children as! [DDXMLElement]).filter({ $0.name == nodeName }).first {
-				return success(node)
+				return node
 			}
-			return failure(XMLSupport.XMLError("XMLDocument has no node named \(nodeName)"))
+			throw XMLSupport.XMLError("XMLDocument has no node named \(nodeName)")
 		}
 
         // Data will be a character sheet in XML format.  Import it and create a character for it.
         if !url.fileURL {
-            return XMLSupport.XMLFailure("Error: URL: \(url) is not a file URL and isn't supported.")
+            throw XMLSupport.XMLError("Error: URL: \(url) is not a file URL and isn't supported.")
         }
 
 		let xmlData = NSData(contentsOfURL:url)
-		return DDXMLDocument.documentWithData(xmlData!, options: 0)
-			.andThen { findElement($0, nodeName: "charSheet") }
-			.andThen { self.createCharSheetFromElement($0).nilResult() }
+		let document = try DDXMLDocument.documentWithData(xmlData!, options: 0)
+		let rootNode = try findElement(document, nodeName: "charSheet")
+		try createCharSheetFromElement(rootNode)
 	}
 
     override func viewDidLoad()
@@ -171,18 +175,12 @@ class MasterViewController : UITableViewController {
 		return errorText
 	}
 
-	/// Extract the error object from a Result, and present a view controller displaying the error.
+	/// Present a view controller displaying the provided error.
 	///
-	/// Does nothing if result is successful.
-	///
-	/// - parameter result: The result to display.
+	/// - parameter error: The error to display.
 	/// - parameter title:  The title displayed on the error window.
-	func showAlertForResult<T>(result: Result<T>, title: String)
+	func showAlertForError(error: NSError, title: String)
 	{
-		// Show nothing if this isn't an error result.
-		guard let error = result.error else {
-			return
-		}
 		let errorText = textFromError(error)
 		let alertController = UIAlertController(title: title, message: errorText, preferredStyle: .Alert)
 		alertController.addAction(UIAlertAction(title: "Close",style: .Default) { (action) in
@@ -192,24 +190,29 @@ class MasterViewController : UITableViewController {
    }
 
 	/// Creates a new CharSheet entity in Core Data's managed object context and returns it.
-	private func newCharacter() -> Result<CharSheet>
+	private func newCharacter() throws -> CharSheet
 	{
 		let context  = fetchedResultsController.managedObjectContext
 		if let
 			entCharacter = fetchedResultsController.fetchRequest.entity,
 			entName      = entCharacter.name,
-			newCharacter = NSEntityDescription.insertNewObjectForEntityForName(
-				entName, inManagedObjectContext:context) as? CharSheet
+			newCharacter = NSEntityDescription.insertNewObjectForEntityForName(entName,
+				inManagedObjectContext:context) as? CharSheet
 		{
 			newCharacter.name = "New Character"
-			return success(newCharacter)
+			return newCharacter
 		}
-		return failure(XMLSupport.XMLError("Error creating character sheet from Core Data"))
+		throw XMLSupport.XMLError("Error creating character sheet from Core Data")
 	}
 
     @IBAction func insertNewCharSheet(sender: AnyObject?)
 	{
-        newCharacter()
+		do {
+			try newCharacter()
+		}
+		catch let error as NSError {
+			showAlertForError(error, title: "Error inserting new character sheet.")
+		}
 		// Save the character immediately.
         NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
     }
