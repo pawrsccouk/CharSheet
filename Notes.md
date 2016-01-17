@@ -3,7 +3,7 @@
 [x] Log details should appear linked to the row that triggered them, not at the bottom of the screen.
 [ ] Ensure all die rolls are appearing as they should. Ensure they are properly random.
 [ ] Where we have empty tables (e.g. Die Roll/Skills) we should have an initial row marked <Add Skill> which the user
-can click on to add the skill. Currently the "+" icon is too far away from the user's attention.
+	can click on to add the skill. Currently the "+" icon is too far away from the user's attention.
 [x] Die roll results should be more readable, possibly in an HTML table or using proper tabbing.
 [x] Automatically select the last-used character on startup.
 [ ] Associate a GUID with the character so we can tell which character is which even if the name changes.
@@ -13,7 +13,7 @@ can click on to add the skill. Currently the "+" icon is too far away from the u
 [ ] When rearranging specialties in the Edit view, the old skill cell in the Use view doesn't update.
 	Open a character, pick any skill. Note the positions in the 'use' cell. Then go Edit, Skill Info, drag the specialties.
 	Close skill info, close main edit page. Note the specialties have not been updated in the 'Use' view.
-[ ] Disable the Edit, Notes, XP etc. in the Use Controller when there are no characters selected in the table view controller.
+[x] Disable the Edit, Notes, XP etc. in the Use Controller when there are no characters selected in the table view controller.
 [ ] Dates in the XML files use the locale-dependent full format, which means you can get crashes reading back older XML files.
     We should use a canonical format, such as YYYY-MM-DD HH:MM which has no ambiguity.
 	(We can try and parse the full format as well, for backwards compatibility but only if the canonical format isn't found)

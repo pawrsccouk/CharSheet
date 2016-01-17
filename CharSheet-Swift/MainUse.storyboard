@@ -407,6 +407,7 @@
                         <outlet property="rangedAddsLabel" destination="Qdh-Y8-Alo" id="yMe-Cp-PbJ"/>
                         <outlet property="setHealthBtn" destination="82T-8c-Xg3" id="zgD-Zr-wfM"/>
                         <outlet property="skillsCollectionView" destination="DBA-AS-y4Q" id="Gf9-7i-MCd"/>
+                        <outlet property="toolbar" destination="qIE-Hb-yph" id="5Uj-Le-3Pi"/>
                         <outletCollection property="statButtons" destination="ene-V1-JM4" collectionClass="NSMutableArray" id="QE9-hV-dKb"/>
                         <outletCollection property="statButtons" destination="jF8-6P-By4" collectionClass="NSMutableArray" id="jhR-wl-dx1"/>
                         <outletCollection property="statButtons" destination="Y9Z-QI-VGW" collectionClass="NSMutableArray" id="fsK-f6-8Df"/>

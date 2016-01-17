@@ -24,6 +24,7 @@ final class CharSheetUseViewController : CharSheetViewController
     // MARK: IB Properties
 
 	@IBOutlet var statButtons: [UseStatLabel]!
+	@IBOutlet weak var toolbar: UIToolbar!
     @IBOutlet weak var skillsCollectionView: UICollectionView!
     @IBOutlet weak var playerLabel    : UILabel!
     @IBOutlet weak var gameLabel      : UILabel!
@@ -114,6 +115,7 @@ final class CharSheetUseViewController : CharSheetViewController
         didSet {
             if charSheet != oldValue {
                 configureView()
+				enableToolbarButtons(charSheet != nil)
                 navigationItem.title = charSheet?.name ?? "No name"
             }
         }
@@ -219,10 +221,24 @@ final class CharSheetUseViewController : CharSheetViewController
             rangedAddsLabel.text = sheet.rangedAdds.description
             setHealthBtn.setTitle(sheet.health, forState: .Normal)
         }
+		else {	// Disable the toolbar controls if there are no characters selected.
+
+		}
         skillsCollectionView.allowsSelection = true
         skillsCollectionView.allowsMultipleSelection = true
         skillsCollectionView.reloadData()
     }
+
+	/// Enable or disable the toolbar buttons.
+	/// 
+	/// - parameter enable: If true, enable the buttons, otherwise disable them.
+	private func enableToolbarButtons(enable: Bool)
+	{
+		guard let items = toolbar.items else { return }
+		for btn in items {
+			btn.enabled = enable
+		}
+	}
 
     override func viewDidLoad()
 	{
@@ -238,6 +254,7 @@ final class CharSheetUseViewController : CharSheetViewController
 			charSheet = cs
 		}
 		configureView()
+		enableToolbarButtons(charSheet != nil)
 	}
 
 	private func deselectEveryStat()
