@@ -43,13 +43,22 @@ class Skill : NSManagedObject
 	}
 
 	// MARK: Array of specialties.
-	private let specialtiesKey = "specialties"
+
+	/// This is the name of a notification sent to the global NSNotificationCenter when I change the specialties.
+	///
+	/// I would prefer to use KVO or Protocols to handle this, but Swift cannot handle an array of protocol objects
+	/// and KVO doesn't update when the contents of a set changes, only when the set itself does.
+	/// So I use this global method by default.
+	static let specialtiesChangedNotification = "SpecialtiesChangedNotification"
+
+	private let notificationCentre = NSNotificationCenter.defaultCenter()
 
     func appendSpecialty() -> Specialty
 	{
         let newSpec = addSpecialty(self.managedObjectContext!)
         newSpec.parent = self
         self.specialties.addObject(newSpec)
+		notificationCentre.postNotificationName(Skill.specialtiesChangedNotification, object: self)
         return newSpec
     }
     
@@ -58,11 +67,13 @@ class Skill : NSManagedObject
         let spec: Specialty = self.specialties[index] as! Specialty
         self.specialties.removeObjectAtIndex(index)
 		self.managedObjectContext?.deleteObject(spec)
+		notificationCentre.postNotificationName(Skill.specialtiesChangedNotification, object: self)
     }
 
     func moveSpecialtyFromIndex(sourceIndex: NSInteger, toIndex destIndex: NSInteger) -> Void
 	{
         specialties.moveObjectsAtIndexes(NSIndexSet(index: sourceIndex), toIndex:destIndex)
+		notificationCentre.postNotificationName(Skill.specialtiesChangedNotification, object: self)
     }
 
 

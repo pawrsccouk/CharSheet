@@ -27,41 +27,41 @@ class UseSkillCell : UICollectionViewCell
 		// Add observers to the skill when we set it, so that we can update the display when it changes.
         didSet {
             if skill != oldValue {
-                if let s = oldValue {
-                    s.removeObserver(self, forKeyPath:"name"       )
-                    s.removeObserver(self, forKeyPath:"value"      )
-                    s.removeObserver(self, forKeyPath:"specialties")
+                if let oldSkill = oldValue {
+					["name", "value"].forEach { oldSkill.removeObserver(self, forKeyPath: $0) }
                 }
                 
-                if let s = skill {
-                    s.addObserver(self, forKeyPath:"name"       , options:.New, context:nil)
-                    s.addObserver(self, forKeyPath:"value"      , options:.New, context:nil)
-                    s.addObserver(self, forKeyPath:"specialties", options:.New, context:nil)
-                    
-                    setLabelViaTag(.Name       , value: s.name ?? "")
-                    setLabelViaTag(.Value      , value: s.value.description)
-                    setLabelViaTag(.Specialties, value: s.specialtiesAsString)
+                if let newSkill = skill {
+					["name", "value"].forEach { newSkill.addObserver(self, forKeyPath: $0, options: .New, context: nil) }
+
+                    setLabelViaTag(.Name       , value: newSkill.name ?? "")
+                    setLabelViaTag(.Value      , value: newSkill.value.description)
+                    setLabelViaTag(.Specialties, value: newSkill.specialtiesAsString)
                     
 					assert(self.viewWithTag(CellTags.Ticks.rawValue)?.isKindOfClass(TicksView) ?? false,
 						"View \(self.viewWithTag(CellTags.Ticks.rawValue)) is not a TicksView object")
-                    if let tv = self.viewWithTag(CellTags.Ticks.rawValue) as? TicksView {
-                        tv.skill = s
-                    }
-                    else {
-                        assert(false, "TicksView not found")
-                    }
+					guard let tv = self.viewWithTag(CellTags.Ticks.rawValue) as? TicksView  else { fatalError("TicksView not found") }
+					tv.skill = newSkill
                 }
                 setNeedsDisplay()
             }
         }
     }
 
+	let notificationCentre = NSNotificationCenter.defaultCenter()
+
 	// MARK: Overrides
     
     override init(frame: CGRect)
 	{
         super.init(frame:frame)
-        
+
+		// Update the text on the skill box whenever the specialties change.
+		notificationCentre.addObserverForName(Skill.specialtiesChangedNotification, object: nil, queue: nil) {
+			(_) in
+			self.setLabelViaTag(.Specialties, value: self.skill.specialtiesAsString)
+		}
+
         var arrayOfViews = NSBundle.mainBundle().loadNibNamed("UseSkillCellView", owner:self, options:nil)
         
         if arrayOfViews.count >= 1 {
@@ -78,6 +78,11 @@ class UseSkillCell : UICollectionViewCell
         super.init(coder: coder)
     }
 
+	deinit
+	{
+		notificationCentre.removeObserver(self)
+	}
+
     override func observeValueForKeyPath(keyPath: String?
 		, 					     ofObject object: AnyObject?
 		,								  change: [String: AnyObject]?
@@ -85,7 +90,6 @@ class UseSkillCell : UICollectionViewCell
 	{
         if      keyPath == "name"        { setLabelViaTag(.Name       , value: skill.name ?? "") }
         else if keyPath == "value"       { setLabelViaTag(.Value      , value: skill.value.description) }
-        else if keyPath == "specialties" { setLabelViaTag(.Specialties, value: skill.specialtiesAsString) }
     }
     
     
