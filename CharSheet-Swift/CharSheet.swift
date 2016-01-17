@@ -175,17 +175,17 @@ class CharSheet : NSManagedObject
 		/// Checks if parameter NAME already exists as the name of any other character.
 		func nameAlreadyExists(name: String) -> Bool
 		{
-			let request = NSFetchRequest()
-			request.entity = NSEntityDescription.entityForName("CharSheet", inManagedObjectContext:managedObjectContext!)
-			request.predicate = NSPredicate(format:"(name == %@)  AND (self != %@)", name, self)
+			let request = NSFetchRequest(entityName: "CharSheet")
+			request.predicate = NSPredicate(format:"name == %@", name)
 
-			do {
-				let array = try managedObjectContext!.executeFetchRequest(request)
-				return array.isEmpty
-			} catch let error as NSError {  // Deal with error. Log it and assume the name already exists for safety's sake.
-				NSLog("nameAlreadyExists: Fetch returned error: %@ / %@", error, error.userInfo ?? "nil")
+			var error: NSError?
+			let count = managedObjectContext?.countForFetchRequest(request, error: &error)
+			if count == NSNotFound {
+				// Deal with error. Log it and assume the name already exists for safety's sake.
+				NSLog("nameAlreadyExists: countForFetchRequest returned error: %@ / %@", error!, error!.userInfo ?? "nil")
+				return true
 			}
-			return true
+			return count > 1
 		}
 
 
