@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="0BG-KE-4Sf">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="0BG-KE-4Sf">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -302,6 +302,14 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="4lj-g8-B03"/>
+                                    <barButtonItem title="Targets" id="3kY-pA-dcs">
+                                        <connections>
+                                            <segue destination="weP-k3-lso" kind="popover" identifier="SpellTargets" popoverAnchorBarButtonItem="3kY-pA-dcs" id="gFS-Vr-ThO">
+                                                <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                            </segue>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="4aM-Au-vFg"/>
                                     <barButtonItem title="Roll" id="V2H-sI-MyT">
                                         <connections>
                                             <segue destination="3O9-4W-5VD" kind="modal" identifier="DieRoll" id="Z7w-UB-tcS"/>
@@ -898,6 +906,74 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EQS-bf-z4g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1098" y="2207"/>
+        </scene>
+        <!--Spell Targets-->
+        <scene sceneID="Aze-TR-JSc">
+            <objects>
+                <viewController title="Spell Targets" id="weP-k3-lso" customClass="SpellTargetsViewController" customModule="CharSheet" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="eyx-Rf-Jpd"/>
+                        <viewControllerLayoutGuide type="bottom" id="sy5-hW-g4X"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="e5d-LU-L7n">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="i0d-3E-eSD">
+                                <rect key="frame" x="20" y="28" width="500" height="584"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SpellTargetsCell" textLabel="7iR-gS-ebA" detailTextLabel="Ufs-Bw-Xge" style="IBUITableViewCellStyleValue1" id="pfs-cs-rqF">
+                                        <rect key="frame" x="0.0" y="28" width="500" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pfs-cs-rqF" id="era-D2-fu9">
+                                            <rect key="frame" x="0.0" y="0.0" width="500" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7iR-gS-ebA">
+                                                    <rect key="frame" x="15" y="12" width="32" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Ufs-Bw-Xge">
+                                                    <rect key="frame" x="443" y="12" width="42" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <sections/>
+                                <connections>
+                                    <outlet property="dataSource" destination="weP-k3-lso" id="BIa-LC-Qz5"/>
+                                    <outlet property="delegate" destination="weP-k3-lso" id="u87-Rj-KRZ"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="i0d-3E-eSD" firstAttribute="leading" secondItem="e5d-LU-L7n" secondAttribute="leadingMargin" id="NaC-9f-ISa"/>
+                            <constraint firstItem="i0d-3E-eSD" firstAttribute="top" secondItem="eyx-Rf-Jpd" secondAttribute="bottom" constant="8" symbolic="YES" id="tpI-dk-ZFw"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="i0d-3E-eSD" secondAttribute="trailing" id="xIJ-yn-I1r"/>
+                            <constraint firstItem="sy5-hW-g4X" firstAttribute="top" secondItem="i0d-3E-eSD" secondAttribute="bottom" constant="8" symbolic="YES" id="z31-M5-xOt"/>
+                        </constraints>
+                    </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="340" height="920"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="540" height="620"/>
+                    <connections>
+                        <outlet property="table" destination="i0d-3E-eSD" id="Rcq-YH-1tW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qXm-Xu-Bcy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1825" y="345"/>
         </scene>
         <!--Statistics-->
         <scene sceneID="84e-UR-x52">

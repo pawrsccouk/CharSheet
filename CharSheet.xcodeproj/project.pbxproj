@@ -18,7 +18,6 @@
 		5725DEAB1A046FF800343E5F /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEA21A046FF800343E5F /* DDXMLDocument.m */; };
 		5725DEAC1A046FF800343E5F /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEA41A046FF800343E5F /* DDXMLElement.m */; };
 		5725DEAD1A046FF800343E5F /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEA61A046FF800343E5F /* DDXMLNode.m */; };
-		5725DEAF1A04703900343E5F /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5725DEAE1A04703900343E5F /* libxml2.dylib */; };
 		5725DEB71A0473EC00343E5F /* CharSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB01A0473EC00343E5F /* CharSheet.swift */; };
 		5725DEC01A047D5100343E5F /* XMLSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEBF1A047D5100343E5F /* XMLSupport.swift */; };
 		5725DEC31A0493F100343E5F /* Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEC21A0493F100343E5F /* Misc.swift */; };
@@ -53,6 +52,8 @@
 		577A81D31A091F8B00DA1EC8 /* SkillSelectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577A81D21A091F8B00DA1EC8 /* SkillSelectController.swift */; };
 		577A81D61A0B358300DA1EC8 /* Edit.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 577A81D41A0B358300DA1EC8 /* Edit.storyboard */; };
 		577A81D71A0B358300DA1EC8 /* MainUse.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 577A81D51A0B358300DA1EC8 /* MainUse.storyboard */; };
+		579B6BCB1CB1FD19002F13C0 /* SpellTargetsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 579B6BCA1CB1FD19002F13C0 /* SpellTargetsViewController.swift */; };
+		579B6BCD1CB21A92002F13C0 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 579B6BCC1CB21A92002F13C0 /* libxml2.tbd */; };
 		57D635A11B448970004AAB4D /* CharSheet.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 57D6359E1B448970004AAB4D /* CharSheet.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -78,7 +79,6 @@
 		5725DEA51A046FF800343E5F /* DDXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLNode.h; sourceTree = "<group>"; };
 		5725DEA61A046FF800343E5F /* DDXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLNode.m; sourceTree = "<group>"; };
 		5725DEA81A046FF800343E5F /* DDXMLPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLPrivate.h; sourceTree = "<group>"; };
-		5725DEAE1A04703900343E5F /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		5725DEB01A0473EC00343E5F /* CharSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharSheet.swift; sourceTree = "<group>"; };
 		5725DEB11A0473EC00343E5F /* DieRoll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DieRoll.swift; sourceTree = "<group>"; };
 		5725DEB21A0473EC00343E5F /* LogEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogEntry.swift; sourceTree = "<group>"; };
@@ -114,6 +114,8 @@
 		577A81D21A091F8B00DA1EC8 /* SkillSelectController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkillSelectController.swift; sourceTree = "<group>"; };
 		577A81D41A0B358300DA1EC8 /* Edit.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Edit.storyboard; sourceTree = "<group>"; };
 		577A81D51A0B358300DA1EC8 /* MainUse.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainUse.storyboard; sourceTree = "<group>"; };
+		579B6BCA1CB1FD19002F13C0 /* SpellTargetsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpellTargetsViewController.swift; sourceTree = "<group>"; };
+		579B6BCC1CB21A92002F13C0 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		57D6359F1B448970004AAB4D /* CharSheet 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "CharSheet 2.xcdatamodel"; sourceTree = "<group>"; };
 		57D635A01B448970004AAB4D /* CharSheet.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CharSheet.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -123,7 +125,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5725DEAF1A04703900343E5F /* libxml2.dylib in Frameworks */,
+				579B6BCD1CB21A92002F13C0 /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,8 +135,8 @@
 		5725DE631A0415CC00343E5F = {
 			isa = PBXGroup;
 			children = (
+				579B6BCC1CB21A92002F13C0 /* libxml2.tbd */,
 				571133D41B4D66CA001F0210 /* Notes.md */,
-				5725DEAE1A04703900343E5F /* libxml2.dylib */,
 				5725DE991A046FF800343E5F /* KissXML */,
 				5725DE6E1A0415CD00343E5F /* CharSheet-Swift */,
 				5725DE6D1A0415CD00343E5F /* Products */,
@@ -258,6 +260,7 @@
 				577A81B91A08CFD700DA1EC8 /* CharSheetEditViewController.swift */,
 				577A81BA1A08CFD700DA1EC8 /* CharSheetUseViewController.swift */,
 				571133D71B537915001F0210 /* CharSheetViewController.swift */,
+				579B6BCA1CB1FD19002F13C0 /* SpellTargetsViewController.swift */,
 				577A81BB1A08CFD700DA1EC8 /* DieRollResultViewController.swift */,
 				577A81BC1A08CFD700DA1EC8 /* DieRollViewController.swift */,
 				577A81BD1A08CFD700DA1EC8 /* EditNotesViewController.swift */,
@@ -369,6 +372,7 @@
 				5725DE771A0415CD00343E5F /* MasterViewController.swift in Sources */,
 				5725DEC31A0493F100343E5F /* Misc.swift in Sources */,
 				577A81C71A08CFD700DA1EC8 /* DieRollResultViewController.swift in Sources */,
+				579B6BCB1CB1FD19002F13C0 /* SpellTargetsViewController.swift in Sources */,
 				5725DEB71A0473EC00343E5F /* CharSheet.swift in Sources */,
 				5725DEC41A04A1D000343E5F /* Skill.swift in Sources */,
 				577A81C61A08CFD700DA1EC8 /* CharSheetUseViewController.swift in Sources */,

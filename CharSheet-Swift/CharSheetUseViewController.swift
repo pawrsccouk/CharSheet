@@ -184,9 +184,14 @@ final class CharSheetUseViewController : CharSheetViewController
 			dieRollViewController.setInitialStat(statData, skills:selectedSkills)
 		}
 
-		// Get the new controller and set some common properties.
-		let navigationController = segue.destinationViewController as! UINavigationController
-		let newViewController = navigationController.childViewControllers[0] as! CharSheetViewController
+		var newViewController: CharSheetViewController!
+		if segue.identifier == "SpellTargets" {		// SpellTargets is a popover with no nav controller.
+			newViewController = segue.destinationViewController as! CharSheetViewController
+		} else {									// All other controllers are embedded in a navigation controller.
+			let navigationController = segue.destinationViewController as! UINavigationController
+			newViewController = navigationController.childViewControllers[0] as! CharSheetViewController
+		}
+			// Get the new controller and set some common properties.
 		newViewController.charSheet = charSheet
 		newViewController.managedObjectContext = managedObjectContext
 		if segue.identifier == "DieRoll" {  // Extra prep for the die roll view.
