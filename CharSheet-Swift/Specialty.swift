@@ -20,14 +20,22 @@ import CoreData
 
 class Specialty : NSManagedObject
 {
-	@NSManaged var name: String?, value: Int16, order: Int16, parent: Skill!
-    
-    override func awakeFromInsert() -> Void
+	@NSManaged var name: String?
+	@NSManaged var value: Int16
+	@NSManaged var order: Int16
+	@NSManaged var parent: Skill!
+}
+
+// MARK: Overrides
+
+extension Specialty
+{
+    override func awakeFromInsert()
 	{
         super.awakeFromInsert()
         self.name  = ""
-        self.value = 0
-		self.order = 0
+        self.value = Int16(0)
+		self.order = Int16(0)
     }
 }
 
@@ -50,7 +58,7 @@ extension Specialty: XMLClient
         return this
     }
 
-    func updateFromXML(element: DDXMLElement) throws
+	func updateFromXML(element: DDXMLElement) throws
 	{
 		try XMLSupport.validateElementName(element.name, expectedName: SPECIALTY)
 

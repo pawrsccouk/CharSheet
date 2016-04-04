@@ -24,9 +24,24 @@ private func addSpecialty(managedObjectContext: NSManagedObjectContext) -> Speci
 
 class Skill : NSManagedObject
 {
-    @NSManaged var name: String?, ticks: Int16, value: Int16, order: Int16
-	@NSManaged var parent: CharSheet!, specialties: NSMutableOrderedSet!
+	// MARK: Core Data
+    @NSManaged var name: String?
+	@NSManaged var ticks: Int16
+	@NSManaged var value: Int16
+	@NSManaged var order: Int16
 
+	@NSManaged var parent: CharSheet!
+	@NSManaged var specialties: NSMutableOrderedSet!
+
+	// MARK: Private
+	private let notificationCentre = NSNotificationCenter.defaultCenter()
+}
+
+// MARK: -
+
+extension Skill
+{
+	// MARK: Overrides
     override func awakeFromInsert() -> Void
 	{
         super.awakeFromInsert()
@@ -49,9 +64,7 @@ class Skill : NSManagedObject
 	/// I would prefer to use KVO or Protocols to handle this, but Swift cannot handle an array of protocol objects
 	/// and KVO doesn't update when the contents of a set changes, only when the set itself does.
 	/// So I use this global method by default.
-	static let specialtiesChangedNotification = "SpecialtiesChangedNotification"
-
-	private let notificationCentre = NSNotificationCenter.defaultCenter()
+	@nonobjc static let specialtiesChangedNotification = "SpecialtiesChangedNotification"
 
     func appendSpecialty() -> Specialty
 	{

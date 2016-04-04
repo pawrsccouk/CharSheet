@@ -84,36 +84,43 @@ class StrictGridLayout : UICollectionViewLayout
 
 
 		// Init is sometimes not called, so check for this and set some defaults if so.
-        assert(columns > 0, "Columns not set correctly. init() has been bypassed.")
-        if let collectionView = self.collectionView {
-            assert((cellSize.width > 0 && cellSize.height > 0), "Cell size [\(cellSize.width), \(cellSize.height)] must not be zero in either dimension");
-            assert(collectionView.numberOfSections() == 1, "The StrictGridLayout only handles single section collection views")
-            itemCount = collectionView.numberOfItemsInSection(0)
-            collectionItemAttributes = [UICollectionViewLayoutAttributes]()
-            
-            var itemFrame = CGRectMake(contentInsets.width, contentInsets.height, cellSize.width, cellSize.height)
-            var itemInColumn = 0;
-            for var i = 0; i < itemCount; ++i {
-                collectionItemAttributes.append(attributesForIndex(i, withFrame:itemFrame))
-                
-                itemInColumn++
-                itemFrame = newRowForColumn(itemInColumn, maxColumns: self.columns)
-                    ? rectForNewRow   (itemFrame, cellSize: cellSize, cellSpacing: cellSpacing, contentInsets: contentInsets)
-                    : rectForNewColumn(itemFrame, cellSize: cellSize, cellSpacing: cellSpacing)
-                if newRowForColumn(itemInColumn, maxColumns: self.columns) {
-                    itemInColumn = 0;
-                }
-            }
-            
-            contentSize = getContentSize(itemCount, columns: columns, contentInsets: contentInsets, collectionItemAttributes: collectionItemAttributes)
-        }
-    }
+		assert(columns > 0, "Columns not set correctly. init() has been bypassed.")
+		guard let collectionView = self.collectionView else { return }
+		assert((cellSize.width > 0 && cellSize.height > 0),
+		       "Cell size [\(cellSize.width), \(cellSize.height)] must not be zero in either dimension");
+		assert(collectionView.numberOfSections() == 1,
+		       "The StrictGridLayout only handles single section collection views")
+		itemCount = collectionView.numberOfItemsInSection(0)
+		collectionItemAttributes = [UICollectionViewLayoutAttributes]()
+
+		var itemFrame = CGRectMake(contentInsets.width, contentInsets.height, cellSize.width, cellSize.height)
+		var itemInColumn = 0;
+		// for var i = 0; i < itemCount; ++i
+		for i in 0..<itemCount {
+			collectionItemAttributes.append(attributesForIndex(i, withFrame:itemFrame))
+
+			itemInColumn += 1
+			itemFrame = newRowForColumn(itemInColumn, maxColumns: self.columns)
+				? rectForNewRow   (itemFrame,
+				                   cellSize     : cellSize,
+				                   cellSpacing  : cellSpacing,
+				                   contentInsets: contentInsets)
+				: rectForNewColumn(itemFrame,
+				                   cellSize   : cellSize,
+				                   cellSpacing: cellSpacing)
+			if newRowForColumn(itemInColumn, maxColumns: self.columns) {
+				itemInColumn = 0
+			}
+		}
+
+		contentSize = getContentSize(itemCount, columns: columns, contentInsets: contentInsets, collectionItemAttributes: collectionItemAttributes)
+	}
 
     override func collectionViewContentSize() -> CGSize
 	{
         return contentSize
     }
-    
+
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]
 	{
         return collectionItemAttributes.filter { object in CGRectIntersectsRect(rect, object.frame) }

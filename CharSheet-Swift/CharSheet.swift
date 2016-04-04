@@ -17,14 +17,27 @@ class CharSheet : NSManagedObject
 {    
     // MARK: Properties - Core Data
 
-    @NSManaged var age: Int16, level: Int16
-    @NSManaged var experience: Int32
-    @NSManaged var woundsPhysical: Int16, woundsSubdual: Int16
-    @NSManaged var game: String?, gender: String?, name: String?, notes: String?, player: String?
-    @NSManaged var skills: NSMutableOrderedSet, xp: NSMutableOrderedSet
-    @NSManaged var logs: NSMutableSet
-	@NSManaged var dexterity: Int16, strength: Int16, constitution: Int16, speed: Int16
-	@NSManaged var intelligence: Int16, perception: Int16, luck: Int16, charisma: Int16
+	@NSManaged var age: Int16
+	@NSManaged var level: Int16
+	@NSManaged var experience: Int32
+	@NSManaged var woundsPhysical: Int16
+	@NSManaged var woundsSubdual: Int16
+	@NSManaged var game: String?
+	@NSManaged var gender: String?
+	@NSManaged var name: String?
+	@NSManaged var notes: String?
+	@NSManaged var player: String?
+	@NSManaged var skills: NSMutableOrderedSet
+	@NSManaged var xp: NSMutableOrderedSet
+	@NSManaged var logs: NSMutableSet
+	@NSManaged var dexterity: Int16
+	@NSManaged var strength: Int16
+	@NSManaged var constitution: Int16
+	@NSManaged var speed: Int16
+	@NSManaged var intelligence: Int16
+	@NSManaged var perception: Int16
+	@NSManaged var luck: Int16
+	@NSManaged var charisma: Int16
 
     // MARK: Properties - Derived
 
@@ -53,8 +66,13 @@ class CharSheet : NSManagedObject
 		let subdHealth = constitution - woundsSubdual
 		return "P: \(physHealth) / \(constitution), S: \(subdHealth) / \(constitution)"
 	}
+}
 
 
+// MARK: -
+
+extension CharSheet
+{
     // MARK: Overrides
 
 	override var description: String {

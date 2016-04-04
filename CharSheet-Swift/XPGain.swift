@@ -19,9 +19,18 @@ class XPGain : NSManagedObject
 {
     
     // MARK: - Properties - CoreData
-	@NSManaged var amount: Int16, reason: String?, parent: CharSheet!, order: Int16
+	@NSManaged var amount: Int16
+	@NSManaged var reason: String?
+	@NSManaged var parent: CharSheet!
+	@NSManaged var order: Int16
+}
 
-    override func awakeFromInsert() -> Void
+// MARK: -
+
+extension XPGain
+{
+	// MARK: Overrides
+	override func awakeFromInsert() -> Void
 	{
         super.awakeFromInsert()
         amount = 0
@@ -29,6 +38,8 @@ class XPGain : NSManagedObject
 		order  = 0
     }
 }
+
+
     // MARK: - XMLClient implementation
 
     // XML entity and attribute tags for this object.

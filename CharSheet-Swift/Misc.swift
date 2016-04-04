@@ -40,7 +40,8 @@ extension NSArray
 	{
         if self.count == 0 { return nil }
         var p: AnyObject = self[0]
-        for var i: NSInteger = 1, c: NSInteger = self.count; i < c; ++i {
+		// for var i: NSInteger = 1, c: NSInteger = self.count; i < c; ++i
+		for i in 1..<self.count {
             p = block(p, self[i])
         }
         return p;

@@ -19,7 +19,10 @@ class AppDelegate: UIResponder
 	override init()
 	{
 		super.init()
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveChanges", name: "SaveChanges", object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self,
+		                                                 selector: #selector(AppDelegate.saveChanges),
+		                                                 name: "SaveChanges",
+		                                                 object: nil)
 	}
 
 	deinit

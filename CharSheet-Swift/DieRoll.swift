@@ -375,15 +375,20 @@ class DieRoll : NSObject
 /// then the remaining items are simply ignored.  For example:
 ///   group(2, [1, 2, 3, 4]) would return [[1, 2], [3, 4]]
 ///   group(2, [1, 2, 3]) would return [[1, 2]] and 3 would be missing.
+///
+/// - todo: Switch to using sequences instead of fixed arrays. Currently it requires the size of the array
+///   so it cannot be lazy.
 func group<T>(groupSize: Int, collection: Array<T>) -> [Array<T>]
 {
 	assert(groupSize > 0, "groupSize(\(groupSize)) must be greater than zero")
 	if groupSize <= 0 { return [] }
 
 	var result: [Array<T>] = []
-	for var i = 0, c = collection.count; i < c; i += groupSize {
-		if i+(groupSize-1) < c {
-			// Copy the values out of the slice and into a home of their own.
+	let count = collection.count
+	for i in 0.stride(to: count, by: groupSize) {
+		// If we have enough entries to make a full group, then
+		// copy the values out of the slice and into a home of their own.
+		if i + (groupSize - 1) < count {
 			var arr: [T] = []
 			for t in collection[i...i+(groupSize-1)] { arr.append(t) }
 			result.append(arr)
@@ -391,3 +396,6 @@ func group<T>(groupSize: Int, collection: Array<T>) -> [Array<T>]
 	}
 	return result
 }
+
+
+

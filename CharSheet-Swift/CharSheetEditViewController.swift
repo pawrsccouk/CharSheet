@@ -126,7 +126,8 @@ class CharSheetEditViewController : CharSheetViewController
 		// Update the 'order' attribute in the skills to match the order in the set.
 		var i: Int16 = 0
 		for sk in charSheet.skills.array.map({ $0 as! Skill }) {
-			sk.order = i++
+			sk.order = i
+			i += 1
 		}
     }
 }

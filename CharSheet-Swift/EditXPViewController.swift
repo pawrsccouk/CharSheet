@@ -27,7 +27,8 @@ class EditXPViewController : CharSheetViewController
 		// Ensure the values saved to the DB have the same order as in the set here.
 		var i: Int16 = 0
 		for xpGain in charSheet.xp.array.map({ $0 as! XPGain }) {
-			xpGain.order = i++
+			xpGain.order = i
+			i += 1
 		}
 		NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
 		presentingViewController?.dismissViewControllerAnimated(true, completion:nil)

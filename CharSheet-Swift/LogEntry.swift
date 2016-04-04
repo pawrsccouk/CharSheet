@@ -16,8 +16,17 @@ import CoreData
 class LogEntry : NSManagedObject
 {
     // MARK: CoreData dynamic properties.
-    @NSManaged var dateTime: NSDate, summary: String?, change: String?, parent: CharSheet!
-    
+	@NSManaged var dateTime: NSDate
+	@NSManaged var summary: String?
+	@NSManaged var change: String?
+	@NSManaged var parent: CharSheet!
+}
+
+// MARK: -
+
+extension LogEntry
+{
+	// MARK: Overrides
     override func awakeFromInsert() {
         super.awakeFromInsert()
         self.dateTime = NSDate()

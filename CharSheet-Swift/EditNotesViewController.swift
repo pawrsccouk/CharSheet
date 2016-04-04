@@ -118,12 +118,12 @@ class EditNotesViewController : CharSheetViewController
 	{
         NSNotificationCenter.defaultCenter()
 			.addObserver(self,
-				selector: "keyboardWasShown:"    ,
+				selector: #selector(EditNotesViewController.keyboardWasShown(_:))    ,
 				name    : UIKeyboardDidShowNotification ,
 				object  : nil)
 		NSNotificationCenter.defaultCenter()
 			.addObserver(self,
-				selector: "keyboardWillBeHidden:",
+				selector: #selector(EditNotesViewController.keyboardWillBeHidden(_:)),
 				name    : UIKeyboardWillHideNotification,
 				object  : nil)
     }

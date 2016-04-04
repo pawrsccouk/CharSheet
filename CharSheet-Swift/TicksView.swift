@@ -68,19 +68,21 @@ class TicksView : UIView
         fgCol.set()
         
         var ticksDrawn: Int16 = 0, numberOfTicks = skill.ticks
-        for var iRow = 0; iRow < 4; iRow++ {
-            for var iCol = 0; iCol < 5; iCol++ {
+
+//      for var iRow = 0; iRow < 4; iRow++
+		for iRow in 0..<4 {
+//          for var iCol = 0; iCol < 5; iCol++
+			for iCol in 0..<4 {
                 let x = bounds.origin.x + CGFloat(iCol) * boxSize, y = bounds.origin.y + CGFloat(iRow) * boxSize
                 var rectBox: CGRect = CGRectMake(x, y, boxSize, boxSize)
                 CGContextStrokeRect(ctx, rectBox);  // Draw the box outline.
                 
                 if ticksDrawn < numberOfTicks {
-                    rectBox = CGRectInset(rectBox, 2, 2);
-                    CGContextFillRect(ctx, rectBox);
-                    ticksDrawn++;
+                    rectBox = CGRectInset(rectBox, 2, 2)
+                    CGContextFillRect(ctx, rectBox)
+                    ticksDrawn += 1
                 }
             }
         }
     }
-
 }
