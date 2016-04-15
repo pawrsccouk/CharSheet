@@ -139,12 +139,11 @@ extension SpellTargetsViewController: UITableViewDataSource
 
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
 	{
-		// The final totals section always just has one row.
-		if isTotalsSection(section) {
+		// The final totals section and all collapsed sections always just have one row.
+		if isTotalsSection(section) || isCollapsed(keys[section]) {
 			return 1
 		}
-		// If the value has already been selected, the selection is collapsed and has only one row.
-		return isCollapsed(keys[section]) ? 1 : keys.count
+		return  data[keys[section]]!.count
 	}
 
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
