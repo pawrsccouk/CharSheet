@@ -10,32 +10,22 @@ import UIKit
 
 private let CELL_ID = "SpellTargetsCell"
 
-private let kDimensions = "Dimensions", kDuration = "Duration", kDifficulty = "Difficulty", kDistance = "Distance"
-
-/*
-
-The plan is to have the data hard-coded in an array or in XML or something
-and read it into the table.
-
-Dimensions	Distance		Duration	Difficulty
-----------  --------		--------	----------
-tiny -1		self -1			second -1	trivial -1
-small 0		reach 0			minute 0	simple 0
-medium 1	stone's throw 1	hour 1		unusual 1
-large 2		bowshot 2		day 2		tricky 2
-huge 3		perception 3	week 3		finicky 3
-*/
+private let kDimensions = "Dimensions", kDuration = "Duration", kDifficulty = "Difficulty", kDistance = "Distance", kGroups = "Groups"
 
 // All range from -1 to 3
 private let dimensions = ["Tiny"   , "Small" , "Medium"       , "Large"  , "Huge"      ]
 private let distance   = ["Self"   , "Reach" , "Stone's throw", "Bowshot", "Perception"]
 private let duration   = ["Second" , "Minute", "Hour"         , "Day"    , "Week"      ]
 private let difficulty = ["Trivial", "Simple", "Unusual"      , "Tricky" , "Finicky"   ]
+// Ranges from 0 to +4
+private let groups     = ["Single target", "Squad (up to 15)", "Company (up to 200)", "Army (up to 3,000)", "Host (up to 50,000)"]
+
 private let data = [
 	kDimensions: dimensions,
 	kDistance  : distance,
 	kDuration  : duration,
-	kDifficulty: difficulty
+	kDifficulty: difficulty,
+	kGroups    : groups
 ]
 
 /// Copy of the keys in data.
@@ -43,7 +33,7 @@ private let data = [
 /// A copy is kept here so the sort ordering will not change
 /// and we don't have to re-sort them for each call to the data source.
 
-private let keys = [kDimensions, kDistance, kDuration, kDifficulty]
+private let keys = [kDimensions, kDistance, kDuration, kDifficulty, kGroups]
 private typealias ArrayIndex = Int
 
 class SpellTargetsViewController: CharSheetViewController
@@ -74,7 +64,11 @@ class SpellTargetsViewController: CharSheetViewController
 	/// This is the final total from all the values selected.
 	/// Sections where the user has not yet decided are not included in the total.
 	private var finalTotal: Int {
-		return valuesSelected.values.reduce(0) { $0 + $1 - 1 }
+		var total = 0
+		for (key, value) in valuesSelected {
+			total += (key == kGroups ? value : value - 1)  // Groups ranges from 0..4, others from -1..4
+		}
+		return total
 	}
 }
 
@@ -105,7 +99,10 @@ extension SpellTargetsViewController
 	private func collapseSection(sectionId: String, selectedValue: ArrayIndex)
 	{
 		assert(keys.contains(sectionId), "Invalid section ID \(sectionId)")
-		assert(selectedValue >= 0 || selectedValue < 4, "selected value \(selectedValue) is out of range.")
+
+		assert(selectedValue >= 0 || selectedValue < data[sectionId]?.count, "selected value \(selectedValue) is out of range for group \(sectionId).")
+
+		// Most values range from -1 to 4, but the groups value ranges from 0 to 4.
 		valuesSelected[sectionId] = selectedValue
 	}
 
@@ -151,8 +148,9 @@ extension SpellTargetsViewController: UITableViewDataSource
 		let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) ?? UITableViewCell()
 
 		if isTotalsSection(indexPath.section) {
+			let dieRoll = 10 + (5 * max(finalTotal, 0))
 			cell.textLabel?.text = "Final total: "
-			cell.detailTextLabel?.text = "\(finalTotal)"
+			cell.detailTextLabel?.text = "\(finalTotal) - Die roll \(dieRoll)"
 		} else {
 			// Find the key for the section, then get the index of the cell
 			// -from the stored data if present or from the index path if not.
@@ -163,7 +161,7 @@ extension SpellTargetsViewController: UITableViewDataSource
 
 			let selectedIndex = isCollapsed(sectionKey) ? valuesSelected[sectionKey]! : indexPath.row
 			cell.textLabel?.text = sectionData[selectedIndex]
-			cell.detailTextLabel?.text = "\(selectedIndex - 1)"
+			cell.detailTextLabel?.text = "\(sectionKey == kGroups ? selectedIndex : selectedIndex - 1)"
 		}
 		return cell
 	}
