@@ -21,8 +21,8 @@ class CharSheetUseControl : UIControl {
 	/// 
 	/// Must be kept in sync with Interface Builder.
     enum SubviewTags : Int {
-        case Stats  = 100,
-        Skills = 101
+        case stats  = 100,
+        skills = 101
     }
 
 	/// Cached label to display the stats (to avoid repeatedly searching the view for the subview).
@@ -31,7 +31,7 @@ class CharSheetUseControl : UIControl {
 	/// Cached label to display the skills (to avoid repeatedly searching the view for the subview).
 	var skillsLabel: UIView?
 
-    override func drawRect(rect: CGRect)
+    override func draw(_ rect: CGRect)
 	{
 		/// Given a sub-view, add a line drawn underneath it to the bezier path provided.
 		///
@@ -39,12 +39,12 @@ class CharSheetUseControl : UIControl {
 		///                   This should be created to draw on to the main view, otherwise the coordinate system will not be the same.
 		/// - parameter viewOrNil: Optionally the view to underline. If this is nil, then the method does nothing.
 		///                        We accept nil values here as it makes the calling code simpler.
-		func underlineView(path: UIBezierPath, viewOrNil: UIView?)
+		func underlineView(_ path: UIBezierPath, viewOrNil: UIView?)
 		{
 			if let view = viewOrNil {
-				let newFrame = CGRectOffset(view.frame, 0, view.frame.size.height);
-				path.moveToPoint(newFrame.origin)
-				path.addLineToPoint(CGPoint(x: newFrame.origin.x + newFrame.size.width, y: newFrame.origin.y))
+				let newFrame = view.frame.offsetBy(dx: 0, dy: view.frame.size.height);
+				path.move(to: newFrame.origin)
+				path.addLine(to: CGPoint(x: newFrame.origin.x + newFrame.size.width, y: newFrame.origin.y))
 			}
 		}
 
@@ -55,18 +55,18 @@ class CharSheetUseControl : UIControl {
 		/// - parameter whichLabel: The Stats or Skills label to return.
 		/// - returns: The label associated with the WHICHLABEL parameter.
 
-		func findLabel(whichLabel: SubviewTags)  -> UIView
+		func findLabel(_ whichLabel: SubviewTags)  -> UIView
 		{
 			// Return the label from the cache if present, otherwise search for it, add it to the cache and return it.
 			// If we get any more labels needed, put the caches in a dictionary and make this method generic.
-			if whichLabel == .Skills {
+			if whichLabel == .skills {
 				if skillsLabel == nil {
 					skillsLabel =  viewWithTag(whichLabel.rawValue)
 					assert(skillsLabel != nil, "CharSheetUseView.xib doesn't have a tag with value \(whichLabel)")
 				}
 				return skillsLabel!
 			}
-			else if whichLabel == .Stats {
+			else if whichLabel == .stats {
 				if statsLabel == nil {
 					statsLabel = viewWithTag(whichLabel.rawValue)
 					assert(statsLabel != nil, "CharSheetUseView XIB doesn't have a tag with value \(whichLabel)")
@@ -77,14 +77,14 @@ class CharSheetUseControl : UIControl {
 		}
 
 		// Drawing code
-        super.drawRect(rect)
+        super.draw(rect)
 
-        UIColor.blackColor().set()
+        UIColor.black.set()
 
         // Find the subviews corresponding to the stats block and skills blocks, and draw decoration around them.
         let path = UIBezierPath()
-        underlineView(path, viewOrNil: findLabel(.Stats))
-        underlineView(path, viewOrNil: findLabel(.Skills))
+        underlineView(path, viewOrNil: findLabel(.stats))
+        underlineView(path, viewOrNil: findLabel(.skills))
         path.stroke()
     }
     

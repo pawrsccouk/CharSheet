@@ -22,7 +22,7 @@ class EditXPViewController : CharSheetViewController
 	@IBOutlet weak var tableView: UITableView!
 
 	/// Action to dismiss this view and update the model with the changes.
-    @IBAction func done(sender: AnyObject?)
+    @IBAction func done(_ sender: AnyObject?)
 	{
 		// Ensure the values saved to the DB have the same order as in the set here.
 		var i: Int16 = 0
@@ -30,13 +30,13 @@ class EditXPViewController : CharSheetViewController
 			xpGain.order = i
 			i += 1
 		}
-		NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
-		presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
+		NotificationCenter.default.post(name: Notification.Name(rawValue: "SaveChanges"), object: nil)
+		presentingViewController?.dismiss(animated: true, completion:nil)
     }
     
     // MARK: Overrides
 
-	override func setEditing(editing: Bool, animated: Bool)
+	override func setEditing(_ editing: Bool, animated: Bool)
 	{
 		super.setEditing(editing, animated: animated)
 		tableView.setEditing(editing, animated: animated)
@@ -47,23 +47,23 @@ class EditXPViewController : CharSheetViewController
 		super.viewDidLoad()
 		// Add the table view's Edit button to the left hand side.
 		var array = navigationItem.leftBarButtonItems ?? [UIBarButtonItem]()
-		array.insert(editButtonItem(), atIndex: 0)
+		array.insert(editButtonItem, at: 0)
 		navigationItem.leftBarButtonItems = array
     }
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		// Reorder the set of XPGain objects to match the order stored in the DB.
-		charSheet.xp.sortUsingComparator { (xp1, xp2) -> NSComparisonResult in
-			if xp1.order > xp2.order { return .OrderedDescending }
-			if xp2.order > xp1.order { return .OrderedAscending  }
-			return .OrderedSame
-		}
+		charSheet.xp.sort (comparator: { (xp1, xp2) -> ComparisonResult in
+			if (xp1 as AnyObject).order > (xp2 as AnyObject).order { return .orderedDescending }
+			if (xp2 as AnyObject).order > (xp1 as AnyObject).order { return .orderedAscending  }
+			return .orderedSame
+		})
 	}
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
 	{
-        let editXPGainViewController = segue.destinationViewController as! EditXPGainViewController
+        let editXPGainViewController = segue.destination as! EditXPGainViewController
         editXPGainViewController.completionBlock = { self.tableView.reloadData() }
         
         switch segue.identifier! {
@@ -72,7 +72,7 @@ class EditXPViewController : CharSheetViewController
             editXPGainViewController.xpGain = xpGain
 
         case "EditExistingXPGainView":
-            if let cell = sender as? UITableViewCell, selectedIndexPath = tableView.indexPathForCell(cell) {
+            if let cell = sender as? UITableViewCell, let selectedIndexPath = tableView.indexPath(for: cell) {
 				editXPGainViewController.xpGain = charSheet.xp[selectedIndexPath.row] as? XPGain
             }
             else {
@@ -88,10 +88,10 @@ class EditXPViewController : CharSheetViewController
 
 extension EditXPViewController: UITableViewDataSource
 {
-    func tableView(           tableView: UITableView,
-		cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    func tableView(           _ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath) -> UITableViewCell
 	{
-        let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) ?? UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: CELL_ID) ?? UITableViewCell()
         if let xpGain = charSheet.xp[indexPath.item] as? XPGain {
             cell.textLabel?.text = xpGain.reason
             cell.detailTextLabel?.text = xpGain.amount.description
@@ -101,7 +101,7 @@ extension EditXPViewController: UITableViewDataSource
         return cell
     }
     
-    func tableView(         tableView: UITableView,
+    func tableView(         _ tableView: UITableView,
 		numberOfRowsInSection section: Int) -> Int
 	{
 		for xpGain in charSheet.xp.array.map({ $0 as! XPGain }) {
@@ -110,7 +110,7 @@ extension EditXPViewController: UITableViewDataSource
         return charSheet.xp.count
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    func numberOfSections(in tableView: UITableView) -> Int
 	{
         return 1
     }
@@ -119,29 +119,29 @@ extension EditXPViewController: UITableViewDataSource
 
 extension EditXPViewController: UITableViewDelegate
 {
-    func tableView(       tableView: UITableView,
-		willDisplayCell        cell: UITableViewCell,
-		forRowAtIndexPath indexPath: NSIndexPath)
+    func tableView(       _ tableView: UITableView,
+		willDisplay        cell: UITableViewCell,
+		forRowAt indexPath: IndexPath)
 	{
 		cell.textLabel?.font = cell.detailTextLabel?.font
     }
 
-    func tableView(           tableView: UITableView,
-		commitEditingStyle editingStyle: UITableViewCellEditingStyle,
-		forRowAtIndexPath     indexPath: NSIndexPath)
+    func tableView(           _ tableView: UITableView,
+		commit editingStyle: UITableViewCellEditingStyle,
+		forRowAt     indexPath: IndexPath)
 	{
-        if editingStyle == .Delete {
+        if editingStyle == .delete {
             charSheet.removeXPGainAtIndex(indexPath.row)
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
-    func tableView(              tableView: UITableView,
-		moveRowAtIndexPath sourceIndexPath: NSIndexPath,
-		toIndexPath   destinationIndexPath: NSIndexPath)
+    func tableView(              _ tableView: UITableView,
+		moveRowAt sourceIndexPath: IndexPath,
+		to   destinationIndexPath: IndexPath)
 	{
         // Table view has already moved the row, so we just need to update the model.
-        charSheet.xp.moveObjectsAtIndexes(NSIndexSet(index: sourceIndexPath.row), toIndex: destinationIndexPath.row)
+        charSheet.xp.moveObjects(at: IndexSet(integer: sourceIndexPath.row), to: destinationIndexPath.row)
     }
 }
 

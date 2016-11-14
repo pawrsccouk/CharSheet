@@ -18,10 +18,10 @@ class EditNotesViewController : CharSheetViewController
 
     @IBOutlet weak var notesTextView: UITextView!
     
-	@IBAction func editDone(sender: AnyObject?)
+	@IBAction func editDone(_ sender: AnyObject?)
 	{
         saveChanges()
-		presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
+		presentingViewController?.dismiss(animated: true, completion:nil)
     }
 
 	// MARK: Overrides
@@ -32,7 +32,7 @@ class EditNotesViewController : CharSheetViewController
 		registerForKeyboardNotifications()
     }
     
-	override func viewWillAppear(animated: Bool)
+	override func viewWillAppear(_ animated: Bool)
 	{
 		super.viewWillAppear(animated)
 		notesTextView.text = charSheet?.notes ?? ""
@@ -40,7 +40,7 @@ class EditNotesViewController : CharSheetViewController
 
 	deinit
 	{
-		NSNotificationCenter.defaultCenter().removeObserver(self)
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	// MARK: Methods
@@ -52,7 +52,7 @@ class EditNotesViewController : CharSheetViewController
     func saveChanges()
 	{
         self.charSheet.notes = notesTextView.text;
-		NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
+		NotificationCenter.default.post(name: Notification.Name(rawValue: "SaveChanges"), object: nil)
     }
     
 
@@ -62,19 +62,19 @@ class EditNotesViewController : CharSheetViewController
     // This requires the fields to be embedded in a scroll view.
 
 	/// View currently being edited (i.e. the one the user needs to see).
-    private var activeView: UITextView?
+    fileprivate var activeView: UITextView?
     
 	/// Original frame for the view, so we can restore it once editing is complete.
-    private var oldViewFrame = CGRectZero
+    fileprivate var oldViewFrame = CGRect.zero
    
     
-	func keyboardWasShown(aNotification: NSNotification)
+	func keyboardWasShown(_ aNotification: Notification)
 	{
 		if let
 			userInfo = aNotification.userInfo,
-			keyboardStartFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue
+			let keyboardStartFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue
 		{
-			let kbSize = view.convertRect(keyboardStartFrame.CGRectValue(), fromView:nil).size
+			let kbSize = view.convert(keyboardStartFrame.cgRectValue, from:nil).size
 
 			// If active text view is hidden by keyboard, move it so it is visible
 			if let superView = view.superview {
@@ -94,37 +94,37 @@ class EditNotesViewController : CharSheetViewController
 
 
 
-    func keyboardWillBeHidden(aNotification: NSNotification)
+    func keyboardWillBeHidden(_ aNotification: Notification)
 	{
         if activeView == notesTextView {
             activeView!.frame = oldViewFrame
-            oldViewFrame = CGRectZero
+            oldViewFrame = CGRect.zero
         }
 	}
     
-    func textViewDidBeginEditing(textView: UITextView)
+    func textViewDidBeginEditing(_ textView: UITextView)
 	{
         activeView = textView
     }
 
     
-    func textViewDidEndEditing(textView: UITextView)
+    func textViewDidEndEditing(_ textView: UITextView)
 	{
         activeView = nil
     }
 
     
-    private func registerForKeyboardNotifications()
+    fileprivate func registerForKeyboardNotifications()
 	{
-        NSNotificationCenter.defaultCenter()
+        NotificationCenter.default
 			.addObserver(self,
 				selector: #selector(EditNotesViewController.keyboardWasShown(_:))    ,
-				name    : UIKeyboardDidShowNotification ,
+				name    : NSNotification.Name.UIKeyboardDidShow ,
 				object  : nil)
-		NSNotificationCenter.defaultCenter()
+		NotificationCenter.default
 			.addObserver(self,
 				selector: #selector(EditNotesViewController.keyboardWillBeHidden(_:)),
-				name    : UIKeyboardWillHideNotification,
+				name    : NSNotification.Name.UIKeyboardWillHide,
 				object  : nil)
     }
     

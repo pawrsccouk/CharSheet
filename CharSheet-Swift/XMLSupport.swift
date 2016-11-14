@@ -14,7 +14,7 @@ import Foundation
 protocol XMLClient
 {
 	/// Update the object data from the XML element given. Call recursively for child objects.
-    func updateFromXML(element: DDXMLElement) throws
+    func updateFromXML(_ element: DDXMLElement) throws
     
 	/// Output the object (and it's children) as an XML element for inclusion in an XML tree.
     func asXML() -> DDXMLElement
@@ -22,7 +22,7 @@ protocol XMLClient
 
 struct XMLSupport
 {
-	static func XMLError(text: String) -> NSError
+	static func XMLError(_ text: String) -> NSError
 	{
         let domainXML_IMPORT = "CharSheet XML"
 		let errorInfo = [
@@ -34,15 +34,15 @@ struct XMLSupport
     typealias CreateFunc = () -> XMLClient
     
     static func dataFromNodes(
-		parent     : DDXMLElement,
+		_ parent     : DDXMLElement,
 		createFunc : CreateFunc) throws -> NSOrderedSet
 	{
-        let xmlChildren: [DDXMLElement] = parent.children as! [DDXMLElement]
+        let xmlChildren = parent.children as? [DDXMLElement] ?? []
         let newLogs = NSMutableOrderedSet(capacity: xmlChildren.count)
-        for element: DDXMLElement in xmlChildren  {
+        for element: DDXMLElement in xmlChildren {
             let newEntry: XMLClient = createFunc()
 			try newEntry.updateFromXML(element)
-			newLogs.addObject(newEntry)
+			newLogs.add(newEntry)
         }
         return newLogs
     }
@@ -52,11 +52,9 @@ struct XMLSupport
     // If the name doesn't exist, or doesn't match the expected name, sets error and returns false.
     // Otherwise returns true.
     
-    static func validateElementName(
-		name        : String?,
-		expectedName: String) throws
+    static func validateElement(name: String?, expectedName: String) throws
 	{
-        if let s = name where s == expectedName {
+        if let s = name, s == expectedName {
 			return // Success
         }
         let n = name ?? "[nil]"

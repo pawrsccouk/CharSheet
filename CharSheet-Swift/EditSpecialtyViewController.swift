@@ -19,7 +19,7 @@ class EditSpecialtyViewController : UIViewController
     var specialty: Specialty!
 
 	/// Update the view with details gathered from *specialty*.
-    private func configureView()
+    fileprivate func configureView()
 	{
         nameField.text    = specialty.name
 		valueField.text   = specialty.value.description
@@ -28,21 +28,21 @@ class EditSpecialtyViewController : UIViewController
 		}
     }
     
-	override func viewWillAppear(animated: Bool)
+	override func viewWillAppear(_ animated: Bool)
 	{
         super.viewWillAppear(animated)
         configureView()
     }
     
     
-    override func viewDidDisappear(animated: Bool)
+    override func viewDidDisappear(_ animated: Bool)
 	{
         let spec = specialty
-        spec.name = nameField.text
-		if let s = valueField.text, i = Int(s) {
-        spec.value = Int16(i)
+        spec?.name = nameField.text
+		if let s = valueField.text, let i = Int(s) {
+        spec?.value = Int16(i)
 		} else {
-			spec.value = 0
+			spec?.value = 0
 		}
         super.viewDidDisappear(animated)
     }

@@ -33,25 +33,25 @@ class UseStatLabel : UIControl
 
 	// MARK: Overrides
 
-    override func drawRect(rect: CGRect)
+    override func draw(_ rect: CGRect)
 	{
         let bounds = self.bounds
         let ctx = UIGraphicsGetCurrentContext()
 
-        let foreColour = UIColor.blackColor(), backColour = UIColor(red:0.25, green:0.25, blue:0.75, alpha:0.25)
-        CGContextSetStrokeColorWithColor(ctx, foreColour.CGColor)
+        let foreColour = UIColor.black, backColour = UIColor(red:0.25, green:0.25, blue:0.75, alpha:0.25)
+        ctx?.setStrokeColor(foreColour.cgColor)
         
-        if selected {
-            CGContextSaveGState(ctx)
-            CGContextSetFillColorWithColor(ctx, backColour.CGColor)
-            CGContextFillRect(ctx, bounds)
-            CGContextStrokeRect(ctx, bounds)
-            CGContextRestoreGState(ctx)
+        if isSelected {
+            ctx?.saveGState()
+            ctx?.setFillColor(backColour.cgColor)
+            ctx?.fill(bounds)
+            ctx?.stroke(bounds)
+            ctx?.restoreGState()
         }
         
-        let insetBounds = CGRectInset(bounds, 1, 1)
+        let insetBounds = bounds.insetBy(dx: 1, dy: 1)
 		let text = "\(name): \(value)"
-        text.drawInRect(insetBounds, withAttributes: [NSFontAttributeName : UIFont.systemFontOfSize(17)])
+        text.draw(in: insetBounds, withAttributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 17)])
     }
     
     

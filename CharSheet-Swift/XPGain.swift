@@ -50,19 +50,19 @@ extension XPGain: XMLClient
 {
     func asXML() -> DDXMLElement
 	{
-        func attribute(name: Attribute, value: String) -> DDXMLNode
+        func attribute(_ name: Attribute, value: String) -> DDXMLNode
 		{
-			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
+			return DDXMLNode.attribute(withName: name.rawValue, stringValue: value) as! DDXMLNode
 		}
-        let this = DDXMLElement.elementWithName(XP_ENTRY) as! DDXMLElement
+        let this = DDXMLElement.element(withName: XP_ENTRY) as! DDXMLElement
         this.addAttribute( attribute( .AMOUNT, value: self.amount.description) )
         this.addAttribute( attribute( .REASON, value: self.reason!) )
         return this
     }
     
-    func updateFromXML(element: DDXMLElement) throws
+    func updateFromXML(_ element: DDXMLElement) throws
 	{
-        try XMLSupport.validateElementName(element.name, expectedName: XP_ENTRY)
+		try XMLSupport.validateElement(name: element.name, expectedName: XP_ENTRY)
 
 		for attrNode in (element.attributes as! [DDXMLNode]) {
             if let nodeName = Attribute(rawValue: attrNode.name) {

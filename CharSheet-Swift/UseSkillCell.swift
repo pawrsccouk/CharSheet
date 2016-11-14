@@ -17,7 +17,7 @@ class UseSkillCell : UICollectionViewCell
 	/// This enum specifies those label tags.
     enum CellTags : Int
 	{
-        case Name = 1, Value, Specialties, Ticks
+        case name = 1, value, specialties, ticks
     }
     
     weak var _contentView: UIView?
@@ -32,15 +32,15 @@ class UseSkillCell : UICollectionViewCell
                 }
                 
                 if let newSkill = skill {
-					["name", "value"].forEach { newSkill.addObserver(self, forKeyPath: $0, options: .New, context: nil) }
+					["name", "value"].forEach { newSkill.addObserver(self, forKeyPath: $0, options: .new, context: nil) }
 
-                    setLabelViaTag(.Name       , value: newSkill.name ?? "")
-                    setLabelViaTag(.Value      , value: newSkill.value.description)
-                    setLabelViaTag(.Specialties, value: newSkill.specialtiesAsString)
+                    setLabelViaTag(.name       , value: newSkill.name ?? "")
+                    setLabelViaTag(.value      , value: newSkill.value.description)
+                    setLabelViaTag(.specialties, value: newSkill.specialtiesAsString)
                     
-					assert(self.viewWithTag(CellTags.Ticks.rawValue)?.isKindOfClass(TicksView) ?? false,
-						"View \(self.viewWithTag(CellTags.Ticks.rawValue)) is not a TicksView object")
-					guard let tv = self.viewWithTag(CellTags.Ticks.rawValue) as? TicksView  else { fatalError("TicksView not found") }
+					assert(self.viewWithTag(CellTags.ticks.rawValue)?.isKind(of: TicksView.self) ?? false,
+						"View \(self.viewWithTag(CellTags.ticks.rawValue)) is not a TicksView object")
+					guard let tv = self.viewWithTag(CellTags.ticks.rawValue) as? TicksView  else { fatalError("TicksView not found") }
 					tv.skill = newSkill
                 }
                 setNeedsDisplay()
@@ -48,7 +48,7 @@ class UseSkillCell : UICollectionViewCell
         }
     }
 
-	let notificationCentre = NSNotificationCenter.defaultCenter()
+	let notificationCentre = NotificationCenter.default
 
 	// MARK: Overrides
     
@@ -57,15 +57,15 @@ class UseSkillCell : UICollectionViewCell
         super.init(frame:frame)
 
 		// Update the text on the skill box whenever the specialties change.
-		notificationCentre.addObserverForName(Skill.specialtiesChangedNotification, object: nil, queue: nil) {
+		notificationCentre.addObserver(forName: NSNotification.Name(rawValue: Skill.specialtiesChangedNotification), object: nil, queue: nil) {
 			(_) in
-			self.setLabelViaTag(.Specialties, value: self.skill.specialtiesAsString)
+			self.setLabelViaTag(.specialties, value: self.skill.specialtiesAsString)
 		}
 
-        var arrayOfViews = NSBundle.mainBundle().loadNibNamed("UseSkillCellView", owner:self, options:nil)
+        var arrayOfViews = Bundle.main.loadNibNamed("UseSkillCellView", owner:self, options:nil)
         
-        if arrayOfViews.count >= 1 {
-			if let content = arrayOfViews[0] as? UIView {
+        if (arrayOfViews?.count)! >= 1 {
+			if let content = arrayOfViews?[0] as? UIView {
 				contentView.addSubview(content)
 			}
             selectedBackgroundView = UIView(frame:frame)
@@ -83,13 +83,13 @@ class UseSkillCell : UICollectionViewCell
 		notificationCentre.removeObserver(self)
 	}
 
-    override func observeValueForKeyPath(keyPath: String?
-		, 					     ofObject object: AnyObject?
-		,								  change: [String: AnyObject]?
-		,								 context: UnsafeMutablePointer<Void>)
+    override func observeValue(forKeyPath keyPath: String?
+		, 					     of object: Any?
+		,								  change: [NSKeyValueChangeKey: Any]?
+		,								 context: UnsafeMutableRawPointer?)
 	{
-        if      keyPath == "name"        { setLabelViaTag(.Name       , value: skill.name ?? "") }
-        else if keyPath == "value"       { setLabelViaTag(.Value      , value: skill.value.description) }
+        if      keyPath == "name"        { setLabelViaTag(.name       , value: skill.name ?? "") }
+        else if keyPath == "value"       { setLabelViaTag(.value      , value: skill.value.description) }
     }
     
     
@@ -99,24 +99,24 @@ class UseSkillCell : UICollectionViewCell
     }
     
     // Underline the skill box.
-    override func drawRect(rect: CGRect)
+    override func draw(_ rect: CGRect)
 	{
-        super.drawRect(rect)
+        super.draw(rect)
         
         // White background.
-        UIColor.whiteColor().set()
+        UIColor.white.set()
         UIBezierPath(rect:rect).fill()
         
         // Grey underline.
-        UIColor.lightGrayColor().set()
+        UIColor.lightGray.set()
         let path = UIBezierPath()
         
         let bounds = self.bounds
-        let lineOrigin = CGPointMake(bounds.origin.x, bounds.origin.y + bounds.size.height)
-        let lineEnd    = CGPointMake(lineOrigin.x + bounds.size.width, lineOrigin.y)
+        let lineOrigin = CGPoint(x: bounds.origin.x, y: bounds.origin.y + bounds.size.height)
+        let lineEnd    = CGPoint(x: lineOrigin.x + bounds.size.width, y: lineOrigin.y)
         
-        path.moveToPoint(lineOrigin)
-        path.addLineToPoint(lineEnd)
+        path.move(to: lineOrigin)
+        path.addLine(to: lineEnd)
         path.stroke()
     }
 
@@ -130,7 +130,7 @@ class UseSkillCell : UICollectionViewCell
 	/// - parameter tag: The tag of one of the labels in this cell.
 	/// - parameter value: The text which the control will be set to display.
 
-    private func setLabelViaTag(tag: CellTags, value: String)
+    fileprivate func setLabelViaTag(_ tag: CellTags, value: String)
 	{
         let view = viewWithTag(tag.rawValue)
         assert(view != nil)

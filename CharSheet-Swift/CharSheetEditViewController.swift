@@ -41,32 +41,32 @@ class CharSheetEditViewController : CharSheetViewController
 
 	// MARK: IB Actions
 
-    @IBAction func editDone(sender: AnyObject?)
+    @IBAction func editDone(_ sender: AnyObject?)
 	{
         configureData()
-		NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
-		presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
+		NotificationCenter.default.post(name: Notification.Name(rawValue: "SaveChanges"), object: nil)
+		presentingViewController?.dismiss(animated: true, completion:nil)
     }
     
-    @IBAction func addSkill(sender: AnyObject?)
+    @IBAction func addSkill(_ sender: AnyObject?)
 	{
-        charSheet.appendSkill()
+        let _ = charSheet.appendSkill()
         skillsTableView.reloadData()
     }
 
     // MARK: Overrides
     
-    override func viewWillAppear(animated: Bool)
+    override func viewWillAppear(_ animated: Bool)
 	{
         super.viewWillAppear(animated)
         configureView()
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
 	{
         if segue.identifier == "AddSkillPopup" {
             // Connect the Edit Skill view controller to the skill it is editing.
-            let asnc = segue.destinationViewController as! UINavigationController
+            let asnc = segue.destination as! UINavigationController
             let esc = asnc.childViewControllers[0] as! EditSkillViewController
             esc.skill = charSheet.appendSkill()
             esc.completionCallback = { self.skillsTableView.reloadData() }
@@ -76,7 +76,7 @@ class CharSheetEditViewController : CharSheetViewController
     // MARK: Private helper functions
     
 	/// Copies data in the model into the various UI controls.
-    private func configureView()
+    fileprivate func configureView()
 	{
 		let name = charSheet.name ?? ""
         navigationItem.title      = "Edit - \(name)"
@@ -106,7 +106,7 @@ class CharSheetEditViewController : CharSheetViewController
     }
 
 	/// Copies the data in the various UI controls back into the model.
-    private func configureData()
+    fileprivate func configureData()
 	{
         charSheet.name   = charNameTextField.text
         charSheet.game   = gameTextField.text
@@ -137,25 +137,25 @@ class CharSheetEditViewController : CharSheetViewController
 
 extension CharSheetEditViewController: UITableViewDataSource
 {
-    func tableView(           tableView: UITableView,
-		cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    func tableView(           _ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath) -> UITableViewCell
 	{
-        let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID, forIndexPath: indexPath) as! EditSkillCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: CELL_ID, for: indexPath) as! EditSkillCell
         let skill = charSheet.skills[indexPath.row] as! Skill
         cell.name = skill.name ?? "No name"
         cell.value = skill.value
         cell.specialties = skill.specialtiesAsString
-        cell.editingAccessoryType = .DetailDisclosureButton
+        cell.editingAccessoryType = .detailDisclosureButton
         return cell
     }
 
-    func tableView(         tableView: UITableView,
+    func tableView(         _ tableView: UITableView,
 		numberOfRowsInSection section: Int) -> Int
 	{
         return charSheet.skills.count
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    func numberOfSections(in tableView: UITableView) -> Int
 	{
         return 1
     }
@@ -165,37 +165,37 @@ extension CharSheetEditViewController: UITableViewDataSource
 
 extension CharSheetEditViewController: UITableViewDelegate
 {
-    func tableView(           tableView: UITableView,
-		commitEditingStyle editingStyle: UITableViewCellEditingStyle,
-		forRowAtIndexPath     indexPath: NSIndexPath)
+    func tableView(           _ tableView: UITableView,
+		commit editingStyle: UITableViewCellEditingStyle,
+		forRowAt     indexPath: IndexPath)
 	{
-        if editingStyle == .Delete {
+        if editingStyle == .delete {
             charSheet.removeSkillAtIndex(indexPath.row)
-            skillsTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            skillsTableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
-    func tableView(              tableView: UITableView,
-		moveRowAtIndexPath sourceIndexPath: NSIndexPath,
-		toIndexPath   destinationIndexPath: NSIndexPath)
+    func tableView(              _ tableView: UITableView,
+		moveRowAt sourceIndexPath: IndexPath,
+		to   destinationIndexPath: IndexPath)
 	{
         // Table view has already moved the row, so we just need to update the model.
-        charSheet.skills.moveObjectsAtIndexes(NSIndexSet(index: sourceIndexPath.row), toIndex:destinationIndexPath.row)
+        charSheet.skills.moveObjects(at: IndexSet(integer: sourceIndexPath.row), to:destinationIndexPath.row)
     }
     
     
-    func tableView(                              tableView: UITableView,
-		accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath)
+    func tableView(                              _ tableView: UITableView,
+		accessoryButtonTappedForRowWith indexPath: IndexPath)
 	{
         let esb = StoryboardManager.sharedInstance().editStoryboard
 		let navId = "EditSkillNavigationController"
-        let esnc = esb.instantiateViewControllerWithIdentifier(navId) as! UINavigationController
+        let esnc = esb.instantiateViewController(withIdentifier: navId) as! UINavigationController
         
         let editSkillViewController = esnc.childViewControllers[0] as! EditSkillViewController
         editSkillViewController.skill = charSheet.skills[indexPath.row] as! Skill
         editSkillViewController.completionCallback = { self.skillsTableView.reloadData() }
-        esnc.modalPresentationStyle = .FormSheet
-        esnc.modalTransitionStyle = .CrossDissolve
-		navigationController?.presentViewController(esnc, animated: true, completion:nil)
+        esnc.modalPresentationStyle = .formSheet
+        esnc.modalTransitionStyle = .crossDissolve
+		navigationController?.present(esnc, animated: true, completion:nil)
     }
 }

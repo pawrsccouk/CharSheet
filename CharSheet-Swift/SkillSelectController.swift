@@ -36,7 +36,7 @@ class SkillSelectController : UIViewController
     var skillsToPick = MutableOrderedSet<Skill>()
 
 	/// Type of a callback function which passes in the selected skill and specialty.
-    typealias SelectionChanged = (selectedSkill: Skill, selectedSpecialty: Specialty) -> Void
+    typealias SelectionChanged = (_ selectedSkill: Skill, _ selectedSpecialty: Specialty) -> Void
 
 	/// Callback if the selection changes.
     var  selectionChangedBlock: SelectionChanged?
@@ -50,14 +50,14 @@ class SkillSelectController : UIViewController
 	/// - returns: A new SkillSelectController.
     class func skillSelectControllerFromNib() -> SkillSelectController
 	{
-        let allObjects = NSBundle.mainBundle().loadNibNamed("SkillSelectView", owner: self, options: nil)
-        return allObjects[0] as! SkillSelectController
+        let allObjects = Bundle.main.loadNibNamed("SkillSelectView", owner: self, options: nil)
+        return allObjects![0] as! SkillSelectController
     }
 
 
 	// MARK: Overrides
 
-    override func viewWillAppear(animated: Bool)
+    override func viewWillAppear(_ animated: Bool)
 	{
         super.viewWillAppear(animated)
         
@@ -69,7 +69,7 @@ class SkillSelectController : UIViewController
             skillPicker.selectRow(indexOfObject + 1, inComponent: 0, animated: false)
         
             if let spec = selectedSpecialty {
-                let indexOfObject = skill.specialties.indexOfObject(spec)
+                let indexOfObject = skill.specialties.index(of: spec)
                 assert(indexOfObject != NSNotFound,
 					"Specialty \(spec) is not in the list of specialties \(skill.specialties) for skill \(skill)")
 				specialtyPicker.selectRow(indexOfObject + 1, inComponent: 0, animated: false)
@@ -87,12 +87,12 @@ class SkillSelectController : UIViewController
 
 extension SkillSelectController: UIPickerViewDataSource
 {
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int
+    func numberOfComponents(in pickerView: UIPickerView) -> Int
 	{
         return 1
     }
 
-    func pickerView(           pickerView: UIPickerView,
+    func pickerView(           _ pickerView: UIPickerView,
 		numberOfRowsInComponent component: NSInteger) -> Int
     {
 		// Both pickers have an extra row "None" in their list.
@@ -109,7 +109,7 @@ extension SkillSelectController: UIPickerViewDataSource
 
 extension SkillSelectController: UIPickerViewDelegate
 {
-    func pickerView(pickerView: UIPickerView,
+    func pickerView(_ pickerView: UIPickerView,
 		titleForRow        row: Int,
 		forComponent component: Int) -> String?
 	{
@@ -136,7 +136,7 @@ extension SkillSelectController: UIPickerViewDelegate
 	}
 
     
-    func pickerView(pickerView: UIPickerView,
+    func pickerView(_ pickerView: UIPickerView,
 		didSelectRow       row: Int,
 		inComponent  component: Int)
 	{

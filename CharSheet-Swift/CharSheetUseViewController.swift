@@ -36,14 +36,14 @@ final class CharSheetUseViewController : CharSheetViewController
 
 	// MARK: IB Actions
 
-    @IBAction func backgroundSelected(sender: AnyObject?)
+    @IBAction func backgroundSelected(_ sender: AnyObject?)
 	{
         deselectEveryStat()
         deselectEverySkill()
     }
     
     
-    @IBAction func editCharSheet(sender: AnyObject?)
+    @IBAction func editCharSheet(_ sender: AnyObject?)
 	{
         // Load the edit view, edit view controller and navigation item all from the "Edit" storyboard file.
         let editStoryboard = StoryboardManager.sharedInstance().editStoryboard
@@ -52,20 +52,20 @@ final class CharSheetUseViewController : CharSheetViewController
         
         charSheetEditViewController.managedObjectContext = managedObjectContext
         charSheetEditViewController.charSheet = charSheet
-		navigationController?.presentViewController(editNavigationController, animated:true, completion:nil)
+		navigationController?.present(editNavigationController, animated:true, completion:nil)
     }
 
 
-	@IBAction func exportEmail(sender: AnyObject?)
+	@IBAction func exportEmail(_ sender: AnyObject?)
 	{
 		// Abort if there are no email accounts on this device.
 		if !MFMailComposeViewController.canSendMail() {
 			let alertView = UIAlertController(
 				title         : "Export via email",
 				message       :"This device is not set up to send email.",
-				preferredStyle: .Alert)
-			alertView.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-			presentViewController(alertView, animated: true, completion: nil)
+				preferredStyle: .alert)
+			alertView.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+			present(alertView, animated: true, completion: nil)
 			return
 		}
 
@@ -73,30 +73,27 @@ final class CharSheetUseViewController : CharSheetViewController
 			try exportToEmail()
 		}
 		catch let error as NSError {
-			let localisedDescription = error.localizedDescription ?? "Unknown error"
-			let alertView = UIAlertController(
-				title         : "Error converting \(charSheet.name) to XML",
-				message       : localisedDescription,
-				preferredStyle: .Alert)
-			alertView.addAction(UIAlertAction(title: "Close", style: .Default, handler: nil))
-			presentViewController(alertView, animated: true, completion: nil)
+			let title = "Error converting \(charSheet.name) to XML"
+			let alertView = UIAlertController(title: title, message: error.localizedDescription, preferredStyle: .alert)
+			alertView.addAction(UIAlertAction(title: "Close", style: .default, handler: nil))
+			present(alertView, animated: true, completion: nil)
 		}
 	}
 
 
-	@IBAction func setHealth(sender: AnyObject?)
+	@IBAction func setHealth(_ sender: AnyObject?)
 	{
 		NSLog("setHealth(\(sender))")	// TODO: In future this will be a segue.
 	}
 
 
-	@IBAction func statSelected(sender: AnyObject?)
+	@IBAction func statSelected(_ sender: AnyObject?)
 	{
 		assert(sender as? UseStatLabel != nil, "Sender \(sender) is nil or not a label.")
 		if let statLabel = sender as? UseStatLabel {
-			assert(statLabel.isKindOfClass(UseStatLabel), "Sender [\(statLabel)] is not of class UseStatLabel")
+			assert(statLabel.isKind(of: UseStatLabel.self), "Sender [\(statLabel)] is not of class UseStatLabel")
 			deselectEveryStat()
-			statLabel.selected = true
+			statLabel.isSelected = true
 			statLabel.setNeedsDisplay()
 		}
 	}
@@ -129,7 +126,7 @@ final class CharSheetUseViewController : CharSheetViewController
     // MARK: Private Methods
 
 	/// Present a mail composer view with a default email message and the contents of the character exported as XML into an attachment.
-	private func exportToEmail() throws
+	fileprivate func exportToEmail() throws
 	{
 		let bodyHTMLFormat =
 		"<html>\n" +
@@ -146,39 +143,39 @@ final class CharSheetUseViewController : CharSheetViewController
 		assert(MFMailComposeViewController.canSendMail(), "Device cannot send mail.")
 		let value = try charSheet.exportToXML()
 		charSheet.name = charSheet.name ?? "Unknown"
-		let bodyHTML = String(format: bodyHTMLFormat, charSheet.name!, charSheet.name!, NSDate())
+		let bodyHTML = String(format: bodyHTMLFormat, charSheet.name!, charSheet.name!, Date() as CVarArg)
 
 		// Present a mail compose view with the data as an attachment.
 		let mailVC = MFMailComposeViewController()
 		mailVC.mailComposeDelegate = self
 		mailVC.setSubject("\(charSheet.name!) exported from CharSheet.")
 		mailVC.setMessageBody(bodyHTML, isHTML:true)
-		mailVC.addAttachmentData(value,
+		mailVC.addAttachmentData(value as Data,
 			mimeType: "application/charsheet+xml",
 			fileName: "\(charSheet.name!).charSheet")
-		presentViewController(mailVC, animated:true, completion:nil)
+		present(mailVC, animated:true, completion:nil)
 	}
 
 	/// Given an index path return the Skill object that corresponds to the index in the skills array.
-	private func skillForIndexPath(indexPath: NSIndexPath) -> Skill
+	fileprivate func skillForIndexPath(_ indexPath: IndexPath) -> Skill
 	{
-		assert(indexPath.length == 2 && indexPath.indexAtPosition(0) == 0, "Invalid index path \(indexPath)")
-		return charSheet.skills.objectAtIndex(indexPath.indexAtPosition(1)) as! Skill
+		assert(indexPath.count == 2 && indexPath[0] == 0, "Invalid index path \(indexPath)")
+		return charSheet.skills.object(at: indexPath[1]) as! Skill
 	}
 
 
 
-	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?)
 	{
-		func prepareDieRollView(dieRollViewController: DieRollViewController)
+		func prepareDieRollView(_ dieRollViewController: DieRollViewController)
 		{
 			dieRollViewController.addTickToSkillCallback = { $0.addTick() }
 
-			let selectedIndexPaths = skillsCollectionView.indexPathsForSelectedItems() ?? [NSIndexPath]()
+			let selectedIndexPaths = skillsCollectionView.indexPathsForSelectedItems ?? [IndexPath]()
 			let selectedSkills = selectedIndexPaths.map{ self.skillForIndexPath($0) }
 
 			var statData: DieRoll.StatInfo? = nil
-			if let selectedLabel = statButtons.filter({ $0.selected }).first {
+			if let selectedLabel = statButtons.filter({ $0.isSelected }).first {
 				statData = (selectedLabel.name, selectedLabel.value)
 			}
 			dieRollViewController.setInitialStat(statData, skills:selectedSkills)
@@ -186,9 +183,9 @@ final class CharSheetUseViewController : CharSheetViewController
 
 		var newViewController: CharSheetViewController!
 		if segue.identifier == "SpellTargets" {		// SpellTargets is a popover with no nav controller.
-			newViewController = segue.destinationViewController as! CharSheetViewController
+			newViewController = segue.destination as! CharSheetViewController
 		} else {									// All other controllers are embedded in a navigation controller.
-			let navigationController = segue.destinationViewController as! UINavigationController
+			let navigationController = segue.destination as! UINavigationController
 			newViewController = navigationController.childViewControllers[0] as! CharSheetViewController
 		}
 			// Get the new controller and set some common properties.
@@ -203,18 +200,19 @@ final class CharSheetUseViewController : CharSheetViewController
     //MARK: Managing the detail item
 
 	/// Update the user interface with data from the character sheet supplied.
-    private func configureView()
+    fileprivate func configureView()
 	{
         if let sheet = charSheet {
 			// Sort the skills so the set in memory matches the one in the DB.
 			// I'll update the 'order' attribute when I edit the skills in the Edit View Controller.
-			sheet.skills.sortUsingDescriptors([NSSortDescriptor(key: "order", ascending: true)])
+			sheet.skills.sort(using: [NSSortDescriptor(key: "order", ascending: true)])
 
             navigationItem.title = sheet.name
 
 			// Stat buttons. The name in the button should match the name of the stat, so use KVO to get it.
 			for b in statButtons {
-				b.value = Int16(sheet.valueForKey(b.name.lowercaseString)!.integerValue)
+				let val = sheet.value(forKey: b.name.lowercased()) as AnyObject?
+				b.value = Int16(val?.intValue ?? 0)
 			}
 
             // Misc text labels.
@@ -224,7 +222,7 @@ final class CharSheetUseViewController : CharSheetViewController
             experienceLabel.text = sheet.experience.description
             meleeAddsLabel.text  = sheet.meleeAdds.description
             rangedAddsLabel.text = sheet.rangedAdds.description
-            setHealthBtn.setTitle(sheet.health, forState: .Normal)
+            setHealthBtn.setTitle(sheet.health, for: UIControlState())
         }
 		else {	// Disable the toolbar controls if there are no characters selected.
 
@@ -237,44 +235,44 @@ final class CharSheetUseViewController : CharSheetViewController
 	/// Enable or disable the toolbar buttons.
 	/// 
 	/// - parameter enable: If true, enable the buttons, otherwise disable them.
-	private func enableToolbarButtons(enable: Bool)
+	fileprivate func enableToolbarButtons(_ enable: Bool)
 	{
 		guard let items = toolbar.items else { return }
 		for btn in items {
-			btn.enabled = enable
+			btn.isEnabled = enable
 		}
 	}
 
     override func viewDidLoad()
 	{
 		super.viewDidLoad()
-        skillsCollectionView.registerClass(UseSkillCell.self, forCellWithReuseIdentifier:COLLECTION_CELL_ID)
+        skillsCollectionView.register(UseSkillCell.self, forCellWithReuseIdentifier:COLLECTION_CELL_ID)
     }
 
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		// If we are about to display an empty char sheet, and we have a default then display the default instead.
-		if let cs = defaultCharSheet where charSheet == nil {
+		if let cs = defaultCharSheet, charSheet == nil {
 			charSheet = cs
 		}
 		configureView()
 		enableToolbarButtons(charSheet != nil)
 	}
 
-	private func deselectEveryStat()
+	fileprivate func deselectEveryStat()
 	{
-		for statLabel in statButtons.filter({ $0.selected }) {
-			statLabel.selected = false
+		for statLabel in statButtons.filter({ $0.isSelected }) {
+			statLabel.isSelected = false
 			statLabel.setNeedsDisplay()
 		}
 	}
 
-	private func deselectEverySkill()
+	fileprivate func deselectEverySkill()
 	{
-		if let ips = skillsCollectionView.indexPathsForSelectedItems() {
+		if let ips = skillsCollectionView.indexPathsForSelectedItems {
 			for selectionPath in ips {
-				skillsCollectionView.deselectItemAtIndexPath(selectionPath, animated:true)
+				skillsCollectionView.deselectItem(at: selectionPath, animated:true)
 			}
 		}
 	}
@@ -284,17 +282,17 @@ final class CharSheetUseViewController : CharSheetViewController
 
 extension CharSheetUseViewController: UICollectionViewDataSource
 {
-	func collectionView(  collectionView: UICollectionView,
-		cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell
+	func collectionView(  _ collectionView: UICollectionView,
+		cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
 	{
-			let cell = skillsCollectionView.dequeueReusableCellWithReuseIdentifier(
-				COLLECTION_CELL_ID,
-				forIndexPath:indexPath) as! UseSkillCell
+			let cell = skillsCollectionView.dequeueReusableCell(
+				withReuseIdentifier: COLLECTION_CELL_ID,
+				for:indexPath) as! UseSkillCell
 			cell.skill = skillForIndexPath(indexPath)
 			return cell
 	}
 
-    func collectionView(collectionView: UICollectionView,
+    func collectionView(_ collectionView: UICollectionView,
 		numberOfItemsInSection section: Int) -> Int
 	{
         return charSheet?.skills.count ?? 0
@@ -306,23 +304,19 @@ extension CharSheetUseViewController: UICollectionViewDataSource
 
 extension CharSheetUseViewController: MFMailComposeViewControllerDelegate
 {
-    func mailComposeController(controller: MFMailComposeViewController,
-		didFinishWithResult    result    : MFMailComposeResult,
-		error                            : NSError?) {
-
-        NSLog("Mail composer finished. Result: %d, error: %@", result.rawValue, error ?? "nil")
-        
-        controller.dismissViewControllerAnimated(true, completion:nil)
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?)
+	{
+        controller.dismiss(animated: true, completion:nil)
         
         // If something went wrong, produce an alert to say what.
-        if (result.rawValue == MFMailComposeResultFailed.rawValue) || (error != nil) {
+        if (result.rawValue == MFMailComposeResult.failed.rawValue) || (error != nil) {
             let localisedDescription = error?.localizedDescription ?? "No error given"
             let alertView = UIAlertController(
 				title          : "Error sending email",
 				message        : localisedDescription,
-				preferredStyle : .Alert)
-            alertView.addAction(UIAlertAction(title: "Close", style: .Default, handler:nil))
-            presentViewController(alertView, animated:true, completion:nil)
+				preferredStyle : .alert)
+            alertView.addAction(UIAlertAction(title: "Close", style: .default, handler:nil))
+            present(alertView, animated:true, completion:nil)
         }
     }
 }

@@ -48,19 +48,19 @@ extension Specialty: XMLClient
 {
     func asXML() -> DDXMLElement
 	{
-        func attribute(name: Attribute, value: String) -> DDXMLNode
+        func attribute(_ name: Attribute, value: String) -> DDXMLNode
 		{
-			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
+			return DDXMLNode.attribute(withName: name.rawValue, stringValue: value) as! DDXMLNode
 		}
-		let this = DDXMLElement.elementWithName(SPECIALTY) as! DDXMLElement
+		let this = DDXMLElement.element(withName: SPECIALTY) as! DDXMLElement
         this.addAttribute( attribute(.NAME , value: self.name ?? "No name") )
         this.addAttribute( attribute(.VALUE, value: self.value.description) )
         return this
     }
 
-	func updateFromXML(element: DDXMLElement) throws
+	func updateFromXML(_ element: DDXMLElement) throws
 	{
-		try XMLSupport.validateElementName(element.name, expectedName: SPECIALTY)
+		try XMLSupport.validateElement(name: element.name, expectedName: SPECIALTY)
 
 		for attrNode in (element.attributes as! [DDXMLNode]) {
             if let nodeName = Attribute(rawValue: attrNode.name) {

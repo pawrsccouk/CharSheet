@@ -620,7 +620,7 @@ static void MarkDeath(void *xmlPtr, DDXMLNode *wrapper);
 /**
  * Returns an immutable array containing the child nodes of the receiver (as DDXMLNode objects).
 **/
-- (NSArray *)children
+- (NSArray<DDXMLNode*> *)children
 {
 	// Note: DDXMLNamespaceNode overrides this method
 	
@@ -633,7 +633,7 @@ static void MarkDeath(void *xmlPtr, DDXMLNode *wrapper);
 		return nil;
 	}
 	
-	NSMutableArray *result = [NSMutableArray array];
+	NSMutableArray<DDXMLNode*> *result = [NSMutableArray array];
 	
 	xmlNodePtr child = ((xmlStdPtr)genericPtr)->children;
 	while (child != NULL)
@@ -2832,7 +2832,7 @@ BOOL DDXMLIsZombie(void *xmlPtr, DDXMLNode *wrapper)
 - (NSUInteger)childCount {
 	return 0;
 }
-- (NSArray *)children {
+- (NSArray<DDXMLNode*> *)children {
 	return [NSArray array];
 }
 - (DDXMLNode *)childAtIndex:(NSUInteger)index {

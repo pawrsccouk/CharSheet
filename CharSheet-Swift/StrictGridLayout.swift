@@ -19,9 +19,9 @@ class StrictGridLayout : UICollectionViewLayout
 {
 	// MARK: Private Data
 
-    private var itemCount = 0
-    private var contentSize = CGSizeZero
-    private var collectionItemAttributes: [UICollectionViewLayoutAttributes] = []
+    fileprivate var itemCount = 0
+    fileprivate var contentSize = CGSize.zero
+    fileprivate var collectionItemAttributes: [UICollectionViewLayoutAttributes] = []
 
 	// MARK: Constants.
 
@@ -29,7 +29,7 @@ class StrictGridLayout : UICollectionViewLayout
     let columns = 2
     
 	/// Size of each cell.
-    let cellSize = CGSizeMake(350, 100)
+    let cellSize = CGSize(width: 350, height: 100)
     
 	/// Spacing between cells in X and Y dimensions.
     let cellSpacing = CGSize(width: 0,  height: 20)
@@ -39,45 +39,45 @@ class StrictGridLayout : UICollectionViewLayout
 
 	// MARK: Overrides
 
-    override func prepareLayout()
+    override func prepare()
 	{
-		func newRowForColumn(currentColumn: Int , maxColumns: Int ) -> Bool
+		func newRowForColumn(_ currentColumn: Int , maxColumns: Int ) -> Bool
 		{
 			return currentColumn >= maxColumns
 		}
 
-		func attributesForIndex(i: Int, withFrame itemFrame: CGRect) -> UICollectionViewLayoutAttributes
+		func attributesForIndex(_ i: Int, withFrame itemFrame: CGRect) -> UICollectionViewLayoutAttributes
 		{
-			let indexPath = NSIndexPath(forItem: i, inSection:0)
-			let attributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
+			let indexPath = IndexPath(item: i, section:0)
+			let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
 			attributes.frame = itemFrame
 			return attributes
 		}
 
-		func rectForNewRow(oldFrame: CGRect,  cellSize: CGSize,  cellSpacing: CGSize,  contentInsets: CGSize) -> CGRect
+		func rectForNewRow(_ oldFrame: CGRect,  cellSize: CGSize,  cellSpacing: CGSize,  contentInsets: CGSize) -> CGRect
 		{
-			return CGRectMake(contentInsets.width, oldFrame.origin.y + cellSize.height + cellSpacing.height, oldFrame.size.width, oldFrame.size.height)
+			return CGRect(x: contentInsets.width, y: oldFrame.origin.y + cellSize.height + cellSpacing.height, width: oldFrame.size.width, height: oldFrame.size.height)
 		}
 
-		func rectForNewColumn(oldFrame: CGRect, cellSize: CGSize, cellSpacing: CGSize) -> CGRect
+		func rectForNewColumn(_ oldFrame: CGRect, cellSize: CGSize, cellSpacing: CGSize) -> CGRect
 		{
-			return CGRectMake(oldFrame.origin.x + cellSize.width + cellSpacing.width, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height)
+			return CGRect(x: oldFrame.origin.x + cellSize.width + cellSpacing.width, y: oldFrame.origin.y, width: oldFrame.size.width, height: oldFrame.size.height)
 		}
 
-		func getContentSize(itemCount: Int, columns: Int, contentInsets: CGSize, collectionItemAttributes: NSArray) -> CGSize
+		func getContentSize(_ itemCount: Int, columns: Int, contentInsets: CGSize, collectionItemAttributes: NSArray) -> CGSize
 		{
 			assert(columns > 0);
-			if itemCount == 0 { return CGSizeZero }
+			if itemCount == 0 { return CGSize.zero }
 
 			// Get one of the rightmost cells and use its bounds to get the width of the content as a whole.
 			// Get the last cell and use it's bounds to get the height.
 			let rightmostItemIndex = min(itemCount - 1, columns - 1)
 			let bottomItemIndex    = itemCount - 1
 
-			let rightmostFrame = collectionItemAttributes[rightmostItemIndex].frame
-			let bottomFrame    = collectionItemAttributes[bottomItemIndex].frame
+			let rightmostFrame = (collectionItemAttributes[rightmostItemIndex] as AnyObject).frame
+			let bottomFrame    = (collectionItemAttributes[bottomItemIndex] as AnyObject).frame
 
-			return CGSizeMake(CGRectGetMaxX(rightmostFrame) + (contentInsets.width  * 2), CGRectGetMaxY(bottomFrame) + (contentInsets.height * 2))
+			return CGSize(width: rightmostFrame!.maxX + (contentInsets.width  * 2), height: bottomFrame!.maxY + (contentInsets.height * 2))
 		}
 
 
@@ -88,12 +88,12 @@ class StrictGridLayout : UICollectionViewLayout
 		guard let collectionView = self.collectionView else { return }
 		assert((cellSize.width > 0 && cellSize.height > 0),
 		       "Cell size [\(cellSize.width), \(cellSize.height)] must not be zero in either dimension");
-		assert(collectionView.numberOfSections() == 1,
+		assert(collectionView.numberOfSections == 1,
 		       "The StrictGridLayout only handles single section collection views")
-		itemCount = collectionView.numberOfItemsInSection(0)
+		itemCount = collectionView.numberOfItems(inSection: 0)
 		collectionItemAttributes = [UICollectionViewLayoutAttributes]()
 
-		var itemFrame = CGRectMake(contentInsets.width, contentInsets.height, cellSize.width, cellSize.height)
+		var itemFrame = CGRect(x: contentInsets.width, y: contentInsets.height, width: cellSize.width, height: cellSize.height)
 		var itemInColumn = 0;
 		// for var i = 0; i < itemCount; ++i
 		for i in 0..<itemCount {
@@ -113,25 +113,25 @@ class StrictGridLayout : UICollectionViewLayout
 			}
 		}
 
-		contentSize = getContentSize(itemCount, columns: columns, contentInsets: contentInsets, collectionItemAttributes: collectionItemAttributes)
+		contentSize = getContentSize(itemCount, columns: columns, contentInsets: contentInsets, collectionItemAttributes: collectionItemAttributes as NSArray)
 	}
 
-    override func collectionViewContentSize() -> CGSize
+    override var collectionViewContentSize : CGSize
 	{
         return contentSize
     }
 
-    override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]
 	{
-        return collectionItemAttributes.filter { object in CGRectIntersectsRect(rect, object.frame) }
+        return collectionItemAttributes.filter { object in rect.intersects(object.frame) }
     }
     
-    override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes
+    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes
 	{
         return collectionItemAttributes[indexPath.item]
     }
     
-    override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool
+    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool
 	{
 		return false
 	}

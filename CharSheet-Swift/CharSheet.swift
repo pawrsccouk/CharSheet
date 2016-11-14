@@ -8,6 +8,30 @@
 
 import Foundation
 import CoreData
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 /// Model object for a character sheet, the root of the datamodel.
 ///
@@ -54,9 +78,9 @@ class CharSheet : NSManagedObject
 	var sortedLogs: [LogEntry] {
 		return logs.allObjects
 			.map { $0 as! LogEntry }
-			.sort{
+			.sorted{
 				let d1 = $0.dateTime
-				return d1.earlierDate($1.dateTime) == d1
+				return (d1 as NSDate).earlierDate($1.dateTime as Date) == d1 as Date
 		}
 	}
 
@@ -76,7 +100,7 @@ extension CharSheet
     // MARK: Overrides
 
 	override var description: String {
-		return self.fault
+		return self.isFault
 			? super.description
 			: "CharSheet: \(super.description) <\(name)>"
 	}
@@ -98,17 +122,17 @@ extension CharSheet
 
     // Skills
 
-    func addSkill(managedObjectContext: NSManagedObjectContext) -> Skill
+    func addSkill(_ managedObjectContext: NSManagedObjectContext) -> Skill
 	{
-        return NSEntityDescription.insertNewObjectForEntityForName(
-			"Skill", inManagedObjectContext:managedObjectContext) as! Skill
+        return NSEntityDescription.insertNewObject(
+			forEntityName: "Skill", into:managedObjectContext) as! Skill
     }
 
-    func removeSkillAtIndex(index: Int)
+    func removeSkillAtIndex(_ index: Int)
 	{
 		if let skill = self.skills[index] as? Skill {
-			self.skills.removeObject(skill)
-			self.managedObjectContext?.deleteObject(skill)
+			self.skills.remove(skill)
+			self.managedObjectContext?.delete(skill)
 		}
     }
 
@@ -116,7 +140,7 @@ extension CharSheet
 	{
         let newSkill = addSkill(self.managedObjectContext!)
         newSkill.parent = self
-        self.skills.addObject(newSkill)
+        self.skills.add(newSkill)
         return newSkill
     }
 
@@ -125,25 +149,25 @@ extension CharSheet
 
     func addLogEntry() -> LogEntry
 	{
-        let entry = NSEntityDescription.insertNewObjectForEntityForName(
-			"LogEntry", inManagedObjectContext:self.managedObjectContext!) as! LogEntry
+        let entry = NSEntityDescription.insertNewObject(
+			forEntityName: "LogEntry", into:self.managedObjectContext!) as! LogEntry
         entry.parent  = self
-        self.logs.addObject(entry)
+        self.logs.add(entry)
         return entry
     }
     
-    func removeLogEntry(entry: LogEntry)
+    func removeLogEntry(_ entry: LogEntry)
 	{
-        self.logs.removeObject(entry)
+        self.logs.remove(entry)
         entry.parent = nil
     }
 
     // XP Gains
 
-    func addXPGain(context: NSManagedObjectContext) -> XPGain
+    func addXPGain(_ context: NSManagedObjectContext) -> XPGain
 	{
-        return NSEntityDescription.insertNewObjectForEntityForName(
-			"XPGain", inManagedObjectContext:context) as! XPGain
+        return NSEntityDescription.insertNewObject(
+			forEntityName: "XPGain", into:context) as! XPGain
     }
 
     // Create a new xp entry and append it to the list. Returns the new xp.
@@ -151,17 +175,17 @@ extension CharSheet
 	{
         let xpGain = addXPGain(self.managedObjectContext!)
         xpGain.parent  = self
-        self.xp.addObject(xpGain)
+        self.xp.add(xpGain)
         return xpGain
     }
 
         // Remove the xp entry at the given index. It will be destroyed at the next commit.
-	func removeXPGainAtIndex(index: Int)
+	func removeXPGainAtIndex(_ index: Int)
 	{
 		if let xpGain = self.xp[index] as? XPGain {
-			self.xp.removeObject(xpGain)
+			self.xp.remove(xpGain)
 			xpGain.parent = nil
-			self.managedObjectContext!.deleteObject(xpGain)
+			self.managedObjectContext!.delete(xpGain)
 		}
 	}
 
@@ -171,14 +195,14 @@ extension CharSheet
     // MARK: Misc
 
 
-    func exportToXML() throws -> NSData
+    func exportToXML() throws -> Data
 	{
-		let document = try DDXMLDocument(XMLString: "<xml></xml>", options: 0)
+		let document = try DDXMLDocument(xmlString: "<xml></xml>", options: 0)
 		guard let root = document.rootElement as? DDXMLElement else {
 			fatalError("Document \(document) has invalid root element \(document.rootElement)")
 		}
 		root.addChild(self.asXML())
-		guard let documentData = document.XMLDataWithOptions(UInt(DDXMLNodeCompactEmptyElement)) else {
+		guard let documentData = document.xmlData(withOptions: UInt(DDXMLNodeCompactEmptyElement)) else {
 			throw XMLSupport.XMLError("document.XMLDataWithOptions failed for document \(document)")
 		}
 		return documentData
@@ -188,21 +212,16 @@ extension CharSheet
 	/// Check if a character name clashes with an already-existing name and update the name to make it unique.
 	///
 	/// Called after importing a character from XML, to avoid overwriting an existing character.
-	private func renameIfNecessary()
+	fileprivate func renameIfNecessary() throws
 	{
 		/// Checks if parameter NAME already exists as the name of any other character.
-		func nameAlreadyExists(name: String) -> Bool
+		func nameAlreadyExists(_ name: String) throws -> Bool
 		{
-			let request = NSFetchRequest(entityName: "CharSheet")
+			let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CharSheet")
 			request.predicate = NSPredicate(format:"name == %@", name)
 
-			var error: NSError?
-			let count = managedObjectContext?.countForFetchRequest(request, error: &error)
-			if count == NSNotFound {
-				// Deal with error. Log it and assume the name already exists for safety's sake.
-				NSLog("nameAlreadyExists: countForFetchRequest returned error: %@ / %@", error!, error!.userInfo ?? "nil")
-				return true
-			}
+			let count = try managedObjectContext?.count(for: request)
+			assert(count != NSNotFound, "Error returned but exception not thrown.")
 			return count > 1
 		}
 
@@ -211,18 +230,18 @@ extension CharSheet
 		// e.g. "John Smith - Imported 23/11/2013 11:14pm"
 		// so the user can compare it to the existing version and delete whichever they prefer.
 		name = name ?? "Unknown"
-		if nameAlreadyExists(name!) {
-			let dateFormatter = NSDateFormatter()
-			dateFormatter.dateStyle = .MediumStyle
-			dateFormatter.timeStyle = .MediumStyle
-			name = String(format:"%@ : %@", name!, dateFormatter.stringFromDate(NSDate()))
+		if try nameAlreadyExists(name!) {
+			let dateFormatter = DateFormatter()
+			dateFormatter.dateStyle = .medium
+			dateFormatter.timeStyle = .medium
+			name = String(format:"%@ : %@", name!, dateFormatter.string(from: Date()))
 		}
 	}
 }
 
 // MARK: - XMLClient implementation
 
-private enum AttrType { case String, Integer }
+private enum AttrType { case string, integer }
 
 /// Collection of attribute names and the associated attribute type.
 ///
@@ -231,14 +250,14 @@ private enum AttrType { case String, Integer }
 /// - todo: Can this be got from the entity?
 
 private let attributes: [(String, AttrType)] = [
-		("name", .String), ("gender", .String), ("game", .String), ("player", .String), ("level", .Integer), ("experience", .Integer),
-		("strength", .Integer), ("speed", .Integer), ("dexterity", .Integer), ("constitution", .Integer),
-		("perception", .Integer), ("intelligence", .Integer), ("charisma", .Integer), ("luck", .Integer)
+		("name", .string), ("gender", .string), ("game", .string), ("player", .string), ("level", .integer), ("experience", .integer),
+		("strength", .integer), ("speed", .integer), ("dexterity", .integer), ("constitution", .integer),
+		("perception", .integer), ("intelligence", .integer), ("charisma", .integer), ("luck", .integer)
 	]
 
 extension CharSheet: XMLClient
 {
-    private enum Element: String
+    fileprivate enum Element: String
 	{
         case CHAR_SHEET = "charSheet"
 		case SKILLS = "skills", LOGS = "logs", NOTES = "notes", XP_GAINS = "xp_gains"
@@ -246,43 +265,46 @@ extension CharSheet: XMLClient
     
     func asXML() -> DDXMLElement
 	{
-        func saveChildrenAsXML(parent: DDXMLElement, elementName: Element, collection: NSArray)
+        func saveChildrenAsXML(_ parent: DDXMLElement, elementName: Element, collection: [Any])
 		{
-            let element = DDXMLElement.elementWithName(elementName.rawValue) as! DDXMLElement
+            let element = DDXMLElement.element(withName: elementName.rawValue) as! DDXMLElement
             parent.addChild(element)
-            collection.enumerateObjectsUsingBlock { obj, index, stop in element.addChild(obj.asXML()) }
+			for child in collection {
+				let childNode = child as! XMLClient
+				element.addChild(childNode.asXML())
+			}
         }
-       
-        let thisElement = DDXMLElement.elementWithName(Element.CHAR_SHEET.rawValue) as! DDXMLElement
+
+        let thisElement = DDXMLElement.element(withName: Element.CHAR_SHEET.rawValue) as! DDXMLElement
 		// Use KVO to get the attribute data.
 		for (attrName, _) in attributes {
-			let sv = (valueForKey(attrName) ?? "").description
-			thisElement.addAttribute(DDXMLNode.attributeWithName(attrName, stringValue:sv) as! DDXMLNode)
+			let sv = ((value(forKey: attrName) ?? "") as AnyObject).description
+			thisElement.addAttribute(DDXMLNode.attribute(withName: attrName, stringValue:sv) as! DDXMLNode)
 		}
         saveChildrenAsXML(thisElement, elementName: .LOGS    , collection: logs.allObjects )
         saveChildrenAsXML(thisElement, elementName: .SKILLS  , collection: skills.array    )
         saveChildrenAsXML(thisElement, elementName: .XP_GAINS, collection: xp.array        )
         
         // Store notes as a separate element as it's too big to go as an attribute.
-        let elemNotes = DDXMLElement.elementWithName(
-			Element.NOTES.rawValue, stringValue:self.notes) as! DDXMLElement
+        let elemNotes = DDXMLElement.element(
+			withName: Element.NOTES.rawValue, stringValue:self.notes) as! DDXMLElement
         thisElement.addChild(elemNotes)
         return thisElement
     }
 
 
     
-    func updateFromXML(element: DDXMLElement) throws
+    func updateFromXML(_ element: DDXMLElement) throws
 	{
-		try XMLSupport.validateElementName(element.name, expectedName: Element.CHAR_SHEET.rawValue)
+		try XMLSupport.validateElement(name: element.name, expectedName: Element.CHAR_SHEET.rawValue)
 
 		// Use KVO to set the attributes from the XML element provided.
 		for (attrName, attrType) in attributes {
-			if let node = element.attributeForName(attrName) {
+			if let node = element.attribute(forName: attrName) {
 				switch attrType {
-				case .String:
+				case .string:
 					setValue(node.stringValue, forKey: attrName)
-				case .Integer:
+				case .integer:
 					setValue(Int(node.stringValue) ?? 0, forKey: attrName)
 				}
 			} else {
@@ -318,7 +340,7 @@ extension CharSheet: XMLClient
         }
         
  		// Rename the new sheet to avoid name clashes with an already-existing one, if any.
-		renameIfNecessary()
+		try renameIfNecessary()
     }
 }
 

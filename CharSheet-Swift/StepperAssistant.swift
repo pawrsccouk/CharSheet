@@ -29,14 +29,14 @@ class StepperAssistant: NSObject
 	@IBOutlet weak var textField: UITextField!
 
 	/// Called when the stepper's value has changed. Update the text field to match.
-	@IBAction func stepperValueChanged(sender: UIStepper?)
+	@IBAction func stepperValueChanged(_ sender: UIStepper?)
 	{
 		assert(sender == stepper, "Unknown sender \(sender) for stepperValueChanged")
 		updateTextFieldFromStepper()
 	}
 
 	/// Called when the text field's value has changed. Update the stepper to match.
-	@IBAction func textFieldValueChanged(sender: UITextField?)
+	@IBAction func textFieldValueChanged(_ sender: UITextField?)
 	{
 		assert(sender == textField, "Unknown sender \(sender) for textFieldValueChanged.")
 		updateStepperFromTextField()
@@ -46,7 +46,7 @@ class StepperAssistant: NSObject
 	/// or to stepper.minimumValue if textField.text is not parseable.
 	func updateStepperFromTextField()
 	{
-		if let txt = textField.text, val = Int(txt) {
+		if let txt = textField.text, let val = Int(txt) {
 			stepper.value = Double(val)
 		} else {
 			stepper.value = stepper.minimumValue

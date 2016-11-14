@@ -25,18 +25,18 @@ class DieRollViewController: CharSheetViewController
 
 	// MARK: IB Actions
     
-    @IBAction func cancel(sender: AnyObject?)
+    @IBAction func cancel(_ sender: AnyObject?)
 	{
-		presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
+		presentingViewController?.dismiss(animated: true, completion:nil)
     }
 
-    @IBAction func editSkillTable(sender: AnyObject?)
+    @IBAction func editSkillTable(_ sender: AnyObject?)
 	{
-        let newEditing = !skillsTable.editing
-        skillsTable.editing = newEditing
+        let newEditing = !skillsTable.isEditing
+        skillsTable.isEditing = newEditing
     }
     
-	@IBAction func addSkill(sender: AnyObject?)
+	@IBAction func addSkill(_ sender: AnyObject?)
 	{
 		let skillsToAdd = (charSheet!.skills.array)
 			.map { $0 as! Skill }
@@ -47,12 +47,12 @@ class DieRollViewController: CharSheetViewController
 			let alert = UIAlertController(
 				title         : "Add skill",
 				message       : "There are no more skills to add.",
-				preferredStyle: .Alert)
+				preferredStyle: .alert)
 			alert.addAction(UIAlertAction(
 				title  : "Close",
-				style  : .Default,
+				style  : .default,
 				handler: nil))
-			presentViewController(alert, animated: true, completion: nil)
+			present(alert, animated: true, completion: nil)
 			return
         }
 
@@ -74,10 +74,10 @@ class DieRollViewController: CharSheetViewController
 
 	/// If we are editing an existing skill, this is the skill we are changing.
 	/// If we are adding a new skill, this is nil.
-	private var editingSkill: Skill? = nil
+	fileprivate var editingSkill: Skill? = nil
 
 	// Context for KVO.
-	private var myContext: Int = 0
+	fileprivate var myContext: Int = 0
 
 	/// The die roll object actually makes the roll and records the results.
 	///
@@ -90,7 +90,7 @@ class DieRollViewController: CharSheetViewController
 	var skillSelectController: SkillSelectController?
 
 	/// Callback type for the callback to add a tick to the character sheet.
-	typealias AddTickCallback = (skill: Skill) -> Void
+	typealias AddTickCallback = (_ skill: Skill) -> Void
 
 	/// Callback block called once the dialog has been closed to add a tick to the skill that was used.
 	var addTickToSkillCallback: AddTickCallback?
@@ -112,10 +112,10 @@ class DieRollViewController: CharSheetViewController
 		dieRoll.removeObserver(self, forKeyPath: "extraD4s")
 	}
 
-	override func observeValueForKeyPath(keyPath: String?,
-		ofObject                         object: AnyObject?,
-		change                                 : [String : AnyObject]?,
-		context                                : UnsafeMutablePointer<Void>)
+	override func observeValue(forKeyPath keyPath: String?,
+		of                         object: Any?,
+		change                                 : [NSKeyValueChangeKey : Any]?,
+		context                                : UnsafeMutableRawPointer?)
 	{
 		if let key = keyPath {
 			switch key {
@@ -137,15 +137,15 @@ class DieRollViewController: CharSheetViewController
 				break
 			}
 		}
-		super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+		super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
 	}
 
 
 	override func viewDidLoad()
 	{
 		super.viewDidLoad()
-		dieRoll.addObserver(self, forKeyPath: "adds",     options: ([.Initial, .New]), context: &myContext)
-		dieRoll.addObserver(self, forKeyPath: "extraD4s", options: ([.Initial, .New]), context: &myContext)
+		dieRoll.addObserver(self, forKeyPath: "adds",     options: ([.initial, .new]), context: &myContext)
+		dieRoll.addObserver(self, forKeyPath: "extraD4s", options: ([.initial, .new]), context: &myContext)
 		updateStatLabel()
 
 		if let navc = navigationController {
@@ -157,15 +157,15 @@ class DieRollViewController: CharSheetViewController
 	}
 
 
-	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?)
 	{
 		switch segue.identifier! {
 		case "ShowDieRollResult":
-			let dieRollResultViewController = segue.destinationViewController as! DieRollResultViewController
+			let dieRollResultViewController = segue.destination as! DieRollResultViewController
 			rollTheDieAndShowResultsInViewController(dieRollResultViewController)
 
 		case "PushStatSelect":
-			let statSelectViewController = segue.destinationViewController as! StatSelectViewController
+			let statSelectViewController = segue.destination as! StatSelectViewController
 			statSelectViewController.selectedStat = dieRoll.stat?.name ?? "No name"
 			statSelectViewController.selectionChangedCallback = { newName, _ in
 				self.statNameChanged(newName)
@@ -183,7 +183,7 @@ class DieRollViewController: CharSheetViewController
 	///
 	/// This allows the user to select the stat and/or skill from the main page and have them defaulted here.
 	/// The user can add or remove the stat or skills later if they want.
-    func setInitialStat(statOrNil: DieRoll.StatInfo?, skills:[Skill])
+    func setInitialStat(_ statOrNil: DieRoll.StatInfo?, skills:[Skill])
 	{
         assert(self.charSheet != nil, "DieRollViewController: No char sheet specified.")
         dieRoll.skills = MutableOrderedSet<Skill>(array: skills)
@@ -197,28 +197,27 @@ class DieRollViewController: CharSheetViewController
 	// MARK: Private Methods
 
 	/// Update the label specifying which stat to use from the specified StatInfo object.
-    private func updateStatLabel()
+    fileprivate func updateStatLabel()
 	{
         if let button = statButton {
             var statButtonText = "None"
             if let stat = dieRoll.stat {
                 statButtonText = "\(stat.name): \(stat.value)"
             }
-            button.setTitle(statButtonText, forState: .Normal)
+            button.setTitle(statButtonText, for: UIControlState())
         }
     }
 
 	/// Callback func called when the name of the stat has changed.
 	/// Look up the value for the given name and assign a StatInfo pair to the die roll.
-	private func statNameChanged(newStatName: String?)
+	fileprivate func statNameChanged(_ newStatName: String?)
 	{
 		var statInfo: DieRoll.StatInfo? = nil
 		// Find the stat that name represents, and select it as dieRoll.stat.
-		if let
-			newName = newStatName,
-			statValue = charSheet.valueForKey(newName.lowercaseString)?.integerValue
-		{
-			statInfo = (newName, Int16(statValue))
+		if  let newName = newStatName,
+			let statObj = charSheet.value(forKey: newName.lowercased()) as? NSNumber?,
+			let statValue = statObj?.intValue {
+				statInfo = (newName, Int16(statValue))
 		}
 		dieRoll.stat = statInfo
 	}
@@ -226,14 +225,14 @@ class DieRollViewController: CharSheetViewController
 	/// Callback. Trigger a die roll with the settings in DieRoll, and present a view controller to show the results.
 	///
 	/// - parameter dieRollResultViewController: The controller to push to display the die roll result.
-    private func rollTheDieAndShowResultsInViewController(dieRollResultViewController: DieRollResultViewController)
+    fileprivate func rollTheDieAndShowResultsInViewController(_ dieRollResultViewController: DieRollResultViewController)
 	{
-		if let s = addsTextField.text, adds = Int(s) {
+		if let s = addsTextField.text, let adds = Int(s) {
 			dieRoll.adds = adds
 		} else {
 			dieRoll.adds = 0
 		}
-		if let s = extraDiceTextField.text, d4s = Int(s) {
+		if let s = extraDiceTextField.text, let d4s = Int(s) {
 			dieRoll.extraD4s = Int16(d4s)
 		}
 		else {
@@ -247,7 +246,7 @@ class DieRollViewController: CharSheetViewController
 		assert(self.addTickToSkillCallback != nil)
 		if dieRoll.skills.count == 1 {
 			if let callback = addTickToSkillCallback {
-				dieRollResultViewController.addTickAction = { callback(skill: self.dieRoll.skills[0]) }
+				dieRollResultViewController.addTickAction = { callback(self.dieRoll.skills[0]) }
 			}
 		}
 	}
@@ -257,8 +256,8 @@ class DieRollViewController: CharSheetViewController
 
 extension DieRollViewController: UINavigationControllerDelegate
 {
-	func navigationController(navigationController: UINavigationController,
-		willShowViewController      viewController: UIViewController,
+	func navigationController(_ navigationController: UINavigationController,
+		willShow      viewController: UIViewController,
 		animated                                  : Bool)
 	{
 		// If this controller is being shown because the select skill view controller has just been closed,
@@ -286,7 +285,7 @@ extension DieRollViewController: UINavigationControllerDelegate
 				}
 			}
 
-			if let selectedSkill = skillSelectController?.selectedSkill, skillName = selectedSkill.name {
+			if let selectedSkill = skillSelectController?.selectedSkill, let skillName = selectedSkill.name {
 				dieRoll.specialties[skillName] = skillSelectController?.selectedSpecialty
 			}
 			skillsTable.reloadData()
@@ -303,14 +302,14 @@ extension DieRollViewController: UINavigationControllerDelegate
 extension DieRollViewController: UITableViewDataSource
 {
 
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    func numberOfSections(in tableView: UITableView) -> Int
 	{
         return 1
     }
     
     
     
-    func tableView(         tableView: UITableView,
+    func tableView(         _ tableView: UITableView,
 		numberOfRowsInSection section: Int) -> Int
 	{
         return dieRoll.skills.count
@@ -318,13 +317,13 @@ extension DieRollViewController: UITableViewDataSource
     
     
 
-	func tableView(           tableView: UITableView,
-		cellForRowAtIndexPath indexPath: NSIndexPath ) -> UITableViewCell
+	func tableView(           _ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath ) -> UITableViewCell
 	{
 		let CELL_ID = "PWDieRollView_Cell"
 
-		let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID)
-			?? UITableViewCell(style: .Value1, reuseIdentifier:CELL_ID)
+		let cell = tableView.dequeueReusableCell(withIdentifier: CELL_ID)
+			?? UITableViewCell(style: .value1, reuseIdentifier:CELL_ID)
 
 		let skill = dieRoll.skills.objectAtIndex(indexPath.row)
 		cell.textLabel?.text = skill.name
@@ -332,7 +331,7 @@ extension DieRollViewController: UITableViewDataSource
 			detailLabel.text = "No specialty"
 			if let
 				skillName = skill.name,
-				spec = dieRoll.specialties[skillName] {
+				let spec = dieRoll.specialties[skillName] {
 					detailLabel.text = spec.name
 			}
 		}
@@ -344,23 +343,23 @@ extension DieRollViewController: UITableViewDataSource
 
 extension DieRollViewController: UITableViewDelegate
 {
-    func tableView(           tableView: UITableView,
-		commitEditingStyle editingStyle: UITableViewCellEditingStyle,
-		forRowAtIndexPath     indexPath: NSIndexPath)
+    func tableView(           _ tableView: UITableView,
+		commit editingStyle: UITableViewCellEditingStyle,
+		forRowAt     indexPath: IndexPath)
 	{
-        assert(tableView == skillsTable && editingStyle == .Delete)
-        if(tableView == skillsTable && editingStyle == .Delete) {
+        assert(tableView == skillsTable && editingStyle == .delete)
+        if(tableView == skillsTable && editingStyle == .delete) {
             let skill = dieRoll.skills[indexPath.row]
             if let skillName = skill.name {
                 dieRoll.specialties[skillName] = nil
             }
             dieRoll.skills.removeObjectAtIndex(indexPath.row)
-            skillsTable.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+            skillsTable.deleteRows(at: [indexPath], with: .automatic)
         }
     }
     
-    func tableView(             tableView: UITableView,
-		didSelectRowAtIndexPath indexPath: NSIndexPath)
+    func tableView(             _ tableView: UITableView,
+		didSelectRowAt indexPath: IndexPath)
 	{
         assert(skillSelectController == nil,
 			"Table View select. Skill select controller is \(skillSelectController), should be nil")

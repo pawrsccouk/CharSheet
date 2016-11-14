@@ -21,7 +21,7 @@ class EditSkillViewController : UIViewController
     @IBOutlet weak var specialtiesTableView: UITableView!
 	@IBOutlet var stepperAssistants: [StepperAssistant]!
 
-    @IBAction func done(sender: AnyObject?)
+    @IBAction func done(_ sender: AnyObject?)
 	{
 		// Update the 'order' field in the specialties to match the order given in the set.
 		var i: Int16 = 0
@@ -29,7 +29,7 @@ class EditSkillViewController : UIViewController
 			s.order = i
 			i += 1
 		}
-		presentingViewController?.dismissViewControllerAnimated(true, completion: completionCallback)
+		presentingViewController?.dismiss(animated: true, completion: completionCallback)
     }
     
     // MARK: Public API
@@ -38,18 +38,18 @@ class EditSkillViewController : UIViewController
     var skill: Skill!
 
 	/// Callback triggered once the view controller has been dismissed with the *done* action.
-    var completionCallback: VoidCallback?
+    var completionCallback: (() -> Void)?
 
 	// MARK: Overrides
     
-    override func viewWillAppear(animated: Bool)
+    override func viewWillAppear(_ animated: Bool)
 	{
         super.viewWillAppear(animated)
-        specialtiesTableView.editing = true
+        specialtiesTableView.isEditing = true
         configureView()
     }
     
-    override func viewDidDisappear(animated: Bool)
+    override func viewDidDisappear(_ animated: Bool)
 	{
         if let s = skill {
             s.name = nameTextField.text;
@@ -59,7 +59,7 @@ class EditSkillViewController : UIViewController
         super.viewDidDisappear(animated)
     }
     
-    override func viewDidAppear(animated: Bool)
+    override func viewDidAppear(_ animated: Bool)
 	{
         super.viewDidAppear(animated)
         // Called when the specialties view is removed, so update the data with any new values in there.
@@ -69,7 +69,7 @@ class EditSkillViewController : UIViewController
 	// MARK: Private methods
 
 	/// Update the controls in the view from the values in *skill*.
-    private func configureView()
+    fileprivate func configureView()
 	{
         navigationItem.title = skill.name ?? "New skill"
         nameTextField.text   = skill.name ?? ""
@@ -82,11 +82,11 @@ class EditSkillViewController : UIViewController
     }
     
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
 	{
         if segue.identifier == "PushEditSpecialty" {
             let newSpecialty = skill.appendSpecialty()
-            let editSpecialtyViewController = segue.destinationViewController as! EditSpecialtyViewController
+            let editSpecialtyViewController = segue.destination as! EditSpecialtyViewController
             editSpecialtyViewController.specialty = newSpecialty
         }
     }
@@ -96,32 +96,32 @@ class EditSkillViewController : UIViewController
 
 extension EditSkillViewController: UITableViewDataSource
 {
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    func numberOfSections(in tableView: UITableView) -> Int
 	{
         return 1
     }
     
-    func tableView(         tableView: UITableView,
+    func tableView(         _ tableView: UITableView,
 		numberOfRowsInSection section: Int) -> Int
 	{
         return self.skill.specialties.count
     }
     
-    func tableView(           tableView: UITableView,
-		cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    func tableView(           _ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath) -> UITableViewCell
 	{
 		let CELL_ID = "PWEditSkillViewController_Cell"
 
-        let cell = specialtiesTableView.dequeueReusableCellWithIdentifier(CELL_ID)
-			?? UITableViewCell(style: .Value1, reuseIdentifier: CELL_ID)
-        let spec = skill.specialties.objectAtIndex(indexPath.row) as! Specialty
+        let cell = specialtiesTableView.dequeueReusableCell(withIdentifier: CELL_ID)
+			?? UITableViewCell(style: .value1, reuseIdentifier: CELL_ID)
+        let spec = skill.specialties.object(at: indexPath.row) as! Specialty
         if let l = cell.textLabel {
             l.text = spec.name
         }
         if let label = cell.detailTextLabel {
             label.text = spec.value.description
         }
-        cell.editingAccessoryType = .DetailDisclosureButton
+        cell.editingAccessoryType = .detailDisclosureButton
         return cell
     }
 }
@@ -130,30 +130,30 @@ extension EditSkillViewController: UITableViewDataSource
 
 extension EditSkillViewController: UITableViewDelegate
 {
-    func tableView(           tableView: UITableView,
-		commitEditingStyle editingStyle: UITableViewCellEditingStyle,
-		forRowAtIndexPath     indexPath: NSIndexPath)
+    func tableView(           _ tableView: UITableView,
+		commit editingStyle: UITableViewCellEditingStyle,
+		forRowAt     indexPath: IndexPath)
 	{
-        if editingStyle == .Delete {
+        if editingStyle == .delete {
             skill.removeSpecialtyAtIndex(indexPath.row)
-            specialtiesTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+            specialtiesTableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
     
-    func tableView(              tableView: UITableView,
-		moveRowAtIndexPath sourceIndexPath: NSIndexPath,
-		toIndexPath   destinationIndexPath: NSIndexPath)
+    func tableView(              _ tableView: UITableView,
+		moveRowAt sourceIndexPath: IndexPath,
+		to   destinationIndexPath: IndexPath)
 	{
         skill.moveSpecialtyFromIndex(sourceIndexPath.row, toIndex: destinationIndexPath.row)
     }
     
     
-    func tableView(                              tableView: UITableView,
-		accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath)
+    func tableView(                              _ tableView: UITableView,
+		accessoryButtonTappedForRowWith indexPath: IndexPath)
 	{
-        let editStoryboard = UIStoryboard(name: "Edit", bundle: NSBundle.mainBundle())
+        let editStoryboard = UIStoryboard(name: "Edit", bundle: Bundle.main)
 		let cntrId = "EditSpecialtyViewController"
-        let esvc = editStoryboard.instantiateViewControllerWithIdentifier(cntrId) as! EditSpecialtyViewController
+        let esvc = editStoryboard.instantiateViewController(withIdentifier: cntrId) as! EditSpecialtyViewController
         esvc.specialty = skill.specialties[indexPath.row] as! Specialty
 		navigationController?.pushViewController(esvc, animated: true)
     }

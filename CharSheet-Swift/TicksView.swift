@@ -25,7 +25,7 @@ class TicksView : UIView
                     s.removeObserver(self, forKeyPath:"ticks")
                 }
                 if let s = self.skill {
-                    s.addObserver(self, forKeyPath:"ticks", options:.New, context:nil)
+                    s.addObserver(self, forKeyPath:"ticks", options:.new, context:nil)
                 }
                 setNeedsDisplay() // redraw the ticks.
             }
@@ -47,24 +47,24 @@ class TicksView : UIView
 
 	// MARK: Overrides
 
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change:[String: AnyObject]?, context:UnsafeMutablePointer<Void>)
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change:[NSKeyValueChangeKey: Any]?, context:UnsafeMutableRawPointer?)
 	{
         if keyPath  == "ticks" {
             setNeedsDisplay()
         }
     }
     
-    override func drawRect(rect: CGRect)
+    override func draw(_ rect: CGRect)
 	{
         let bounds = self.bounds
-        let fgCol = UIColor.darkTextColor()
+        let fgCol = UIColor.darkText
         
         // 4 rows of 5 boxes.
         // 1 find which is smaller, width / 5, or height / 4
         let boxSize: CGFloat = min(bounds.size.width / 5, bounds.size.height / 4);
         
         let ctx = UIGraphicsGetCurrentContext();
-        CGContextSetLineWidth(ctx, 1);
+        ctx?.setLineWidth(1);
         fgCol.set()
         
         var ticksDrawn: Int16 = 0, numberOfTicks = skill.ticks
@@ -74,12 +74,12 @@ class TicksView : UIView
 //          for var iCol = 0; iCol < 5; iCol++
 			for iCol in 0..<4 {
                 let x = bounds.origin.x + CGFloat(iCol) * boxSize, y = bounds.origin.y + CGFloat(iRow) * boxSize
-                var rectBox: CGRect = CGRectMake(x, y, boxSize, boxSize)
-                CGContextStrokeRect(ctx, rectBox);  // Draw the box outline.
+                var rectBox: CGRect = CGRect(x: x, y: y, width: boxSize, height: boxSize)
+                ctx?.stroke(rectBox);  // Draw the box outline.
                 
                 if ticksDrawn < numberOfTicks {
-                    rectBox = CGRectInset(rectBox, 2, 2)
-                    CGContextFillRect(ctx, rectBox)
+                    rectBox = rectBox.insetBy(dx: 2, dy: 2)
+                    ctx?.fill(rectBox)
                     ticksDrawn += 1
                 }
             }

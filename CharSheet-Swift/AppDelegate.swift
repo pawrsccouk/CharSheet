@@ -19,15 +19,15 @@ class AppDelegate: UIResponder
 	override init()
 	{
 		super.init()
-		NSNotificationCenter.defaultCenter().addObserver(self,
+		NotificationCenter.default.addObserver(self,
 		                                                 selector: #selector(AppDelegate.saveChanges),
-		                                                 name: "SaveChanges",
+		                                                 name: NSNotification.Name(rawValue: "SaveChanges"),
 		                                                 object: nil)
 	}
 
 	deinit
 	{
-		NSNotificationCenter.defaultCenter().removeObserver(self)
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	// MARK: Core Data stack
@@ -36,17 +36,17 @@ class AppDelegate: UIResponder
 	///
 	/// This code uses a directory named "Patrick-Wallace.CharSheet"
 	/// in the application's documents Application Support directory.
-	lazy var applicationDocumentsDirectory: NSURL = {
-		let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-		return urls[urls.count-1] 
+	lazy var applicationDocumentsDirectory: URL = {
+		let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+		return urls[urls.count - 1]
 		}()
 
 	/// The managed object model for the application.
 	///
 	/// This property is not optional. It is a fatal error for the application not to be able to find and load its model.
 	lazy var managedObjectModel: NSManagedObjectModel = {
-		let modelURL = NSBundle.mainBundle().URLForResource("CharSheet", withExtension: "momd")!
-		return NSManagedObjectModel(contentsOfURL: modelURL)!
+		let modelURL = Bundle.main.url(forResource: "CharSheet", withExtension: "momd")!
+		return NSManagedObjectModel(contentsOf: modelURL)!
 		}()
 
 	/// The persistent store coordinator for the application.
@@ -57,23 +57,20 @@ class AppDelegate: UIResponder
 	lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
 
 		let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-		let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("CharSheet.sqlite")
+		let url = self.applicationDocumentsDirectory.appendingPathComponent("CharSheet.sqlite")
 		// A userInfo dictionary which can be passed to addPersistentStoreWithType:configuration:url:options:error to request that Core Data automatically migrate the application to the latest version if necessary.
 		let userInfo = [
 			NSMigratePersistentStoresAutomaticallyOption: true,
 			NSInferMappingModelAutomaticallyOption      : true]
 		do {
-			let persistentStore = try coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
-				configuration: nil,
-				URL          : url,
-				options      : userInfo)
+			let persistentStore = try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: userInfo)
 			return coordinator
 		} catch var error as NSError {
 			// Report any error we got.
-			let dict: [NSObject: AnyObject!] = [
-				NSLocalizedDescriptionKey       : "Failed to initialize the application's saved data",
-				NSLocalizedFailureReasonErrorKey: "There was an error creating or loading the application's saved data.",
-				NSUnderlyingErrorKey            : error]
+			let dict: [String : AnyObject] = [
+				NSLocalizedDescriptionKey        : "Failed to initialize the application's saved data" as AnyObject,
+				NSLocalizedFailureReasonErrorKey : "There was an error creating or loading the application's saved data." as AnyObject,
+				NSUnderlyingErrorKey             : error]
 			let err = NSError(domain: "CharSheet CoreData", code: 9999, userInfo: dict)
 			// Replace this with code to handle the error appropriately.
 			NSLog("Unresolved error \(err), \(err.userInfo)")
@@ -91,11 +88,10 @@ class AppDelegate: UIResponder
 	/// This property is optional since there are error conditions that could
 	/// cause the creation of the context to fail.
 	lazy var managedObjectContext: NSManagedObjectContext? = {
-		let coordinator = self.persistentStoreCoordinator
-		if coordinator == nil {
+		guard let coordinator = self.persistentStoreCoordinator else {
 			return nil
 		}
-		var managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+		let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
 		managedObjectContext.persistentStoreCoordinator = coordinator
 		return managedObjectContext
 		}()
@@ -109,14 +105,12 @@ class AppDelegate: UIResponder
 	/// Saves all changes to the Managed Object Context.
 	func saveChanges()
 	{
-		if let moc = self.managedObjectContext {
-			if moc.hasChanges {
-				do {
-					try moc.save()
-				} catch let error as NSError {
-					// Replace this implementation with code to handle the error appropriately.
-					fatalError("Unresolved error \(error), \(error.userInfo)")
-				}
+		if let moc = self.managedObjectContext, moc.hasChanges {
+			do {
+				try moc.save()
+			} catch let error as NSError {
+				// Replace this implementation with code to handle the error appropriately.
+				fatalError("Unresolved error \(error), \(error.userInfo)")
 			}
 		}
 	}
@@ -124,13 +118,13 @@ class AppDelegate: UIResponder
 	// MARK: Private methods
 
 	/// Get the objects the storyboard has created, and connect them together.
-	private func wireUpMasterAndDetailViews()
+	fileprivate func wireUpMasterAndDetailViews()
 	{
 		let splitViewController = window!.rootViewController as! UISplitViewController
 		let detailNavigationController = splitViewController.viewControllers[1] as! UINavigationController
 
 		let charSheetUseViewController = detailNavigationController.viewControllers[0] as! CharSheetUseViewController
-		charSheetUseViewController.navigationItem.setLeftBarButtonItem(splitViewController.displayModeButtonItem(), animated: false)
+		charSheetUseViewController.navigationItem.setLeftBarButton(splitViewController.displayModeButtonItem, animated: false)
 
 		let masterNavigationController = splitViewController.viewControllers[0] as! UINavigationController
 		masterViewController = masterNavigationController.viewControllers[0] as! MasterViewController
@@ -144,40 +138,40 @@ class AppDelegate: UIResponder
 
 extension AppDelegate: UIApplicationDelegate
 {
-	func application(application                   : UIApplication,
-		didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool
+	func application(_ application                 : UIApplication,
+		didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool
 	{
 		wireUpMasterAndDetailViews()
 		// If we have been given a URL, make sure we can access it. Return false to abort program startup if the URL is invalid.
 		if let options = launchOptions {
-			let launchURL = options[UIApplicationLaunchOptionsURLKey] as! NSURL
-			if !launchURL.fileURL {
+			let launchURL = options[UIApplicationLaunchOptionsKey.url] as! URL
+			if !launchURL.isFileURL {
 				return false
 			}
 		}
 		return true
 	}
 
-	func applicationDidEnterBackground(application: UIApplication)
+	func applicationDidEnterBackground(_ application: UIApplication)
 	{
-		NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
-		NSUserDefaults.standardUserDefaults().synchronize()
+		NotificationCenter.default.post(name: Notification.Name(rawValue: "SaveChanges"), object: nil)
+		UserDefaults.standard.synchronize()
 	}
 
-	func applicationWillTerminate(application: UIApplication)
+	func applicationWillTerminate(_ application: UIApplication)
 	{
-		NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
-		NSUserDefaults.standardUserDefaults().synchronize()
+		NotificationCenter.default.post(name: Notification.Name(rawValue: "SaveChanges"), object: nil)
+		UserDefaults.standard.synchronize()
 	}
 
-	func application(application: UIApplication,
-		openURL      url        : NSURL,
+	func application(_ application: UIApplication,
+		open      url        : URL,
 		sourceApplication       : String?,
-		annotation              : AnyObject) -> Bool
+		annotation              : Any) -> Bool
 	{
 		// Triggered when the user opens a .charSheet attachment in an email.
 		// Import the data from the URL. Display an error if it fails.
-		if url.fileURL {
+		if url.isFileURL {
 			do {
 				try masterViewController.importURL(url)
 			}

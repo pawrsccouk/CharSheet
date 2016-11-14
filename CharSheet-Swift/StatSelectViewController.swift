@@ -19,7 +19,7 @@ class StatSelectViewController : UITableViewController
 {
     var selectedStat = noStatText
     
-    typealias SelectionChangedCallback = (newStat: String?, oldStat: String) -> Void
+    typealias SelectionChangedCallback = (_ newStat: String?, _ oldStat: String) -> Void
     var selectionChangedCallback: SelectionChangedCallback?
     
 }
@@ -28,11 +28,11 @@ class StatSelectViewController : UITableViewController
 
 extension StatSelectViewController
 {
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) ->UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) ->UITableViewCell {
         // Mark the selected stat with a check.
-        let cell = super.tableView(tableView, cellForRowAtIndexPath:indexPath)
+        let cell = super.tableView(tableView, cellForRowAt:indexPath)
         if let l = cell.textLabel {
-            cell.accessoryType = l.text == self.selectedStat ? .Checkmark : .None
+            cell.accessoryType = l.text == self.selectedStat ? .checkmark : .none
         }
         return cell
     }
@@ -42,9 +42,9 @@ extension StatSelectViewController
 
 extension StatSelectViewController
 {
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath:IndexPath) {
         let oldStat = selectedStat
-        if let selectedCell = tableView.cellForRowAtIndexPath(indexPath) {
+        if let selectedCell = tableView.cellForRow(at: indexPath) {
             
             selectedStat = selectedCell.textLabel?.text ?? noStatText
             tableView.reloadData()
@@ -52,7 +52,7 @@ extension StatSelectViewController
             // Tell the parent that something changed.  Return nil instead of "None" for ease of detection.
             if let callback = self.selectionChangedCallback {
                 let newStat: String? = (selectedStat == noStatText) ? nil : selectedStat
-                callback(newStat: newStat, oldStat: oldStat)
+                callback(newStat, oldStat)
             }
         }
     }

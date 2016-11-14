@@ -20,9 +20,9 @@ class DieRollResultViewController : UIViewController
     @IBOutlet weak var webView: UIWebView!
     @IBOutlet weak var addTickSwitch: UISwitch!
 
-    @IBAction func done(sender: AnyObject?)
+    @IBAction func done(_ sender: AnyObject?)
 	{
-        if addTickSwitch.on {
+        if addTickSwitch.isOn {
             if let callback = addTickAction {
                 callback()
             }
@@ -30,13 +30,13 @@ class DieRollResultViewController : UIViewController
         
         // Log the roll.
         let entry = dieRoll.addLogEntry()
-        if addTickSwitch.on {
+        if addTickSwitch.isOn {
             let c = entry.change ?? ""
             entry.change = "\(c)\nTick added."
         }
 
-		NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
-		presentingViewController?.dismissViewControllerAnimated(true, completion:nil)
+		NotificationCenter.default.post(name: Notification.Name(rawValue: "SaveChanges"), object: nil)
+		presentingViewController?.dismiss(animated: true, completion:nil)
     }
 
 
@@ -46,7 +46,7 @@ class DieRollResultViewController : UIViewController
     var dieRoll: DieRoll!
 
 	/// Action called when the user wants to add a tick to a skill.
-    var addTickAction: VoidCallback? {
+    var addTickAction: (() -> Void)? {
         didSet {
             // Always re-check the controls just in case
 			// (If the user explicitly passes in nil and it is nil already, we want to ensure the control is disabled).
@@ -60,12 +60,12 @@ class DieRollResultViewController : UIViewController
     func enableAddTickControl()
 	{
         if let s = addTickSwitch {
-            s.on       = addTickAction != nil     // Default to YES if allowed, NO if disabled.
-            s.enabled  = addTickAction != nil
+            s.isOn       = addTickAction != nil     // Default to YES if allowed, NO if disabled.
+            s.isEnabled  = addTickAction != nil
         }
     }
     
-	override func viewWillAppear(animated: Bool)
+	override func viewWillAppear(_ animated: Bool)
 	{
 		super.viewWillAppear(animated)
 		webView.loadHTMLString(dieRoll.resultAsHTML, baseURL: nil)

@@ -28,15 +28,15 @@ class EditXPGainViewController: UIViewController
 
     var xpGain: XPGain!
 
-    var completionBlock: VoidCallback?
+    var completionBlock: (() -> Void)?
 
-	override func viewWillAppear(animated: Bool)
+	override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
         configureView()
     }
     
-    override func viewDidDisappear(animated:Bool)
+    override func viewDidDisappear(_ animated:Bool)
 	{
 		configureData()
         if let block = completionBlock {
@@ -45,15 +45,15 @@ class EditXPGainViewController: UIViewController
         super.viewDidDisappear(animated)
     }
     
-    private func configureView()
+    fileprivate func configureView()
 	{
 		amountTextField.text = xpGain.amount.description
 		reasonTextField.text = xpGain.reason
     }
 
-	private func configureData()
+	fileprivate func configureData()
 	{
-		if let amtStr = amountTextField.text, amt = Int(amtStr) {
+		if let amtStr = amountTextField.text, let amt = Int(amtStr) {
 			xpGain.amount = Int16(amt)
 		} else {
 			xpGain.amount = 0

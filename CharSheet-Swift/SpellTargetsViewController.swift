@@ -7,6 +7,19 @@
 //
 
 import UIKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 private let CELL_ID = "SpellTargetsCell"
 
@@ -41,15 +54,15 @@ class SpellTargetsViewController: CharSheetViewController
 	// MARK: Interface Builder
 	@IBOutlet var table: UITableView!
 
-	@IBAction func editDone(sender: AnyObject?)
+	@IBAction func editDone(_ sender: AnyObject?)
 	{
 		assert(presentingViewController != nil)
-		presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+		presentingViewController?.dismiss(animated: true, completion: nil)
 	}
 
 	// MARK: Overrides
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		valuesSelected.removeAll()
 	}
@@ -59,11 +72,11 @@ class SpellTargetsViewController: CharSheetViewController
 	/// The values selected for each category.
 	///
 	/// The value is the index into the relevant array of the selected object.
-	private var valuesSelected: [String: ArrayIndex] = [:]
+	fileprivate var valuesSelected: [String: ArrayIndex] = [:]
 
 	/// This is the final total from all the values selected.
 	/// Sections where the user has not yet decided are not included in the total.
-	private var finalTotal: Int {
+	fileprivate var finalTotal: Int {
 		var total = 0
 		for (key, value) in valuesSelected {
 			total += (key == kGroups ? value : value - 1)  // Groups ranges from 0..4, others from -1..4
@@ -79,14 +92,14 @@ extension SpellTargetsViewController
 
 	/// Returns true if the index path refers to the totals section.
 	/// False if it refers to one of the data sections.
-	private func isTotalsSection(sectionIndex: ArrayIndex) -> Bool
+	fileprivate func isTotalsSection(_ sectionIndex: ArrayIndex) -> Bool
 	{
 		assert(sectionIndex >= 0 || sectionIndex <= data.count, "section index \(sectionIndex) is out of range.")
 		return sectionIndex >= data.count
 	}
 
 	/// Returns true if the given section has been collapsed because the user has specified a value.
-	private func isCollapsed(sectionId: String) -> Bool
+	fileprivate func isCollapsed(_ sectionId: String) -> Bool
 	{
 		assert(keys.contains(sectionId), "Invalid section ID \(sectionId)")
 		return valuesSelected[sectionId] != nil
@@ -96,7 +109,7 @@ extension SpellTargetsViewController
 	///
 	/// - parameter sectionId: The string ID of the section to collapse
 	/// - parameter selectedIndex: The index into the relevant array of the value the user selected.
-	private func collapseSection(sectionId: String, selectedValue: ArrayIndex)
+	fileprivate func collapseSection(_ sectionId: String, selectedValue: ArrayIndex)
 	{
 		assert(keys.contains(sectionId), "Invalid section ID \(sectionId)")
 
@@ -112,7 +125,7 @@ extension SpellTargetsViewController
 	/// - parameter sectionId: The string ID of the section to expand.  
 	///
 	/// The user's choice is deleted and the section will be shown when the table is viewed again.
-	private func restoreSection(sectionId: String)
+	fileprivate func restoreSection(_ sectionId: String)
 	{
 		assert(keys.contains(sectionId), "Invalid section ID \(sectionId)")
 		valuesSelected[sectionId] = nil
@@ -123,18 +136,18 @@ extension SpellTargetsViewController
 
 extension SpellTargetsViewController: UITableViewDataSource
 {
-	func numberOfSectionsInTableView(tableView: UITableView) -> Int
+	func numberOfSections(in tableView: UITableView) -> Int
 	{
 		// All the data sections and a totals section at the end.
 		return data.count + 1
 	}
 
-	func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
 	{
 		return isTotalsSection(section) ? "Total" : keys[section]
 	}
 
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
 	{
 		// The final totals section and all collapsed sections always just have one row.
 		if isTotalsSection(section) || isCollapsed(keys[section]) {
@@ -143,9 +156,9 @@ extension SpellTargetsViewController: UITableViewDataSource
 		return  data[keys[section]]!.count
 	}
 
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
 	{
-		let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) ?? UITableViewCell()
+		let cell = tableView.dequeueReusableCell(withIdentifier: CELL_ID) ?? UITableViewCell()
 
 		if isTotalsSection(indexPath.section) {
 			let dieRoll = 10 + (5 * max(finalTotal, 0))
@@ -171,11 +184,11 @@ extension SpellTargetsViewController: UITableViewDataSource
 
 extension SpellTargetsViewController: UITableViewDelegate
 {
-	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 	{
 		// Totals section is always visible and never selected.
 		if isTotalsSection(indexPath.section) {
-			tableView.deselectRowAtIndexPath(indexPath, animated: false)
+			tableView.deselectRow(at: indexPath, animated: false)
 			return
 		}
 
@@ -185,9 +198,9 @@ extension SpellTargetsViewController: UITableViewDelegate
 		} else {
 			collapseSection(sectionKey, selectedValue: indexPath.row)
 		}
-		let indexSet = NSMutableIndexSet(index: indexPath.section)
-		indexSet.addIndex(data.count) // The Totals section.
-		table.reloadSections(indexSet, withRowAnimation: .Automatic)
+		var indexSet = IndexSet(integer: indexPath.section)
+		indexSet.insert(data.count) // The Totals section.
+		table.reloadSections(indexSet, with: .automatic)
 	}
 }
 

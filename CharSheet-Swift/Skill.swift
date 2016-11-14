@@ -9,11 +9,11 @@
 import Foundation
 import CoreData
 
-private func addSpecialty(managedObjectContext: NSManagedObjectContext) -> Specialty
+private func addSpecialty(_ managedObjectContext: NSManagedObjectContext) -> Specialty
 {
     return NSEntityDescription
-		.insertNewObjectForEntityForName("Specialty",
-			inManagedObjectContext:managedObjectContext) as! Specialty
+		.insertNewObject(forEntityName: "Specialty",
+			into:managedObjectContext) as! Specialty
 }
 
 /// This Model object represents one skill. A character will have an array of these.
@@ -34,7 +34,7 @@ class Skill : NSManagedObject
 	@NSManaged var specialties: NSMutableOrderedSet!
 
 	// MARK: Private
-	private let notificationCentre = NSNotificationCenter.defaultCenter()
+	fileprivate let notificationCentre = NotificationCenter.default
 }
 
 // MARK: -
@@ -54,7 +54,7 @@ extension Skill
 	{
 		super.awakeFromFetch()
 		// Update the specialties array to match the order specified in the DB.
-		specialties.sortUsingDescriptors([NSSortDescriptor(key: "order", ascending: true)])
+		specialties.sort(using: [NSSortDescriptor(key: "order", ascending: true)])
 	}
 
 	// MARK: Array of specialties.
@@ -70,23 +70,23 @@ extension Skill
 	{
         let newSpec = addSpecialty(self.managedObjectContext!)
         newSpec.parent = self
-        self.specialties.addObject(newSpec)
-		notificationCentre.postNotificationName(Skill.specialtiesChangedNotification, object: self)
+        self.specialties.add(newSpec)
+		notificationCentre.post(name: Notification.Name(rawValue: Skill.specialtiesChangedNotification), object: self)
         return newSpec
     }
     
-    func removeSpecialtyAtIndex(index: Int) -> Void
+    func removeSpecialtyAtIndex(_ index: Int) -> Void
 	{
         let spec: Specialty = self.specialties[index] as! Specialty
-        self.specialties.removeObjectAtIndex(index)
-		self.managedObjectContext?.deleteObject(spec)
-		notificationCentre.postNotificationName(Skill.specialtiesChangedNotification, object: self)
+        self.specialties.removeObject(at: index)
+		self.managedObjectContext?.delete(spec)
+		notificationCentre.post(name: Notification.Name(rawValue: Skill.specialtiesChangedNotification), object: self)
     }
 
-    func moveSpecialtyFromIndex(sourceIndex: NSInteger, toIndex destIndex: NSInteger) -> Void
+    func moveSpecialtyFromIndex(_ sourceIndex: NSInteger, toIndex destIndex: NSInteger) -> Void
 	{
-        specialties.moveObjectsAtIndexes(NSIndexSet(index: sourceIndex), toIndex:destIndex)
-		notificationCentre.postNotificationName(Skill.specialtiesChangedNotification, object: self)
+        specialties.moveObjects(at: IndexSet(integer: sourceIndex), to:destIndex)
+		notificationCentre.post(name: Notification.Name(rawValue: Skill.specialtiesChangedNotification), object: self)
     }
 
 
@@ -94,7 +94,7 @@ extension Skill
 		var str = ""
 		if let specArray = self.specialties?.array {
 			let specs = specArray.map{ $0 as! Specialty }
-			str = specs.map{ "\($0.name!) + \($0.value)" }.joinWithSeparator("; ")
+			str = specs.map{ "\($0.name!) + \($0.value)" }.joined(separator: "; ")
 		}
 		return str
 	}
@@ -102,9 +102,9 @@ extension Skill
 
 	// MARK: Methods
 
-    func add(value: NSNumber, toAdd: NSInteger) -> NSNumber
+    func add(_ value: NSNumber, toAdd: NSInteger) -> NSNumber
 	{
-        return NSNumber(integer:value.integerValue + toAdd)
+        return NSNumber(value: value.intValue + toAdd as Int)
     }
 
 
@@ -125,31 +125,34 @@ extension Skill
 
 extension Skill: XMLClient
 {
-    private enum Element: String  { case SKILL = "skill", SPECIALTIES = "specialties" }
-    private enum Attribute: String { case NAME = "name", VALUE = "value", TICKS = "ticks" }
+    fileprivate enum Element: String  { case SKILL = "skill", SPECIALTIES = "specialties" }
+    fileprivate enum Attribute: String { case NAME = "name", VALUE = "value", TICKS = "ticks" }
     
     
     func asXML() -> DDXMLElement
 	{
-        func attribute(name: Attribute, value: String!) -> DDXMLNode
+        func attribute(_ name: Attribute, value: String!) -> DDXMLNode
 		{
-			return DDXMLNode.attributeWithName(name.rawValue, stringValue: value) as! DDXMLNode
+			return DDXMLNode.attribute(withName: name.rawValue, stringValue: value) as! DDXMLNode
 		}
         
-        let this = DDXMLElement.elementWithName(Element.SKILL.rawValue) as! DDXMLElement
+        let this = DDXMLElement.element(withName: Element.SKILL.rawValue) as! DDXMLElement
         this.addAttribute( attribute(Attribute.NAME , value: self.name             ) )
         this.addAttribute( attribute(Attribute.VALUE, value: self.value.description) )
         this.addAttribute( attribute(Attribute.TICKS, value: self.ticks.description) )
         
-        let specialties = DDXMLElement.elementWithName(Element.SPECIALTIES.rawValue) as! DDXMLElement
-        this.addChild(specialties)
-        self.specialties.enumerateObjectsUsingBlock { obj, idx, stop in specialties.addChild(obj.asXML()) }
+        let specs = DDXMLElement.element(withName: Element.SPECIALTIES.rawValue) as! DDXMLElement
+        this.addChild(specs)
+		//    specialties.enumerateObjects { (obj, idx, stop) in specs.addChild(obj.asXML()) }
+		for child in specialties {
+			specs.addChild((child as! XMLClient).asXML())
+		}
         return this
     }
 
-    func updateFromXML(element: DDXMLElement) throws
+    func updateFromXML(_ element: DDXMLElement) throws
 	{
-        try XMLSupport.validateElementName(element.name, expectedName: Element.SKILL.rawValue)
+		try XMLSupport.validateElement(name: element.name, expectedName: Element.SKILL.rawValue)
 
         for attrNode in (element.attributes as! [DDXMLNode]) {
             if let nodeName = Attribute(rawValue: attrNode.name) {

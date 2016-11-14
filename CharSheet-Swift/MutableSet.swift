@@ -13,7 +13,7 @@ import Foundation
 /// - todo: This may not be necessary as sets may now be part of the Swift standard library.
 
 class MutableSet<T: AnyObject> {
-    private var _set: NSMutableSet
+    fileprivate var _set: NSMutableSet
     
     init() {
         _set = NSMutableSet()
@@ -23,19 +23,19 @@ class MutableSet<T: AnyObject> {
         _set = NSMutableSet(array: array)
     }
     
-    func add(t: T) {
-        _set.addObject(t)
+    func add(_ t: T) {
+        _set.add(t)
     }
     
-    func remove(t: T) {
-        _set.removeObject(t)
+    func remove(_ t: T) {
+        _set.remove(t)
     }
     
-    func contains(t: T) -> Bool {
-        return _set.containsObject(t)
+    func contains(_ t: T) -> Bool {
+        return _set.contains(t)
     }
     
-    func filter(prediate: (T) -> Bool) -> MutableSet<T> {
+    func filter(_ prediate: (T) -> Bool) -> MutableSet<T> {
         return MutableSet<T>(array: self.array.map{ $0 as T }.filter(prediate))
     }
     
@@ -53,13 +53,13 @@ class MutableSet<T: AnyObject> {
         return MutableSet(array: self.array)
     }
 
-    func addObjects(newItems: [T]) {
-        _set.addObjectsFromArray(newItems)
+    func addObjects(_ newItems: [T]) {
+        _set.addObjects(from: newItems)
     }
 }
 
 /// Add an array of items to the existing set.
-func += <T: AnyObject> (inout set: MutableSet<T>, newItems: [T]) {
+func += <T: AnyObject> (set: inout MutableSet<T>, newItems: [T]) {
     set.addObjects(newItems)
 }
 
@@ -75,7 +75,7 @@ func + <T: AnyObject> (set: MutableSet<T>, newItems: [T]) -> MutableSet<T> {
 /// - todo: This may not be necessary as sets may now be part of the Swift standard library.
 
 class MutableOrderedSet<T: AnyObject> {
-    private var _set: NSMutableOrderedSet
+    fileprivate var _set: NSMutableOrderedSet
     
     // Constructor. Construct as empty.
     init() {
@@ -87,19 +87,19 @@ class MutableOrderedSet<T: AnyObject> {
         _set = NSMutableOrderedSet(array: array)
     }
     
-    func add(t: T) {
-        _set.addObject(t)
+    func add(_ t: T) {
+        _set.add(t)
     }
     
-    func remove(t: T) {
-        _set.removeObject(t)
+    func remove(_ t: T) {
+        _set.remove(t)
     }
     
-    func contains(t: T) -> Bool {
-        return _set.containsObject(t)
+    func contains(_ t: T) -> Bool {
+        return _set.contains(t)
     }
     
-    func filter(prediate: (T) -> Bool) -> MutableOrderedSet<T> {
+    func filter(_ prediate: (T) -> Bool) -> MutableOrderedSet<T> {
         return MutableOrderedSet<T>(array: self.array.map{ $0 as T }.filter(prediate))
     }
     
@@ -111,29 +111,29 @@ class MutableOrderedSet<T: AnyObject> {
         get { return _set.count }
     }
     
-    func indexOfObject(object: T) -> Int {
-        return _set.indexOfObject(object)
+    func indexOfObject(_ object: T) -> Int {
+        return _set.index(of: object)
     }
     
-    func objectAtIndex(idx: Int) -> T {
-        return _set.objectAtIndex(idx) as! T
+    func objectAtIndex(_ idx: Int) -> T {
+        return _set.object(at: idx) as! T
     }
     
     subscript(idx: Int) -> T {
         return _set[idx] as! T
     }
     
-    func addObjects(newObjects: [T])  {
-        _set.addObjectsFromArray(newObjects)
+    func addObjects(_ newObjects: [T])  {
+        _set.addObjects(from: newObjects)
     }
     
-    func removeObjectAtIndex(idx: Int) {
-        _set.removeObjectAtIndex(idx)
+    func removeObjectAtIndex(_ idx: Int) {
+        _set.removeObject(at: idx)
     }
 
-	func replaceObjectAtIndex(idx: Int, withObject object: AnyObject)
+	func replaceObjectAtIndex(_ idx: Int, withObject object: AnyObject)
 	{
-		_set.replaceObjectAtIndex(idx, withObject: object)
+		_set.replaceObject(at: idx, with: object)
 	}
 
     func mutableCopy() -> MutableOrderedSet<T> {
@@ -143,7 +143,7 @@ class MutableOrderedSet<T: AnyObject> {
 }
 
 /// Add an array of items to the existing set.
-func += <T: AnyObject> (inout set: MutableOrderedSet<T>, newItems: [T]) {
+func += <T: AnyObject> (set: inout MutableOrderedSet<T>, newItems: [T]) {
     set.addObjects(newItems)
 }
 

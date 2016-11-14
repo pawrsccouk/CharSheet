@@ -24,16 +24,16 @@ class StoryboardManager
     }
 
 	/// Initializer is private, use the **sharedInstance** constructor instead.
-    private init() {
+    fileprivate init() {
     }
 
 	/// The main storyboard, used when playing the game.
     lazy var mainStoryboard: UIStoryboard = {
-        return UIStoryboard(name:"MainUse", bundle: NSBundle.mainBundle())
+        return UIStoryboard(name:"MainUse", bundle: Bundle.main)
     }()
 
 	/// The 'Edit' storyboard, used when editing a character.
     lazy var editStoryboard: UIStoryboard = {
-        return UIStoryboard(name:"Edit", bundle:NSBundle.mainBundle())
+        return UIStoryboard(name:"Edit", bundle:Bundle.main)
     }()
 }

@@ -21,32 +21,23 @@ class MasterViewController : UITableViewController
     var managedObjectContext: NSManagedObjectContext!
 
 	/// Triggers a Fetch in CoreData of all the CharSheet objects available to the system.
-	private func fetchAllCharacters() -> NSFetchedResultsController
+	func fetchAllCharacters() -> NSFetchedResultsController<NSFetchRequestResult>
 	{
-		let fetchRequest = NSFetchRequest()
-		fetchRequest.entity = NSEntityDescription.entityForName("CharSheet", inManagedObjectContext:self.managedObjectContext)
+		let fetchRequest = NSFetchRequest<NSFetchRequestResult>()
+		fetchRequest.entity = NSEntityDescription.entity(forEntityName: "CharSheet", in:self.managedObjectContext)
 		fetchRequest.fetchBatchSize = 20    // Set the batch size to a suitable number.
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key:"name", ascending:false)]
 
 		// nil for section name key path means "no sections".
 		let fetchedResultsController = NSFetchedResultsController(
-			fetchRequest        : fetchRequest,
-			managedObjectContext: self.managedObjectContext,
-			sectionNameKeyPath  : nil,
-			cacheName           : "Characters")
+			fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Characters")
 		fetchedResultsController.delegate = self
 
-		var error: NSError? //Pointer()
 		do {
 			try fetchedResultsController.performFetch()
-		} catch let error1 as NSError {
-			error = error1
+		} catch let error as NSError {
 			// Replace this implementation with code to handle the error appropriately.
-			if let err = error {
-				NSLog("MasterViewController: Error performing fetch: %@, %@", err, err.userInfo ?? "[]");
-			} else {
-				NSLog("MasterViewController: Unknown error performing fetch.")
-			}
+			NSLog("MasterViewController: Error performing fetch: %@, %@", error, error.userInfo);
 			abort();
 		}
 		return fetchedResultsController
@@ -55,7 +46,7 @@ class MasterViewController : UITableViewController
 	/// Stores the results of fetching all the characters available in Core Data.
 	///
 	/// Generates the fetched results controller for this request only if it is needed.
-	lazy var fetchedResultsController: NSFetchedResultsController = { self.fetchAllCharacters() }()
+	lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = { self.fetchAllCharacters() }()
 
 	/// Creates a CharSheet object and pulls all the data from the XML element provided to initialize it.
 	///
@@ -63,7 +54,7 @@ class MasterViewController : UITableViewController
 	/// - returns: A newly-created CharSheet object which has been added to Core Data.
 	/// :note: This deletes the new char sheet if anything goes wrong during the loading process.
 
-	private func createCharSheetFromElement(element: DDXMLElement) throws -> CharSheet
+	fileprivate func createCharSheetFromElement(_ element: DDXMLElement) throws -> CharSheet
 	{
 		do {
 			let newSheet = try newCharacter()
@@ -87,9 +78,9 @@ class MasterViewController : UITableViewController
 	/// :todo: This should be in the model somewhere, not in a view controller.
 	///        I need to create a class to represent "all the character sheets".
 	/// :note: This decides whether the loaded data represents a new character or replaces an existing one.
-    func importURL(url: NSURL) throws
+    func importURL(_ url: URL) throws
 	{
-		func findElement(document: DDXMLDocument, nodeName: String) throws -> DDXMLElement
+		func findElement(_ document: DDXMLDocument, nodeName: String) throws -> DDXMLElement
 		{
 			if let node = (document.rootElement.children as! [DDXMLElement]).filter({ $0.name == nodeName }).first {
 				return node
@@ -98,26 +89,26 @@ class MasterViewController : UITableViewController
 		}
 
         // Data will be a character sheet in XML format.  Import it and create a character for it.
-        if !url.fileURL {
+        if !url.isFileURL {
             throw XMLSupport.XMLError("Error: URL: \(url) is not a file URL and isn't supported.")
         }
 
-		let xmlData = NSData(contentsOfURL:url)
+		let xmlData = try? Data(contentsOf: url)
 		let document = try DDXMLDocument(data: xmlData!, options: 0)
 		let rootNode = try findElement(document, nodeName: "charSheet")
-		try createCharSheetFromElement(rootNode)
+		_ = try createCharSheetFromElement(rootNode)
 	}
 
     override func viewDidLoad()
 	{
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = false
-        navigationItem.leftBarButtonItem = editButtonItem()
+        navigationItem.leftBarButtonItem = editButtonItem
 
 		if let
 			viewControllers = splitViewController?.viewControllers,
-			navController = viewControllers.last as? UINavigationController,
-			useViewController = navController.topViewController as? CharSheetUseViewController
+			let navController = viewControllers.last as? UINavigationController,
+			let useViewController = navController.topViewController as? CharSheetUseViewController
 		{
 			useViewController.managedObjectContext = managedObjectContext
 			detailViewController = useViewController
@@ -135,12 +126,12 @@ class MasterViewController : UITableViewController
 	/// Returns the last CharSheet the user was viewing before they exited the app.
 	///
 	/// This is stored in the UserDefaults and used to pre-set the character sheet on app startup.
-	private func lastViewedCharSheet() -> CharSheet?
+	fileprivate func lastViewedCharSheet() -> CharSheet?
 	{
 		let allObjects = fetchedResultsController.sections?.flatMap({ (sectionInfo: AnyObject) in
 			return (sectionInfo as! NSFetchedResultsSectionInfo).objects as! [CharSheet]
 		})
-		if let lastViewedSheetName = NSUserDefaults.standardUserDefaults().stringForKey("LastSelectedCharacter")
+		if let lastViewedSheetName = UserDefaults.standard.string(forKey: "LastSelectedCharacter")
 		{
 			return allObjects?.filter({ $0.name == lastViewedSheetName }).first
 		}
@@ -154,7 +145,7 @@ class MasterViewController : UITableViewController
 	///
 	/// - parameter error: The error to search.
 	/// - returns: Text formatted for a user to read describing the error.
-	private func textFromError(error: NSError) -> String
+	fileprivate func textFromError(_ error: NSError) -> String
 	{
         var errorText = "Unknown error"
 		if let fullInfo = error.userInfo[NSHelpAnchorErrorKey] as? String {
@@ -165,7 +156,7 @@ class MasterViewController : UITableViewController
 		// Get the first one, and show it.
 		if let
 			errorDetail = error.userInfo[NSDetailedErrorsKey] as? [NSError],
-			fullInfo    = errorDetail.first?.userInfo[NSHelpAnchorErrorKey] as? String
+			let fullInfo    = errorDetail.first?.userInfo[NSHelpAnchorErrorKey] as? String
 		{
 			errorText = fullInfo
 			if errorDetail.count > 1 {
@@ -183,25 +174,25 @@ class MasterViewController : UITableViewController
 	///
 	/// - parameter error: The error to display.
 	/// - parameter title:  The title displayed on the error window.
-	func showAlertForError(error: NSError, title: String)
+	func showAlertForError(_ error: NSError, title: String)
 	{
 		let errorText = textFromError(error)
-		let alertController = UIAlertController(title: title, message: errorText, preferredStyle: .Alert)
-		alertController.addAction(UIAlertAction(title: "Close",style: .Default) { (action) in
-			self.dismissViewControllerAnimated(true, completion: nil)
+		let alertController = UIAlertController(title: title, message: errorText, preferredStyle: .alert)
+		alertController.addAction(UIAlertAction(title: "Close",style: .default) { (action) in
+			self.dismiss(animated: true, completion: nil)
 			})
-		presentViewController(alertController, animated: true, completion: nil)
+		present(alertController, animated: true, completion: nil)
    }
 
 	/// Creates a new CharSheet entity in Core Data's managed object context and returns it.
-	private func newCharacter() throws -> CharSheet
+	fileprivate func newCharacter() throws -> CharSheet
 	{
 		let context  = fetchedResultsController.managedObjectContext
 		if let
 			entCharacter = fetchedResultsController.fetchRequest.entity,
-			entName      = entCharacter.name,
-			newCharacter = NSEntityDescription.insertNewObjectForEntityForName(entName,
-				inManagedObjectContext:context) as? CharSheet
+			let entName      = entCharacter.name,
+			let newCharacter = NSEntityDescription.insertNewObject(forEntityName: entName,
+				into:context) as? CharSheet
 		{
 			newCharacter.name = "New Character"
 			return newCharacter
@@ -209,23 +200,23 @@ class MasterViewController : UITableViewController
 		throw XMLSupport.XMLError("Error creating character sheet from Core Data")
 	}
 
-    @IBAction func insertNewCharSheet(sender: AnyObject?)
+    @IBAction func insertNewCharSheet(_ sender: AnyObject?)
 	{
 		do {
-			try newCharacter()
+			_ = try newCharacter()
 		}
 		catch let error as NSError {
 			showAlertForError(error, title: "Error inserting new character sheet.")
 		}
 		// Save the character immediately.
-        NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "SaveChanges"), object: nil)
     }
     
-    private func deleteCharSheet(charSheet: CharSheet)
+    fileprivate func deleteCharSheet(_ charSheet: CharSheet)
 	{
-        fetchedResultsController.managedObjectContext.deleteObject(charSheet)
+        fetchedResultsController.managedObjectContext.delete(charSheet)
         // Blank the detail view if we were looking at this sheet when it was deleted.
-        if let dcs = detailViewController.charSheet where dcs == charSheet {
+        if let dcs = detailViewController.charSheet, dcs == charSheet {
             detailViewController.charSheet = nil
         }
     }
@@ -236,22 +227,22 @@ class MasterViewController : UITableViewController
 
 extension MasterViewController // : UITableViewDataSource
 {
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    override func numberOfSections(in tableView: UITableView) -> Int
     {
         return fetchedResultsController.sections?.count ?? 0
     }
     
-    override func tableView(tableView: UITableView,  numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView,  numberOfRowsInSection section: Int) -> Int {
         if let sectionInfo = fetchedResultsController.sections {
             return sectionInfo[section].numberOfObjects
         }
         return 0
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) -> UITableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath:IndexPath) -> UITableViewCell
 	{
 		let CELL_ID = "MasterViewController_Cell"
-        let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID) ?? UITableViewCell(style:.Subtitle, reuseIdentifier:CELL_ID)
+        let cell = tableView.dequeueReusableCell(withIdentifier: CELL_ID) ?? UITableViewCell(style:.subtitle, reuseIdentifier:CELL_ID)
         configureCell(cell, atIndexPath:indexPath)
         return cell
     }
@@ -261,36 +252,36 @@ extension MasterViewController // : UITableViewDataSource
 
 extension MasterViewController // : UITableViewDelegate
 {
-    override func tableView(  tableView: UITableView,
-		canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
+    override func tableView(  _ tableView: UITableView,
+		canEditRowAt indexPath: IndexPath) -> Bool
 	{
         return true    // All the rows are editable
     }
     
-    override func tableView(  tableView: UITableView,
-		commitEditingStyle editingStyle: UITableViewCellEditingStyle,
-		forRowAtIndexPath     indexPath: NSIndexPath)
+    override func tableView(  _ tableView: UITableView,
+		commit editingStyle: UITableViewCellEditingStyle,
+		forRowAt     indexPath: IndexPath)
 	{
-        if editingStyle == .Delete, let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as? CharSheet {
+        if editingStyle == .delete, let sheet = fetchedResultsController.object(at: indexPath) as? CharSheet {
 			deleteCharSheet(sheet)
-			NSNotificationCenter.defaultCenter().postNotificationName("SaveChanges", object: nil)
+			NotificationCenter.default.post(name: Notification.Name(rawValue: "SaveChanges"), object: nil)
         }
     }
     
-    override func tableView(  tableView: UITableView,
-		canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool
+    override func tableView(  _ tableView: UITableView,
+		canMoveRowAt indexPath: IndexPath) -> Bool
 	{
         return false    // The table view should not be re-orderable.
     }
 
-    override func tableView(    tableView: UITableView,
-		didSelectRowAtIndexPath indexPath: NSIndexPath)
+    override func tableView(    _ tableView: UITableView,
+		didSelectRowAt indexPath: IndexPath)
 	{
-		if let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as? CharSheet {
+		if let sheet = fetchedResultsController.object(at: indexPath) as? CharSheet {
 			detailViewController.charSheet = sheet
 
 			// Store the last selection so I can automatically restore it when the app starts up.
-			NSUserDefaults.standardUserDefaults().setValue(sheet.name ?? "", forKey: "LastSelectedCharacter")
+			UserDefaults.standard.setValue(sheet.name ?? "", forKey: "LastSelectedCharacter")
 		}
     }
 }
@@ -299,75 +290,75 @@ extension MasterViewController // : UITableViewDelegate
     //MARK: - Fetched results controller
 extension MasterViewController: NSFetchedResultsControllerDelegate
 {
-    func controllerWillChangeContent(controller: NSFetchedResultsController)
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>)
 	{
         tableView.beginUpdates()
     }
     
-    func controller(      controller: NSFetchedResultsController,
-		didChangeSection sectionInfo: NSFetchedResultsSectionInfo,
-		atIndex         sectionIndex: Int,
-		forChangeType     changeType: NSFetchedResultsChangeType)
+    func controller(      _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+		didChange sectionInfo: NSFetchedResultsSectionInfo,
+		atSectionIndex         sectionIndex: Int,
+		for     changeType: NSFetchedResultsChangeType)
 	{
         switch(changeType) {
-        case .Insert:
-            tableView.insertSections(NSIndexSet(index:sectionIndex), withRowAnimation:.Fade)
-        case .Delete:
-            tableView.deleteSections(NSIndexSet(index:sectionIndex), withRowAnimation:.Fade)
+        case .insert:
+            tableView.insertSections(IndexSet(integer:sectionIndex), with:.fade)
+        case .delete:
+            tableView.deleteSections(IndexSet(integer:sectionIndex), with:.fade)
         default:
             break
         }
     }
 
 
-	func controller(  controller: NSFetchedResultsController,
-		didChangeObject anObject: AnyObject,
-		atIndexPath    indexPath: NSIndexPath?,
-		forChangeType changeType: NSFetchedResultsChangeType,
-		newIndexPath            : NSIndexPath?)
+	func controller(  _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+		didChange anObject: Any,
+		at    indexPath: IndexPath?,
+		for changeType: NSFetchedResultsChangeType,
+		newIndexPath            : IndexPath?)
 	{
 		switch(changeType) {
-		case .Insert:
+		case .insert:
 			if let newIP = newIndexPath {
-				tableView.insertRowsAtIndexPaths([newIP], withRowAnimation: UITableViewRowAnimation.Fade)
+				tableView.insertRows(at: [newIP], with: UITableViewRowAnimation.fade)
 			}
-		case .Delete:
+		case .delete:
 			if let ip = indexPath {
-				tableView.deleteRowsAtIndexPaths([ip], withRowAnimation: UITableViewRowAnimation.Fade)
+				tableView.deleteRows(at: [ip], with: UITableViewRowAnimation.fade)
 			}
-		case .Update:
-			if let ip = indexPath, cell = tableView.cellForRowAtIndexPath(ip) {
+		case .update:
+			if let ip = indexPath, let cell = tableView.cellForRow(at: ip) {
 				configureCell(cell, atIndexPath:ip)
 
 				// Store the new name so I can automatically restore it when the app starts up.
 				// This assumes you only change the name of the character you're currently working on.
-				if let sheet = fetchedResultsController.objectAtIndexPath(ip) as? CharSheet {
-					NSUserDefaults.standardUserDefaults().setValue(sheet.name ?? "", forKey: "LastSelectedCharacter")
+				if let sheet = fetchedResultsController.object(at: ip) as? CharSheet {
+					UserDefaults.standard.setValue(sheet.name ?? "", forKey: "LastSelectedCharacter")
 				}
 			}
-		case .Move:
-			if let ip = indexPath, newIP = newIndexPath {
-				tableView.deleteRowsAtIndexPaths([ip],   withRowAnimation: UITableViewRowAnimation.Fade)
-				tableView.insertRowsAtIndexPaths([newIP],withRowAnimation: UITableViewRowAnimation.Fade)
+		case .move:
+			if let ip = indexPath, let newIP = newIndexPath {
+				tableView.deleteRows(at: [ip],   with: UITableViewRowAnimation.fade)
+				tableView.insertRows(at: [newIP],with: UITableViewRowAnimation.fade)
 			}
 		}
 	}
 
 
-	func controllerDidChangeContent(controller: NSFetchedResultsController)
+	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>)
 	{
 		tableView.endUpdates()
 	}
 
 
 
-	private func configureCell(cell: UITableViewCell, atIndexPath indexPath:NSIndexPath)
+	fileprivate func configureCell(_ cell: UITableViewCell, atIndexPath indexPath:IndexPath)
 	{
-		if let sheet = fetchedResultsController.objectAtIndexPath(indexPath) as? CharSheet {
-			if let name = sheet.name, l = cell.textLabel {
+		if let sheet = fetchedResultsController.object(at: indexPath) as? CharSheet {
+			if let name = sheet.name, let l = cell.textLabel {
 				l.text = name
 			}
-			if let label = cell.detailTextLabel, game = sheet.game {
+			if let label = cell.detailTextLabel, let game = sheet.game {
 				label.text = game
 			}
 		}
