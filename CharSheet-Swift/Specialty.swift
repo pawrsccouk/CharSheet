@@ -47,9 +47,9 @@ extension Specialty: XMLClient
 {
 	func asXML() throws -> DDXMLElement
 	{
-		let element = DDXMLElement.element(withName: SPECIALTY)
-        element.addAttribute( try XMLSupport.exists(DDXMLNode.attribute(withName: NAME , stringValue: self.name ?? "No name"), name: "attribute for \(NAME)" ) )
-        element.addAttribute( try XMLSupport.exists(DDXMLNode.attribute(withName: VALUE, stringValue: self.value.description), name: "attribute for \(VALUE)") )
+		let element = DDXMLElement.element(withName: SPECIALTY) as! DDXMLElement
+        element.addAttribute( try XMLSupport.attrExists(DDXMLNode.attribute(withName: NAME , stringValue: self.name ?? "No name"), name: NAME ) )
+        element.addAttribute( try XMLSupport.attrExists(DDXMLNode.attribute(withName: VALUE, stringValue: self.value.description), name: VALUE) )
         return element
     }
 

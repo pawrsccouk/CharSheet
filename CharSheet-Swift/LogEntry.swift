@@ -67,12 +67,12 @@ extension LogEntry: XMLClient
 {
 	func asXML() throws -> DDXMLElement
 	{
-        let element = DDXMLElement.element(withName: LOG_ENTRY, stringValue:self.change ?? "")
+        let element = DDXMLElement.element(withName: LOG_ENTRY, stringValue:self.change ?? "") as! DDXMLElement
 		let dateString = xmlDateFormatter.string(from: self.dateTime), summaryString = self.summary ?? ""
 		let dateAttr = DDXMLNode.attribute(withName: DATE_TIME, stringValue: dateString)
 		let summAttr = DDXMLNode.attribute(withName: SUMMARY  , stringValue: summaryString)
-		try element.addAttribute( XMLSupport.exists(dateAttr, name: "Attribute for \(DATE_TIME)") )
-		try element.addAttribute( XMLSupport.exists(summAttr, name: "attribute for \(SUMMARY)"  ) )
+		try element.addAttribute( XMLSupport.attrExists(dateAttr, name: DATE_TIME) )
+		try element.addAttribute( XMLSupport.attrExists(summAttr, name: SUMMARY  ) )
         return element
     }
 

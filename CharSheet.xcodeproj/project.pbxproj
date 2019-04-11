@@ -12,11 +12,6 @@
 		5725DE721A0415CD00343E5F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE711A0415CD00343E5F /* AppDelegate.swift */; };
 		5725DE771A0415CD00343E5F /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE761A0415CD00343E5F /* MasterViewController.swift */; };
 		5725DE7E1A0415CD00343E5F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5725DE7D1A0415CD00343E5F /* Images.xcassets */; };
-		5725DEA91A046FF800343E5F /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE9C1A046FF800343E5F /* DDXMLElementAdditions.m */; };
-		5725DEAA1A046FF800343E5F /* NSString+DDXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DE9F1A046FF800343E5F /* NSString+DDXML.m */; };
-		5725DEAB1A046FF800343E5F /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEA21A046FF800343E5F /* DDXMLDocument.m */; };
-		5725DEAC1A046FF800343E5F /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEA41A046FF800343E5F /* DDXMLElement.m */; };
-		5725DEAD1A046FF800343E5F /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEA61A046FF800343E5F /* DDXMLNode.m */; };
 		5725DEB71A0473EC00343E5F /* CharSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB01A0473EC00343E5F /* CharSheet.swift */; };
 		5725DEC01A047D5100343E5F /* XMLSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEBF1A047D5100343E5F /* XMLSupport.swift */; };
 		5725DEC31A0493F100343E5F /* Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEC21A0493F100343E5F /* Misc.swift */; };
@@ -27,6 +22,8 @@
 		5725DEC81A07679900343E5F /* DieRoll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEB11A0473EC00343E5F /* DieRoll.swift */; };
 		5725DECA1A07878600343E5F /* MutableSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DEC91A07878600343E5F /* MutableSet.swift */; };
 		5725DED81A07935A00343E5F /* TicksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725DED71A07935A00343E5F /* TicksView.swift */; };
+		576DD171225F337900436D9B /* KissXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 576DD169225F32E000436D9B /* KissXML.framework */; };
+		576DD172225F33EF00436D9B /* KissXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 576DD169225F32E000436D9B /* KissXML.framework */; };
 		577A81A71A07C73600DA1EC8 /* EditSkillCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A41A07C73600DA1EC8 /* EditSkillCellView.xib */; };
 		577A81A81A07C73600DA1EC8 /* SkillSelectView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A51A07C73600DA1EC8 /* SkillSelectView.xib */; };
 		577A81A91A07C73600DA1EC8 /* UseSkillCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A81A61A07C73600DA1EC8 /* UseSkillCellView.xib */; };
@@ -52,7 +49,6 @@
 		577A81D61A0B358300DA1EC8 /* Edit.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 577A81D41A0B358300DA1EC8 /* Edit.storyboard */; };
 		577A81D71A0B358300DA1EC8 /* MainUse.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 577A81D51A0B358300DA1EC8 /* MainUse.storyboard */; };
 		579B6BCB1CB1FD19002F13C0 /* SpellTargetsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 579B6BCA1CB1FD19002F13C0 /* SpellTargetsViewController.swift */; };
-		579B6BCD1CB21A92002F13C0 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 579B6BCC1CB21A92002F13C0 /* libxml2.tbd */; };
 		579CED891DDF4ADC00115CD2 /* CharSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 579CED881DDF4ADC00115CD2 /* CharSheetTests.swift */; };
 		579CED911DDF4B2200115CD2 /* XMLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 579CED901DDF4B2200115CD2 /* XMLTests.swift */; };
 		579CED931DDF620000115CD2 /* CoreDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 579CED921DDF620000115CD2 /* CoreDataController.swift */; };
@@ -62,6 +58,34 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		576DD168225F32E000436D9B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 576DD161225F32E000436D9B /* KissXML.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0DCD8DCA1E54A3A3001D9832;
+			remoteInfo = "KissXML (iOS)";
+		};
+		576DD16A225F32E000436D9B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 576DD161225F32E000436D9B /* KissXML.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D94131BA1E5CEBE700189BD5;
+			remoteInfo = "KissXML (macOS)";
+		};
+		576DD16C225F32E000436D9B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 576DD161225F32E000436D9B /* KissXML.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D94131D31E5CEC8300189BD5;
+			remoteInfo = "KissXML (tvOS)";
+		};
+		576DD16E225F32E000436D9B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 576DD161225F32E000436D9B /* KissXML.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D94131EC1E5CECC700189BD5;
+			remoteInfo = "KissXML (watchOS)";
+		};
 		579CED8B1DDF4ADC00115CD2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5725DE641A0415CC00343E5F /* Project object */;
@@ -80,18 +104,6 @@
 		5725DE711A0415CD00343E5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5725DE761A0415CD00343E5F /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
 		5725DE7D1A0415CD00343E5F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		5725DE9B1A046FF800343E5F /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElementAdditions.h; sourceTree = "<group>"; };
-		5725DE9C1A046FF800343E5F /* DDXMLElementAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElementAdditions.m; sourceTree = "<group>"; };
-		5725DE9E1A046FF800343E5F /* NSString+DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DDXML.h"; sourceTree = "<group>"; };
-		5725DE9F1A046FF800343E5F /* NSString+DDXML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+DDXML.m"; sourceTree = "<group>"; };
-		5725DEA01A046FF800343E5F /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXML.h; sourceTree = "<group>"; };
-		5725DEA11A046FF800343E5F /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLDocument.h; sourceTree = "<group>"; };
-		5725DEA21A046FF800343E5F /* DDXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLDocument.m; sourceTree = "<group>"; };
-		5725DEA31A046FF800343E5F /* DDXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElement.h; sourceTree = "<group>"; };
-		5725DEA41A046FF800343E5F /* DDXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElement.m; sourceTree = "<group>"; };
-		5725DEA51A046FF800343E5F /* DDXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLNode.h; sourceTree = "<group>"; };
-		5725DEA61A046FF800343E5F /* DDXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLNode.m; sourceTree = "<group>"; };
-		5725DEA81A046FF800343E5F /* DDXMLPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLPrivate.h; sourceTree = "<group>"; };
 		5725DEB01A0473EC00343E5F /* CharSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharSheet.swift; sourceTree = "<group>"; };
 		5725DEB11A0473EC00343E5F /* DieRoll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DieRoll.swift; sourceTree = "<group>"; };
 		5725DEB21A0473EC00343E5F /* LogEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogEntry.swift; sourceTree = "<group>"; };
@@ -103,6 +115,7 @@
 		5725DEC21A0493F100343E5F /* Misc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
 		5725DEC91A07878600343E5F /* MutableSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableSet.swift; sourceTree = "<group>"; };
 		5725DED71A07935A00343E5F /* TicksView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicksView.swift; sourceTree = "<group>"; };
+		576DD161225F32E000436D9B /* KissXML.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = KissXML.xcodeproj; path = KissXML/KissXML.xcodeproj; sourceTree = "<group>"; };
 		577A81A41A07C73600DA1EC8 /* EditSkillCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditSkillCellView.xib; sourceTree = "<group>"; };
 		577A81A51A07C73600DA1EC8 /* SkillSelectView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SkillSelectView.xib; sourceTree = "<group>"; };
 		577A81A61A07C73600DA1EC8 /* UseSkillCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UseSkillCellView.xib; sourceTree = "<group>"; };
@@ -145,7 +158,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				579B6BCD1CB21A92002F13C0 /* libxml2.tbd in Frameworks */,
+				576DD171225F337900436D9B /* KissXML.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				576DD172225F33EF00436D9B /* KissXML.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,12 +176,13 @@
 		5725DE631A0415CC00343E5F = {
 			isa = PBXGroup;
 			children = (
+				576DD161225F32E000436D9B /* KissXML.xcodeproj */,
 				579B6BCC1CB21A92002F13C0 /* libxml2.tbd */,
 				571133D41B4D66CA001F0210 /* Notes.md */,
-				5725DE991A046FF800343E5F /* KissXML */,
 				5725DE6E1A0415CD00343E5F /* CharSheet-Swift */,
 				579CED871DDF4ADC00115CD2 /* CharSheetTests */,
 				5725DE6D1A0415CD00343E5F /* Products */,
+				576DD170225F337900436D9B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -204,50 +219,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		5725DE991A046FF800343E5F /* KissXML */ = {
-			isa = PBXGroup;
-			children = (
-				5725DE9A1A046FF800343E5F /* Additions */,
-				5725DE9D1A046FF800343E5F /* Categories */,
-				5725DEA01A046FF800343E5F /* DDXML.h */,
-				5725DEA11A046FF800343E5F /* DDXMLDocument.h */,
-				5725DEA21A046FF800343E5F /* DDXMLDocument.m */,
-				5725DEA31A046FF800343E5F /* DDXMLElement.h */,
-				5725DEA41A046FF800343E5F /* DDXMLElement.m */,
-				5725DEA51A046FF800343E5F /* DDXMLNode.h */,
-				5725DEA61A046FF800343E5F /* DDXMLNode.m */,
-				5725DEA71A046FF800343E5F /* Private */,
-			);
-			name = KissXML;
-			path = "CharSheet-Swift/KissXML";
-			sourceTree = "<group>";
-		};
-		5725DE9A1A046FF800343E5F /* Additions */ = {
-			isa = PBXGroup;
-			children = (
-				5725DE9B1A046FF800343E5F /* DDXMLElementAdditions.h */,
-				5725DE9C1A046FF800343E5F /* DDXMLElementAdditions.m */,
-			);
-			path = Additions;
-			sourceTree = "<group>";
-		};
-		5725DE9D1A046FF800343E5F /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				5725DE9E1A046FF800343E5F /* NSString+DDXML.h */,
-				5725DE9F1A046FF800343E5F /* NSString+DDXML.m */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
-		5725DEA71A046FF800343E5F /* Private */ = {
-			isa = PBXGroup;
-			children = (
-				5725DEA81A046FF800343E5F /* DDXMLPrivate.h */,
-			);
-			path = Private;
-			sourceTree = "<group>";
-		};
 		5725DEBE1A04740A00343E5F /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -264,6 +235,24 @@
 				5725DEBF1A047D5100343E5F /* XMLSupport.swift */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		576DD162225F32E000436D9B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				576DD169225F32E000436D9B /* KissXML.framework */,
+				576DD16B225F32E000436D9B /* KissXML.framework */,
+				576DD16D225F32E000436D9B /* KissXML.framework */,
+				576DD16F225F32E000436D9B /* KissXML.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		576DD170225F337900436D9B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		577A81AA1A07C74F00DA1EC8 /* Views */ = {
@@ -401,6 +390,12 @@
 			mainGroup = 5725DE631A0415CC00343E5F;
 			productRefGroup = 5725DE6D1A0415CD00343E5F /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 576DD162225F32E000436D9B /* Products */;
+					ProjectRef = 576DD161225F32E000436D9B /* KissXML.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				5725DE6B1A0415CD00343E5F /* CharSheet */,
@@ -408,6 +403,37 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		576DD169225F32E000436D9B /* KissXML.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = KissXML.framework;
+			remoteRef = 576DD168225F32E000436D9B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		576DD16B225F32E000436D9B /* KissXML.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = KissXML.framework;
+			remoteRef = 576DD16A225F32E000436D9B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		576DD16D225F32E000436D9B /* KissXML.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = KissXML.framework;
+			remoteRef = 576DD16C225F32E000436D9B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		576DD16F225F32E000436D9B /* KissXML.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = KissXML.framework;
+			remoteRef = 576DD16E225F32E000436D9B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		5725DE6A1A0415CD00343E5F /* Resources */ = {
@@ -443,7 +469,6 @@
 				571133D81B537915001F0210 /* CharSheetViewController.swift in Sources */,
 				577A81B31A07C8F900DA1EC8 /* CharSheetUseControl.swift in Sources */,
 				579CED931DDF620000115CD2 /* CoreDataController.swift in Sources */,
-				5725DEAD1A046FF800343E5F /* DDXMLNode.m in Sources */,
 				5725DECA1A07878600343E5F /* MutableSet.swift in Sources */,
 				577A81CF1A08CFD700DA1EC8 /* LogViewController.swift in Sources */,
 				5725DED81A07935A00343E5F /* TicksView.swift in Sources */,
@@ -463,12 +488,9 @@
 				577A81C61A08CFD700DA1EC8 /* CharSheetUseViewController.swift in Sources */,
 				577A81CB1A08CFD700DA1EC8 /* EditSpecialtyViewController.swift in Sources */,
 				577A81B51A07C8F900DA1EC8 /* StoryboardManager.swift in Sources */,
-				5725DEAA1A046FF800343E5F /* NSString+DDXML.m in Sources */,
 				571133D61B530F42001F0210 /* StepperAssistant.swift in Sources */,
 				577A81D01A08CFD700DA1EC8 /* StatSelectViewController.swift in Sources */,
-				5725DEAC1A046FF800343E5F /* DDXMLElement.m in Sources */,
 				577A81C81A08CFD700DA1EC8 /* DieRollViewController.swift in Sources */,
-				5725DEAB1A046FF800343E5F /* DDXMLDocument.m in Sources */,
 				577A81C51A08CFD700DA1EC8 /* CharSheetEditViewController.swift in Sources */,
 				577A81CC1A08CFD700DA1EC8 /* EditXPGainViewController.swift in Sources */,
 				5725DEC01A047D5100343E5F /* XMLSupport.swift in Sources */,
@@ -478,7 +500,6 @@
 				577A81CA1A08CFD700DA1EC8 /* EditSkillViewController.swift in Sources */,
 				577A81CE1A08CFD700DA1EC8 /* LogEntryViewController.swift in Sources */,
 				5725DEC71A04E95A00343E5F /* XPGain.swift in Sources */,
-				5725DEA91A046FF800343E5F /* DDXMLElementAdditions.m in Sources */,
 				577A81B61A07C8F900DA1EC8 /* StrictGridLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -618,7 +639,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = JPGPN9QD84;
-				"HEADER_SEARCH_PATHS[arch=*]" = /usr/include/libxml2;
+				HEADER_SEARCH_PATHS = (
+					/usr/include/libxml2,
+					"$(SRCROOT)/KissXML/KissXML",
+				);
 				INFOPLIST_FILE = "CharSheet-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pawrsccouk.CharSheet2;
@@ -639,7 +663,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = JPGPN9QD84;
-				"HEADER_SEARCH_PATHS[arch=*]" = /usr/include/libxml2;
+				HEADER_SEARCH_PATHS = (
+					/usr/include/libxml2,
+					"$(SRCROOT)/KissXML/KissXML",
+				);
 				INFOPLIST_FILE = "CharSheet-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pawrsccouk.CharSheet2;
@@ -661,6 +688,10 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = JPGPN9QD84;
+				HEADER_SEARCH_PATHS = (
+					/usr/include/libxml2,
+					"$(SRCROOT)/KissXML/KissXML",
+				);
 				INFOPLIST_FILE = CharSheetTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -682,6 +713,10 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = JPGPN9QD84;
+				HEADER_SEARCH_PATHS = (
+					/usr/include/libxml2,
+					"$(SRCROOT)/KissXML/KissXML",
+				);
 				INFOPLIST_FILE = CharSheetTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

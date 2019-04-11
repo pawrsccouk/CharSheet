@@ -50,11 +50,11 @@ extension XPGain: XMLClient
 {
 	func asXML() throws -> DDXMLElement
 	{
-		let element = DDXMLElement.element(withName: XP_ENTRY)
+		let element = DDXMLElement.element(withName: XP_ENTRY) as! DDXMLElement
 		let amtAttr = DDXMLNode.attribute(withName: AMOUNT, stringValue: self.amount.description)
-		try element.addAttribute( XMLSupport.exists(amtAttr, name: "attribute for \(AMOUNT)") )
+		try element.addAttribute( XMLSupport.attrExists(amtAttr, name: AMOUNT) )
 		let rsnAttr = DDXMLNode.attribute(withName: REASON, stringValue: self.reason ?? "")
-		try element.addAttribute( XMLSupport.exists(rsnAttr, name: "attribute for \(REASON)") )
+		try element.addAttribute( XMLSupport.attrExists(rsnAttr, name: REASON) )
         return element
     }
     

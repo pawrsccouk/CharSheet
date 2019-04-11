@@ -180,7 +180,7 @@ extension CharSheet
 			throw XMLSupport.XMLError("Document \(document) has invalid root element.")
 		}
 		try root.addChild(self.asXML())
-		return document.xmlData(withOptions: UInt(DDXMLNodeCompactEmptyElement))
+		return document.xmlData(withOptions: UInt(XMLNodeCompactEmptyElement))
     }
 
 
@@ -248,18 +248,18 @@ extension CharSheet: XMLClient
 	{
         func saveChildrenAsXML(_ parent: DDXMLElement, elementName: String, collection: [XMLClient]) throws
 		{
-            let element = DDXMLElement.element(withName: elementName)
+            let element = DDXMLElement.element(withName: elementName) as! DDXMLElement
             parent.addChild(element)
 			for child in collection {
 				try element.addChild(child.asXML())
 			}
         }
 
-        let thisElement = DDXMLElement.element(withName: CHAR_SHEET)
+        let thisElement = DDXMLElement.element(withName: CHAR_SHEET) as! DDXMLElement
 		// Use KVO to get the attribute data.
 		for (attrName, _) in attributes {
 			let val = self.string(forKey: attrName)
-			let attr = try XMLSupport.exists(DDXMLNode.attribute(withName: attrName, stringValue:val), name: "Attribute for \(attrName)")
+			let attr = try XMLSupport.attrExists(DDXMLNode.attribute(withName: attrName, stringValue:val), name: attrName)
 			thisElement.addAttribute(attr)
 		}
 		try saveChildrenAsXML(thisElement, elementName: LOGS    , collection: allLogEntries )
@@ -267,7 +267,7 @@ extension CharSheet: XMLClient
 		try saveChildrenAsXML(thisElement, elementName: XP_GAINS, collection: allXPGains )
         
         // Store notes as a separate element as it's too big to go as an attribute.
-        let elemNotes = DDXMLElement.element(withName: NOTES, stringValue:self.notes ?? "")
+        let elemNotes = DDXMLElement.element(withName: NOTES, stringValue:self.notes ?? "") as! DDXMLElement
         thisElement.addChild(elemNotes)
         return thisElement
     }

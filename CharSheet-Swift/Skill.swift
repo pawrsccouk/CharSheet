@@ -122,12 +122,12 @@ extension Skill: XMLClient
 {
 	func asXML() throws -> DDXMLElement
 	{
-        let this = DDXMLElement.element(withName: SKILL)
-		try this.addAttribute( XMLSupport.exists(DDXMLNode.attribute(withName: NAME , stringValue: self.name ?? "")       , name: "attribute for \(NAME)" ) )
-        try this.addAttribute( XMLSupport.exists(DDXMLNode.attribute(withName: VALUE, stringValue: self.value.description), name: "attribute for \(VALUE)") )
-        try this.addAttribute( XMLSupport.exists(DDXMLNode.attribute(withName: TICKS, stringValue: self.ticks.description), name: "attribute for \(TICKS)") )
+        let this = DDXMLElement.element(withName: SKILL) as! DDXMLElement
+		try this.addAttribute( XMLSupport.attrExists(DDXMLNode.attribute(withName: NAME , stringValue: self.name ?? "")       , name: NAME ) )
+        try this.addAttribute( XMLSupport.attrExists(DDXMLNode.attribute(withName: VALUE, stringValue: self.value.description), name: VALUE) )
+        try this.addAttribute( XMLSupport.attrExists(DDXMLNode.attribute(withName: TICKS, stringValue: self.ticks.description), name: TICKS) )
         
-        let specs = DDXMLElement.element(withName: SPECIALTIES)
+        let specs = DDXMLElement.element(withName: SPECIALTIES) as! DDXMLElement
         this.addChild(specs)
 		for child in allSpecialties {
 			try specs.addChild(child.asXML())

@@ -21,14 +21,15 @@ protocol XMLClient
 
 struct XMLSupport
 {
-	/// Takes an optional optT and returns the non-optional part of it.
-	/// Throws an NSError object if optT is nil and uses the name to describe what failed.
-	static func exists<T>(_ optT: T?, name: String) throws -> T
+	/// Work-around for the fact that the KissXML library returns attributes with a type of 'id' instead of DDXMLNode.
+	/// Converts attr into a DDXMLNode object and returns it.
+	/// Throws an NSError object if attr is nil or not a DDXMLNode object and uses the name to describe what failed.
+	static func attrExists(_ attr: Any?, name: String) throws -> DDXMLNode
 	{
-		guard let aT = optT else {
-			throw XMLSupport.XMLError("Failed to create a new \(name)")
+		guard let a = attr as? DDXMLNode else {
+			throw XMLSupport.XMLError("Failed to create a new attribute for '\(name)'")
 		}
-		return aT
+		return a
 	}
 
 	static func XMLError(_ text: String) -> NSError
