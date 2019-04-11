@@ -85,7 +85,7 @@ class EditSkillViewController : UIViewController
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
 	{
         if segue.identifier == "PushEditSpecialty" {
-            let newSpecialty = skill.appendSpecialty()
+            let newSpecialty = skill.addSpecialty()
             let editSpecialtyViewController = segue.destination as! EditSpecialtyViewController
             editSpecialtyViewController.specialty = newSpecialty
         }
@@ -131,7 +131,7 @@ extension EditSkillViewController: UITableViewDataSource
 extension EditSkillViewController: UITableViewDelegate
 {
     func tableView(           _ tableView: UITableView,
-		commit editingStyle: UITableViewCellEditingStyle,
+							  commit editingStyle: UITableViewCell.EditingStyle,
 		forRowAt     indexPath: IndexPath)
 	{
         if editingStyle == .delete {
@@ -140,7 +140,7 @@ extension EditSkillViewController: UITableViewDelegate
         }
     }
     
-    func tableView(              _ tableView: UITableView,
+    func tableView(_ tableView: UITableView,
 		moveRowAt sourceIndexPath: IndexPath,
 		to   destinationIndexPath: IndexPath)
 	{
@@ -148,13 +148,13 @@ extension EditSkillViewController: UITableViewDelegate
     }
     
     
-    func tableView(                              _ tableView: UITableView,
+    func tableView(_ tableView: UITableView,
 		accessoryButtonTappedForRowWith indexPath: IndexPath)
 	{
         let editStoryboard = UIStoryboard(name: "Edit", bundle: Bundle.main)
 		let cntrId = "EditSpecialtyViewController"
         let esvc = editStoryboard.instantiateViewController(withIdentifier: cntrId) as! EditSpecialtyViewController
-        esvc.specialty = skill.specialties[indexPath.row] as! Specialty
+		esvc.specialty = (skill.specialties[indexPath.row] as! Specialty)
 		navigationController?.pushViewController(esvc, animated: true)
     }
 }

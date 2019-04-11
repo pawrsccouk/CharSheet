@@ -68,11 +68,11 @@ class EditNotesViewController : CharSheetViewController
     fileprivate var oldViewFrame = CGRect.zero
    
     
-	func keyboardWasShown(_ aNotification: Notification)
+	@objc func keyboardWasShown(_ aNotification: Notification)
 	{
 		if let
 			userInfo = aNotification.userInfo,
-			let keyboardStartFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue
+			let keyboardStartFrame = userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue
 		{
 			let kbSize = view.convert(keyboardStartFrame.cgRectValue, from:nil).size
 
@@ -94,7 +94,7 @@ class EditNotesViewController : CharSheetViewController
 
 
 
-    func keyboardWillBeHidden(_ aNotification: Notification)
+	@objc func keyboardWillBeHidden(_ aNotification: Notification)
 	{
         if activeView == notesTextView {
             activeView!.frame = oldViewFrame
@@ -118,13 +118,13 @@ class EditNotesViewController : CharSheetViewController
 	{
         NotificationCenter.default
 			.addObserver(self,
-				selector: #selector(EditNotesViewController.keyboardWasShown(_:))    ,
-				name    : NSNotification.Name.UIKeyboardDidShow ,
+				selector: #selector(EditNotesViewController.keyboardWasShown(_:)),
+				name    : UIResponder.keyboardDidShowNotification,
 				object  : nil)
 		NotificationCenter.default
 			.addObserver(self,
 				selector: #selector(EditNotesViewController.keyboardWillBeHidden(_:)),
-				name    : NSNotification.Name.UIKeyboardWillHide,
+				name    : UIResponder.keyboardWillHideNotification,
 				object  : nil)
     }
     

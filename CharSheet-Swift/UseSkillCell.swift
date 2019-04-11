@@ -39,7 +39,7 @@ class UseSkillCell : UICollectionViewCell
                     setLabelViaTag(.specialties, value: newSkill.specialtiesAsString)
                     
 					assert(self.viewWithTag(CellTags.ticks.rawValue)?.isKind(of: TicksView.self) ?? false,
-						"View \(self.viewWithTag(CellTags.ticks.rawValue)) is not a TicksView object")
+						"View \(String(describing: self.viewWithTag(CellTags.ticks.rawValue)) )) is not a TicksView object")
 					guard let tv = self.viewWithTag(CellTags.ticks.rawValue) as? TicksView  else { fatalError("TicksView not found") }
 					tv.skill = newSkill
                 }
@@ -137,7 +137,7 @@ class UseSkillCell : UICollectionViewCell
         switch view! {
 		case let l as UILabel:     l.text  = value
 		case let tv as UITextView: tv.text = value
-		default:                   fatalError("View \(view) found, class should be text view or label.")
+		default:                   fatalError("View \(String(describing: view)) found, class should be text view or label.")
         }
     }
 }

@@ -71,7 +71,7 @@ class SkillSelectController : UIViewController
             if let spec = selectedSpecialty {
                 let indexOfObject = skill.specialties.index(of: spec)
                 assert(indexOfObject != NSNotFound,
-					"Specialty \(spec) is not in the list of specialties \(skill.specialties) for skill \(skill)")
+					   "Specialty \(spec) is not in the list of specialties \(String(describing: skill.specialties)) for skill \(skill)")
 				specialtyPicker.selectRow(indexOfObject + 1, inComponent: 0, animated: false)
             }
             else {

@@ -9,13 +9,6 @@
 import Foundation
 import CoreData
 
-private func addSpecialty(_ managedObjectContext: NSManagedObjectContext) -> Specialty
-{
-    return NSEntityDescription
-		.insertNewObject(forEntityName: "Specialty",
-			into:managedObjectContext) as! Specialty
-}
-
 /// This Model object represents one skill. A character will have an array of these.
 ///
 /// Each skill can have an array of specialties attached to it.
@@ -66,9 +59,10 @@ extension Skill
 	/// So I use this global method by default.
 	@nonobjc static let specialtiesChangedNotification = "SpecialtiesChangedNotification"
 
-    func appendSpecialty() -> Specialty
+    func addSpecialty() -> Specialty
 	{
-        let newSpec = addSpecialty(self.managedObjectContext!)
+		let newSpec = NSEntityDescription.insertNewObject(forEntityName: "Specialty", into:self.managedObjectContext!) as! Specialty
+
         newSpec.parent = self
         self.specialties.add(newSpec)
 		notificationCentre.post(name: Notification.Name(rawValue: Skill.specialtiesChangedNotification), object: self)
@@ -89,14 +83,12 @@ extension Skill
 		notificationCentre.post(name: Notification.Name(rawValue: Skill.specialtiesChangedNotification), object: self)
     }
 
+	var allSpecialties: [Specialty] {
+		return (specialties?.array ?? []).map { $0 as! Specialty }
+	}
 
 	var specialtiesAsString: String {
-		var str = ""
-		if let specArray = self.specialties?.array {
-			let specs = specArray.map{ $0 as! Specialty }
-			str = specs.map{ "\($0.name!) + \($0.value)" }.joined(separator: "; ")
-		}
-		return str
+		return allSpecialties.map { "\($0.name!) + \($0.value)" }.joined(separator: "; ")
 	}
 
 
@@ -121,64 +113,53 @@ extension Skill
     }
 }
 
-    // MARK:- PWXMLClient implementation
+    // MARK:- XMLClient implementation
+
+private let SKILL = "skill", SPECIALTIES = "specialties"
+private let NAME = "name", VALUE = "value", TICKS = "ticks"
 
 extension Skill: XMLClient
 {
-    fileprivate enum Element: String  { case SKILL = "skill", SPECIALTIES = "specialties" }
-    fileprivate enum Attribute: String { case NAME = "name", VALUE = "value", TICKS = "ticks" }
-    
-    
-    func asXML() -> DDXMLElement
+	func asXML() throws -> DDXMLElement
 	{
-        func attribute(_ name: Attribute, value: String!) -> DDXMLNode
-		{
-			return DDXMLNode.attribute(withName: name.rawValue, stringValue: value) as! DDXMLNode
-		}
+        let this = DDXMLElement.element(withName: SKILL)
+		try this.addAttribute( XMLSupport.exists(DDXMLNode.attribute(withName: NAME , stringValue: self.name ?? "")       , name: "attribute for \(NAME)" ) )
+        try this.addAttribute( XMLSupport.exists(DDXMLNode.attribute(withName: VALUE, stringValue: self.value.description), name: "attribute for \(VALUE)") )
+        try this.addAttribute( XMLSupport.exists(DDXMLNode.attribute(withName: TICKS, stringValue: self.ticks.description), name: "attribute for \(TICKS)") )
         
-        let this = DDXMLElement.element(withName: Element.SKILL.rawValue) as! DDXMLElement
-        this.addAttribute( attribute(Attribute.NAME , value: self.name             ) )
-        this.addAttribute( attribute(Attribute.VALUE, value: self.value.description) )
-        this.addAttribute( attribute(Attribute.TICKS, value: self.ticks.description) )
-        
-        let specs = DDXMLElement.element(withName: Element.SPECIALTIES.rawValue) as! DDXMLElement
+        let specs = DDXMLElement.element(withName: SPECIALTIES)
         this.addChild(specs)
-		//    specialties.enumerateObjects { (obj, idx, stop) in specs.addChild(obj.asXML()) }
-		for child in specialties {
-			specs.addChild((child as! XMLClient).asXML())
+		for child in allSpecialties {
+			try specs.addChild(child.asXML())
 		}
         return this
     }
 
-    func updateFromXML(_ element: DDXMLElement) throws
+    func update(from element: DDXMLElement) throws
 	{
-		try XMLSupport.validateElement(name: element.name, expectedName: Element.SKILL.rawValue)
+		try XMLSupport.validateElement(element, expectedName: SKILL)
 
-        for attrNode in (element.attributes as! [DDXMLNode]) {
-            if let nodeName = Attribute(rawValue: attrNode.name) {
-                switch nodeName {
-                case .NAME  : self.name  = attrNode.stringValue
-                case .VALUE : self.value = Int16(Int(attrNode.stringValue) ?? 0)
-                case .TICKS : self.ticks = Int16(Int(attrNode.stringValue) ?? 0)
-                }
-            }
-            else {
-				throw XMLSupport.XMLError("Unrecognised attribute \(attrNode.name) in skill")
+		for attrNode in element.attributes ?? [] {
+			switch attrNode.name ?? "" {
+			case NAME  : self.name  = attrNode.stringValue
+			case VALUE : self.value = Int16(Int(attrNode.stringValue ?? "") ?? 0)
+			case TICKS : self.ticks = Int16(Int(attrNode.stringValue ?? "") ?? 0)
+			default    : throw XMLSupport.XMLError("Unrecognised attribute \(attrNode.name ?? "NULL") in skill")
 			}
-        }
+		}
 
-        if element.childCount != 1 {
-			NSLog("Warning: Skill has more than one child. Should be just one: \(Element.SPECIALTIES)")
+        if element.childCount > 1 {
+			NSLog("Warning: Skill has more than one child. Should be just one: \(SPECIALTIES)")
 		}
 
         if(element.childCount > 0) {
-            for specGroup in (element.children as! [DDXMLElement]) {
-                if specGroup.name == Element.SPECIALTIES.rawValue {
-					let value = try XMLSupport.dataFromNodes(specGroup, createFunc: { addSpecialty(self.managedObjectContext!) })
-					self.specialties = value.mutableCopy() as! NSMutableOrderedSet
+            for specGroup in element.childElements {
+                if specGroup.name == SPECIALTIES {
+					let value = try XMLSupport.data(from: specGroup, createFunc: { addSpecialty() })
+					self.specialties = (value.mutableCopy() as! NSMutableOrderedSet)
                 }
                 else {
-					throw XMLSupport.XMLError("Unrecognised child \(specGroup.name) of skill element.")
+					throw XMLSupport.XMLError("Unrecognised child \(specGroup.name ?? "NULL") of skill element.")
 				}
             }
         }

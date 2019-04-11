@@ -48,8 +48,7 @@ class DieRollResultViewController : UIViewController
 	/// Action called when the user wants to add a tick to a skill.
     var addTickAction: (() -> Void)? {
         didSet {
-            // Always re-check the controls just in case
-			// (If the user explicitly passes in nil and it is nil already, we want to ensure the control is disabled).
+            // Always re-check the controls just in case (if the user explicitly passes in nil and it is nil already, we want to ensure the control is disabled).
             enableAddTickControl()
         }
     }

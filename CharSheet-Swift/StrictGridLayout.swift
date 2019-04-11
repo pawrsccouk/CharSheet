@@ -74,10 +74,10 @@ class StrictGridLayout : UICollectionViewLayout
 			let rightmostItemIndex = min(itemCount - 1, columns - 1)
 			let bottomItemIndex    = itemCount - 1
 
-			let rightmostFrame = (collectionItemAttributes[rightmostItemIndex] as AnyObject).frame
-			let bottomFrame    = (collectionItemAttributes[bottomItemIndex] as AnyObject).frame
+			let rightmostFrame = (collectionItemAttributes[rightmostItemIndex] as! UICollectionViewLayoutAttributes).frame
+			let bottomFrame    = (collectionItemAttributes[bottomItemIndex] as! UICollectionViewLayoutAttributes).frame
 
-			return CGSize(width: rightmostFrame!.maxX + (contentInsets.width  * 2), height: bottomFrame!.maxY + (contentInsets.height * 2))
+			return CGSize(width: rightmostFrame.maxX + (contentInsets.width  * 2), height: bottomFrame.maxY + (contentInsets.height * 2))
 		}
 
 

@@ -57,7 +57,7 @@ class DieRollViewController: CharSheetViewController
         }
 
 		assert(skillSelectController == nil,
-			"Skill select controller \(skillSelectController) should be nil when adding a skill")
+			"Skill select controller \(String(describing: skillSelectController)) should be nil when adding a skill")
 		skillSelectController = SkillSelectController.skillSelectControllerFromNib()
 		assert(skillSelectController != nil, "No SkillSelectController object in Nib")
 		if let controller = skillSelectController {
@@ -82,7 +82,7 @@ class DieRollViewController: CharSheetViewController
 	/// The die roll object actually makes the roll and records the results.
 	///
 	/// I set up it's properties here (selected stat, skills, specialties etc.) which are used for the roll.
-	var dieRoll : DieRoll = DieRoll()
+	@objc var dieRoll : DieRoll = DieRoll()
 
 	/// The controller used to present a list of skills to the user.
 	///
@@ -112,21 +112,18 @@ class DieRollViewController: CharSheetViewController
 		dieRoll.removeObserver(self, forKeyPath: "extraD4s")
 	}
 
-	override func observeValue(forKeyPath keyPath: String?,
-		of                         object: Any?,
-		change                                 : [NSKeyValueChangeKey : Any]?,
-		context                                : UnsafeMutableRawPointer?)
+	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)
 	{
 		if let key = keyPath {
 			switch key {
-			case "adds" where context == &myContext:
+			case "adds" where context == /*&myContext*/ nil:
 				addsTextField.text = "\(dieRoll.adds)"
 				for s in stepperAssistants {
 					s.updateStepperFromTextField()
 				}
 				return
 
-			case "extraD4s" where context == &myContext:
+			case "extraD4s" where context == /*&myContext*/ nil:
 				extraDiceTextField.text = "\(dieRoll.extraD4s)"
 				for s in stepperAssistants {
 					s.updateStepperFromTextField()
@@ -144,14 +141,12 @@ class DieRollViewController: CharSheetViewController
 	override func viewDidLoad()
 	{
 		super.viewDidLoad()
-		dieRoll.addObserver(self, forKeyPath: "adds",     options: ([.initial, .new]), context: &myContext)
-		dieRoll.addObserver(self, forKeyPath: "extraD4s", options: ([.initial, .new]), context: &myContext)
+		dieRoll.addObserver(self, forKeyPath: #keyPath(DieRoll.adds),     options: ([.initial, .new]), context: nil)
+		dieRoll.addObserver(self, forKeyPath: #keyPath(DieRoll.extraD4s), options: ([.initial, .new]), context: nil)
 		updateStatLabel()
 
 		if let navc = navigationController {
-			assert(navc.delegate == nil,
-				"DieRollViewController: The navigation controller \(navc) has a delegate of \(navc.delegate). "
-					+ "It should be nil")
+			assert(navc.delegate == nil, "DieRollViewController: The navigation controller \(navc) has a delegate of \(String(describing: navc.delegate)). It should be nil")
 			navc.delegate = self
 		}
 	}
@@ -204,7 +199,7 @@ class DieRollViewController: CharSheetViewController
             if let stat = dieRoll.stat {
                 statButtonText = "\(stat.name): \(stat.value)"
             }
-            button.setTitle(statButtonText, for: UIControlState())
+			button.setTitle(statButtonText, for: UIControl.State())
         }
     }
 
@@ -269,7 +264,7 @@ extension DieRollViewController: UINavigationControllerDelegate
 					// We have a skill to replace. Perform the replacement.
 					if selectedSkill != oldSkill {
 						let index = dieRoll.skills.indexOfObject(oldSkill)
-						assert(index != NSNotFound, "Index of skill \(oldSkill).name = \(oldSkill.name) not in die roll skill set.")
+						assert(index != NSNotFound, "Index of skill \(oldSkill).name = \(oldSkill.name ?? "NULL") not in die roll skill set.")
 						if index != NSNotFound {
 							dieRoll.skills.replaceObjectAtIndex(index, withObject:selectedSkill)
 						}
@@ -344,7 +339,7 @@ extension DieRollViewController: UITableViewDataSource
 extension DieRollViewController: UITableViewDelegate
 {
     func tableView(           _ tableView: UITableView,
-		commit editingStyle: UITableViewCellEditingStyle,
+							  commit editingStyle: UITableViewCell.EditingStyle,
 		forRowAt     indexPath: IndexPath)
 	{
         assert(tableView == skillsTable && editingStyle == .delete)
@@ -362,7 +357,7 @@ extension DieRollViewController: UITableViewDelegate
 		didSelectRowAt indexPath: IndexPath)
 	{
         assert(skillSelectController == nil,
-			"Table View select. Skill select controller is \(skillSelectController), should be nil")
+			"Table View select. Skill select controller is \(String(describing: skillSelectController)), should be nil")
         skillSelectController = SkillSelectController.skillSelectControllerFromNib()
         assert(skillSelectController != nil, "Failed to load SkillSelectController from Nib file.")
         let controller = skillSelectController!

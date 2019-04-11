@@ -73,7 +73,7 @@ final class CharSheetUseViewController : CharSheetViewController
 			try exportToEmail()
 		}
 		catch let error as NSError {
-			let title = "Error converting \(charSheet.name) to XML"
+			let title = "Error converting \(charSheet.name ?? "NULL") to XML"
 			let alertView = UIAlertController(title: title, message: error.localizedDescription, preferredStyle: .alert)
 			alertView.addAction(UIAlertAction(title: "Close", style: .default, handler: nil))
 			present(alertView, animated: true, completion: nil)
@@ -83,13 +83,13 @@ final class CharSheetUseViewController : CharSheetViewController
 
 	@IBAction func setHealth(_ sender: AnyObject?)
 	{
-		NSLog("setHealth(\(sender))")	// TODO: In future this will be a segue.
+		NSLog("setHealth(\(String(describing: sender)))")	// TODO: In future this will be a segue.
 	}
 
 
 	@IBAction func statSelected(_ sender: AnyObject?)
 	{
-		assert(sender as? UseStatLabel != nil, "Sender \(sender) is nil or not a label.")
+		assert(sender as? UseStatLabel != nil, "Sender \(String(describing: sender)) is nil or not a label.")
 		if let statLabel = sender as? UseStatLabel {
 			assert(statLabel.isKind(of: UseStatLabel.self), "Sender [\(statLabel)] is not of class UseStatLabel")
 			deselectEveryStat()
@@ -181,12 +181,12 @@ final class CharSheetUseViewController : CharSheetViewController
 			dieRollViewController.setInitialStat(statData, skills:selectedSkills)
 		}
 
-		var newViewController: CharSheetViewController!
+		var newViewController: CharSheetViewController
 		if segue.identifier == "SpellTargets" {		// SpellTargets is a popover with no nav controller.
 			newViewController = segue.destination as! CharSheetViewController
 		} else {									// All other controllers are embedded in a navigation controller.
 			let navigationController = segue.destination as! UINavigationController
-			newViewController = navigationController.childViewControllers[0] as! CharSheetViewController
+			newViewController = navigationController.children[0] as! CharSheetViewController
 		}
 			// Get the new controller and set some common properties.
 		newViewController.charSheet = charSheet
@@ -222,7 +222,7 @@ final class CharSheetUseViewController : CharSheetViewController
             experienceLabel.text = sheet.experience.description
             meleeAddsLabel.text  = sheet.meleeAdds.description
             rangedAddsLabel.text = sheet.rangedAdds.description
-            setHealthBtn.setTitle(sheet.health, for: UIControlState())
+			setHealthBtn.setTitle(sheet.health, for: UIControl.State())
         }
 		else {	// Disable the toolbar controls if there are no characters selected.
 
@@ -282,8 +282,7 @@ final class CharSheetUseViewController : CharSheetViewController
 
 extension CharSheetUseViewController: UICollectionViewDataSource
 {
-	func collectionView(  _ collectionView: UICollectionView,
-		cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
 	{
 			let cell = skillsCollectionView.dequeueReusableCell(
 				withReuseIdentifier: COLLECTION_CELL_ID,
@@ -292,8 +291,7 @@ extension CharSheetUseViewController: UICollectionViewDataSource
 			return cell
 	}
 
-    func collectionView(_ collectionView: UICollectionView,
-		numberOfItemsInSection section: Int) -> Int
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
 	{
         return charSheet?.skills.count ?? 0
     }

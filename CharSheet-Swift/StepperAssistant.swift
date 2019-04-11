@@ -31,14 +31,14 @@ class StepperAssistant: NSObject
 	/// Called when the stepper's value has changed. Update the text field to match.
 	@IBAction func stepperValueChanged(_ sender: UIStepper?)
 	{
-		assert(sender == stepper, "Unknown sender \(sender) for stepperValueChanged")
+		assert(sender == stepper, "Unknown sender \(String(describing: sender)) for stepperValueChanged")
 		updateTextFieldFromStepper()
 	}
 
 	/// Called when the text field's value has changed. Update the stepper to match.
 	@IBAction func textFieldValueChanged(_ sender: UITextField?)
 	{
-		assert(sender == textField, "Unknown sender \(sender) for textFieldValueChanged.")
+		assert(sender == textField, "Unknown sender \(String(describing: sender)) for textFieldValueChanged.")
 		updateStepperFromTextField()
 	}
 

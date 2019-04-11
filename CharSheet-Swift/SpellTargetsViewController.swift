@@ -112,7 +112,6 @@ extension SpellTargetsViewController
 	fileprivate func collapseSection(_ sectionId: String, selectedValue: ArrayIndex)
 	{
 		assert(keys.contains(sectionId), "Invalid section ID \(sectionId)")
-
 		assert(selectedValue >= 0 || selectedValue < data[sectionId]?.count, "selected value \(selectedValue) is out of range for group \(sectionId).")
 
 		// Most values range from -1 to 4, but the groups value ranges from 0 to 4.

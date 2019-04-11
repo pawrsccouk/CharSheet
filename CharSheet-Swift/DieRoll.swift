@@ -14,7 +14,7 @@ private enum State
 	case preparing
 	case rolled(
 		// The result as an HTML format string for display to the user
-		resultForDisplay: String	,
+		resultForDisplay: String,
 		// The result as a simple string for displaying in the log.
 		resultForLog: String)
 }
@@ -26,7 +26,7 @@ private enum State
 /// Primarily you use the *total* field to get the final value and the *resultAsHTML* field to get the final result
 /// formatted to display to the user.
 
-class DieRoll : NSObject
+@objc class DieRoll : NSObject
 {
     // MARK: Input Properties
 
@@ -48,7 +48,7 @@ class DieRoll : NSObject
     }
 
 	/// A total value to be added to the final die roll.
-    dynamic var adds: Int = 0 {
+    @objc dynamic var adds: Int = 0 {
         didSet {
             state = .preparing
         }
@@ -68,7 +68,7 @@ class DieRoll : NSObject
 	///
 	/// The default is usually 1d4 per roll, except for magic skills.
 	/// However this can vary and some GMs will add extra d4s as a circumstance bonus so the user can specify it here.
-    dynamic var extraD4s: Int16 = 1 {
+    @objc dynamic var extraD4s: Int16 = 1 {
         didSet {
             state = .preparing
         }
@@ -156,7 +156,12 @@ class DieRoll : NSObject
 		// D4 rolls.
 		var dieRollsPerSkill: [String: [Int16]] = [:]
 		for skill in self.skills.array {
-			dieRollsPerSkill[skill.name!] = (1...skill.value).map { (_) in rollDie(4) }
+			// Zero-value skills are allowed. They roll no dice but avoid failure penalties.
+			if skill.value == 0 {
+				dieRollsPerSkill[skill.name!] = []
+			} else {
+				dieRollsPerSkill[skill.name!] = (1...skill.value).map { (_) in rollDie(4) }
+			}
 		}
 		let extraD4Rolls = (extraD4s > 0) ? (1...extraD4s).map { (_) in rollDie(4) } : []
 		// Totals and display values.
@@ -179,8 +184,8 @@ class DieRoll : NSObject
 	/// - returns: A string suitable to be embedded in an HTML document.
     fileprivate func sanitiseHTML(_ input: String) -> String
 	{
-        let output = NSMutableString(capacity: input.characters.count)
-        for c in input.characters {
+        let output = NSMutableString(capacity: input.count)
+        for c in input {
             switch c {
             case "<" : output.append("&lt;" )
             case ">" : output.append("&gt;" )
@@ -208,11 +213,13 @@ class DieRoll : NSObject
 	///           It will fit on one line.
 	fileprivate func getSummary() -> String
 	{
-		var statStr  = "<No stat>"
+		var statStr  = "No stat"
 		if let statName = stat?.name {
-			var prefix = statName.substring(to: statName.characters.index(statName.startIndex, offsetBy: 3))
-			if prefix == "Luc" {
-				prefix = "Lck"
+			var prefix = String(statName[..<statName.index(statName.startIndex, offsetBy: 3)])
+			switch prefix {
+			case "Luc": prefix = "Lck"
+			case "Spe": prefix = "Spd"
+			default: break;
 			}
 			statStr = prefix
 		}
@@ -257,7 +264,7 @@ class DieRoll : NSObject
 
 		let extraD4Text = extraD4Rolls.map{ "\($0)" }.joined(separator: " + ")
 
-        return "\(d6str)\n\(statText)\n\(skillStr)\nExtraD4s: \(extraD4Text)\nAdds: \(adds)\nTotal: \(total)"
+		return "\(d6str)\n\(statText)\n\(skillStr)\nExtraD4s: \(extraD4Text)\nAdds: \(adds)\nTotal: \(total)"
     }
     
 	/// Returns an HTML document with the contents of the last die roll in a readable format.
@@ -312,7 +319,11 @@ class DieRoll : NSObject
 					finalTotal += rollsForSkill.reduce(0) { $0 + $1 }
 					let rollsText = rollsForSkill.map{$0.description}.joined(separator: " + ")
 					let safeName = self.sanitiseHTML(skillName)
-					return "\(safeName) (\(rollsForSkill.count)) = \(rollsText) = \(finalTotal) \(specStr)"
+					if rollsForSkill.isEmpty { // Zero-level skills. Don't show the rolls as there aren't any.
+						return "\(safeName) (\(rollsForSkill.count)) = \(finalTotal) \(specStr)"
+					} else {
+						return "\(safeName) (\(rollsForSkill.count)) = \(rollsText) = \(finalTotal) \(specStr)"
+					}
 				} else {
 					fatalError("Skill \(skill) has no name!")
 				}
@@ -360,7 +371,7 @@ class DieRoll : NSObject
 				}
 			} else { fatalError("Skill \(skill) has no name!") }
 		}
-		total += adds
+		total += Int16(adds)
 		total += extraD4Rolls.reduce(0) { $0 + $1 }
 		return total
 	}

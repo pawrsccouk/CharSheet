@@ -13,12 +13,12 @@ import UIKit
 /// Displays <NAME> = <VALUE> in a given font (currently hard codes as System-17).  E.g. "Stealth = 7".
 /// If clicked, draws itself highlighted.
 
-class UseStatLabel : UIControl
+@IBDesignable class UseStatLabel : UIControl
 {
 	// MARK: Properties
 
 	/// The name of the stat to display.  Example "strength"
-	var name: String = "" {
+	@IBInspectable var name: String = "" {
 		didSet {
 			setNeedsDisplay()
 		}
@@ -51,7 +51,7 @@ class UseStatLabel : UIControl
         
         let insetBounds = bounds.insetBy(dx: 1, dy: 1)
 		let text = "\(name): \(value)"
-        text.draw(in: insetBounds, withAttributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 17)])
+		text.draw(in: insetBounds, withAttributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 17)])
     }
     
     

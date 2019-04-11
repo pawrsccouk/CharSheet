@@ -50,7 +50,7 @@ class CharSheetEditViewController : CharSheetViewController
     
     @IBAction func addSkill(_ sender: AnyObject?)
 	{
-        let _ = charSheet.appendSkill()
+		_ = charSheet.addSkill()
         skillsTableView.reloadData()
     }
 
@@ -67,8 +67,8 @@ class CharSheetEditViewController : CharSheetViewController
         if segue.identifier == "AddSkillPopup" {
             // Connect the Edit Skill view controller to the skill it is editing.
             let asnc = segue.destination as! UINavigationController
-            let esc = asnc.childViewControllers[0] as! EditSkillViewController
-            esc.skill = charSheet.appendSkill()
+			let esc = asnc.children[0] as! EditSkillViewController
+            esc.skill = charSheet.addSkill()
             esc.completionCallback = { self.skillsTableView.reloadData() }
         }
     }
@@ -165,34 +165,29 @@ extension CharSheetEditViewController: UITableViewDataSource
 
 extension CharSheetEditViewController: UITableViewDelegate
 {
-    func tableView(           _ tableView: UITableView,
-		commit editingStyle: UITableViewCellEditingStyle,
-		forRowAt     indexPath: IndexPath)
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath)
 	{
         if editingStyle == .delete {
-            charSheet.removeSkillAtIndex(indexPath.row)
+			charSheet.removeSkill(at: indexPath.row)
             skillsTableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
-    func tableView(              _ tableView: UITableView,
-		moveRowAt sourceIndexPath: IndexPath,
-		to   destinationIndexPath: IndexPath)
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath)
 	{
         // Table view has already moved the row, so we just need to update the model.
         charSheet.skills.moveObjects(at: IndexSet(integer: sourceIndexPath.row), to:destinationIndexPath.row)
     }
     
     
-    func tableView(                              _ tableView: UITableView,
-		accessoryButtonTappedForRowWith indexPath: IndexPath)
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath)
 	{
         let esb = StoryboardManager.sharedInstance().editStoryboard
 		let navId = "EditSkillNavigationController"
         let esnc = esb.instantiateViewController(withIdentifier: navId) as! UINavigationController
         
-        let editSkillViewController = esnc.childViewControllers[0] as! EditSkillViewController
-        editSkillViewController.skill = charSheet.skills[indexPath.row] as! Skill
+		let editSkillViewController = esnc.children[0] as! EditSkillViewController
+		editSkillViewController.skill = (charSheet.skills[indexPath.row] as! Skill)
         editSkillViewController.completionCallback = { self.skillsTableView.reloadData() }
         esnc.modalPresentationStyle = .formSheet
         esnc.modalTransitionStyle = .crossDissolve

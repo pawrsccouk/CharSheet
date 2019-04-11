@@ -41,38 +41,29 @@ extension Specialty
 
 // MARK: - PWXMLClient implementation
 
-private let SPECIALTY = "specialty"
-private enum Attribute: String { case NAME = "name", VALUE = "value" }
+private let SPECIALTY = "specialty", NAME = "name", VALUE = "value"
 
 extension Specialty: XMLClient
 {
-    func asXML() -> DDXMLElement
+	func asXML() throws -> DDXMLElement
 	{
-        func attribute(_ name: Attribute, value: String) -> DDXMLNode
-		{
-			return DDXMLNode.attribute(withName: name.rawValue, stringValue: value) as! DDXMLNode
-		}
-		let this = DDXMLElement.element(withName: SPECIALTY) as! DDXMLElement
-        this.addAttribute( attribute(.NAME , value: self.name ?? "No name") )
-        this.addAttribute( attribute(.VALUE, value: self.value.description) )
-        return this
+		let element = DDXMLElement.element(withName: SPECIALTY)
+        element.addAttribute( try XMLSupport.exists(DDXMLNode.attribute(withName: NAME , stringValue: self.name ?? "No name"), name: "attribute for \(NAME)" ) )
+        element.addAttribute( try XMLSupport.exists(DDXMLNode.attribute(withName: VALUE, stringValue: self.value.description), name: "attribute for \(VALUE)") )
+        return element
     }
 
-	func updateFromXML(_ element: DDXMLElement) throws
+	func update(from element: DDXMLElement) throws
 	{
-		try XMLSupport.validateElement(name: element.name, expectedName: SPECIALTY)
+		try XMLSupport.validateElement(element, expectedName: SPECIALTY)
 
-		for attrNode in (element.attributes as! [DDXMLNode]) {
-            if let nodeName = Attribute(rawValue: attrNode.name) {
-                switch nodeName {
-                case .NAME: self.name  = attrNode.stringValue
-                case .VALUE:self.value = Int16(Int(attrNode.stringValue) ?? 0)
-                }
-            }
-            else {
-				throw XMLSupport.XMLError("Attribute \(attrNode.name) unrecognised in \(SPECIALTY)")
+		for attrNode in (element.attributes ?? []) {
+			switch attrNode.name ?? "" {
+			case NAME:	self.name  = attrNode.stringValue
+			case VALUE:	self.value = Int16(attrNode.stringValue ?? "") ?? 0
+			default:	throw XMLSupport.XMLError("Attribute \(attrNode.name ?? "NULL") unrecognised in \(SPECIALTY)")
 			}
-        }
-    }
+		}
+	}
 }
 

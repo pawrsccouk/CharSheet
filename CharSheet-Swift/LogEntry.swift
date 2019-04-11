@@ -59,26 +59,26 @@ private var backwardsCompatibleDateFormatter: DateFormatter = {
 
 // XML entity and attribute tags for this object.
 private let LOG_ENTRY = "logEntry"
-private enum Attribute: String { case DATE_TIME = "dateTime", SUMMARY = "summary" }
+private let DATE_TIME = "dateTime", SUMMARY = "summary"
 
     // MARK: - PWXMLClient implementation
     
 extension LogEntry: XMLClient
 {
-	func asXML() -> DDXMLElement
+	func asXML() throws -> DDXMLElement
 	{
-        func attribute(_ name: Attribute, value: String) -> DDXMLNode {
-			return DDXMLNode.attribute(withName: name.rawValue, stringValue: value) as! DDXMLNode
-		}
-        let this = DDXMLElement.element(withName: LOG_ENTRY, stringValue:self.change) as! DDXMLElement
-        this.addAttribute( attribute(.DATE_TIME, value: xmlDateFormatter.string(from: self.dateTime)) )
-        this.addAttribute( attribute(.SUMMARY  , value: self.summary!) )
-        return this;
+        let element = DDXMLElement.element(withName: LOG_ENTRY, stringValue:self.change ?? "")
+		let dateString = xmlDateFormatter.string(from: self.dateTime), summaryString = self.summary ?? ""
+		let dateAttr = DDXMLNode.attribute(withName: DATE_TIME, stringValue: dateString)
+		let summAttr = DDXMLNode.attribute(withName: SUMMARY  , stringValue: summaryString)
+		try element.addAttribute( XMLSupport.exists(dateAttr, name: "Attribute for \(DATE_TIME)") )
+		try element.addAttribute( XMLSupport.exists(summAttr, name: "attribute for \(SUMMARY)"  ) )
+        return element
     }
 
     
     
-    func updateFromXML(_ element: DDXMLElement) throws
+    func update(from element: DDXMLElement) throws
 	{
 		/// Attempt to parse a date using multiple date formatters for backwards compatibility.
 		/// 
@@ -98,18 +98,14 @@ extension LogEntry: XMLClient
 		}
 
 
-		try XMLSupport.validateElement(name: element.name, expectedName: LOG_ENTRY)
-        for attrNode in (element.attributes as! [DDXMLNode]) {
-            if let nodeName = Attribute(rawValue: attrNode.name) {
-                switch nodeName {
-                case .DATE_TIME: self.dateTime = try parseDate(attrNode.stringValue)
-                case .SUMMARY:   self.summary  = attrNode.stringValue
-                }
-            }
-            else {
-				throw XMLSupport.XMLError("Unrecognised log entry attribute: \(attrNode.name)")
+		try XMLSupport.validateElement(element, expectedName: LOG_ENTRY)
+		for attrNode in element.allAttributes {
+			switch attrNode.name ?? "" {
+			case DATE_TIME: self.dateTime = try parseDate(attrNode.stringValue ?? "")
+			case SUMMARY:   self.summary  = attrNode.stringValue
+			default:		throw XMLSupport.XMLError("Unrecognised log entry attribute: \(attrNode.name ?? "NULL")")
 			}
-        }
-        self.change = element.stringValue
-    }
+		}
+		self.change = element.stringValue
+	}
 }

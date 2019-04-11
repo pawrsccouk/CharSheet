@@ -40,40 +40,34 @@ extension XPGain
 }
 
 
-    // MARK: - XMLClient implementation
+// MARK: - XMLClient implementation
 
-    // XML entity and attribute tags for this object.
+// XML entity and attribute tags for this object.
 private let XP_ENTRY = "xpEntry"
-private enum Attribute: String { case AMOUNT = "amount", REASON = "reason" }
+private let AMOUNT = "amount", REASON = "reason"
 
 extension XPGain: XMLClient
 {
-    func asXML() -> DDXMLElement
+	func asXML() throws -> DDXMLElement
 	{
-        func attribute(_ name: Attribute, value: String) -> DDXMLNode
-		{
-			return DDXMLNode.attribute(withName: name.rawValue, stringValue: value) as! DDXMLNode
-		}
-        let this = DDXMLElement.element(withName: XP_ENTRY) as! DDXMLElement
-        this.addAttribute( attribute( .AMOUNT, value: self.amount.description) )
-        this.addAttribute( attribute( .REASON, value: self.reason!) )
-        return this
+		let element = DDXMLElement.element(withName: XP_ENTRY)
+		let amtAttr = DDXMLNode.attribute(withName: AMOUNT, stringValue: self.amount.description)
+		try element.addAttribute( XMLSupport.exists(amtAttr, name: "attribute for \(AMOUNT)") )
+		let rsnAttr = DDXMLNode.attribute(withName: REASON, stringValue: self.reason ?? "")
+		try element.addAttribute( XMLSupport.exists(rsnAttr, name: "attribute for \(REASON)") )
+        return element
     }
     
-    func updateFromXML(_ element: DDXMLElement) throws
+	func update(from element: DDXMLElement) throws
 	{
-		try XMLSupport.validateElement(name: element.name, expectedName: XP_ENTRY)
+		try XMLSupport.validateElement(element, expectedName: XP_ENTRY)
 
-		for attrNode in (element.attributes as! [DDXMLNode]) {
-            if let nodeName = Attribute(rawValue: attrNode.name) {
-                switch nodeName {
-                case .AMOUNT : self.amount = Int16(Int(attrNode.stringValue) ?? 0)
-                case .REASON : self.reason = attrNode.stringValue
-                }
-            }
-            else {
-				throw XMLSupport.XMLError("Unrecognised XP entry attribute: \(attrNode.name)")
+		for attrNode in element.allAttributes {
+			switch attrNode.name ?? "" {
+			case AMOUNT : self.amount = Int16(Int(attrNode.stringValue ?? "") ?? 0)
+			case REASON : self.reason = attrNode.stringValue
+			default     : throw XMLSupport.XMLError("Unrecognised XP entry attribute: \(attrNode.name ?? "NULL")")
 			}
-        }
-    }
+		}
+	}
 }

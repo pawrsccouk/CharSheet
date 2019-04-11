@@ -68,7 +68,7 @@ class EditXPViewController : CharSheetViewController
         
         switch segue.identifier! {
 		case "AddNewXPGainView":
-            let xpGain = charSheet.appendXPGain()
+            let xpGain = charSheet.addXPGain()
             editXPGainViewController.xpGain = xpGain
 
         case "EditExistingXPGainView":
@@ -76,11 +76,11 @@ class EditXPViewController : CharSheetViewController
 				editXPGainViewController.xpGain = charSheet.xp[selectedIndexPath.row] as? XPGain
             }
             else {
-                assert(false, "Cannot get the indexPath from sender: \(sender) is it a UITableViewCell?")
+                fatalError("Cannot get the indexPath from sender: \(sender ?? "NULL") is it a UITableViewCell?")
             }
 
 		default:
-            assert(false, "Segue \(segue) ID \(segue.identifier) is not known in EditXPViewController \(self)")
+            fatalError("Segue \(segue) ID \(segue.identifier ?? "NULL") is not known in EditXPViewController \(self)")
         }
     }
 }
@@ -88,8 +88,7 @@ class EditXPViewController : CharSheetViewController
 
 extension EditXPViewController: UITableViewDataSource
 {
-    func tableView(           _ tableView: UITableView,
-		cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
 	{
         let cell = tableView.dequeueReusableCell(withIdentifier: CELL_ID) ?? UITableViewCell()
         if let xpGain = charSheet.xp[indexPath.item] as? XPGain {
@@ -101,8 +100,7 @@ extension EditXPViewController: UITableViewDataSource
         return cell
     }
     
-    func tableView(         _ tableView: UITableView,
-		numberOfRowsInSection section: Int) -> Int
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
 	{
 		for xpGain in charSheet.xp.array.map({ $0 as! XPGain }) {
 			assert(xpGain.reason != nil, "Ensure no faulting.")
@@ -119,26 +117,20 @@ extension EditXPViewController: UITableViewDataSource
 
 extension EditXPViewController: UITableViewDelegate
 {
-    func tableView(       _ tableView: UITableView,
-		willDisplay        cell: UITableViewCell,
-		forRowAt indexPath: IndexPath)
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
 	{
 		cell.textLabel?.font = cell.detailTextLabel?.font
     }
 
-    func tableView(           _ tableView: UITableView,
-		commit editingStyle: UITableViewCellEditingStyle,
-		forRowAt     indexPath: IndexPath)
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath)
 	{
         if editingStyle == .delete {
-            charSheet.removeXPGainAtIndex(indexPath.row)
+			charSheet.removeXPGain(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
-    func tableView(              _ tableView: UITableView,
-		moveRowAt sourceIndexPath: IndexPath,
-		to   destinationIndexPath: IndexPath)
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath)
 	{
         // Table view has already moved the row, so we just need to update the model.
         charSheet.xp.moveObjects(at: IndexSet(integer: sourceIndexPath.row), to: destinationIndexPath.row)
