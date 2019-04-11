@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml><charSheet name="Erich Stinnes" gender="" game="Shadowrun" player="Pat Wallace" level="5" experience="12600" strength="7" speed="10" dexterity="8" constitution="8" perception="28" intelligence="15" charisma="17" luck="12"><logs><logEntry dateTime="2014-08-21 20:12:04" summary="Lck + ">D6 Rolls: 3 + 4
+Stat: Luck=12
+
+Adds:0
+Total: 19</logEntry><logEntry dateTime="2014-07-03 23:21:04" summary="Per + Observation">D6 Rolls: 2 + 4
+Stat: Perception=28
+Observation: 2+3+2+4 (+0)
+Adds:0
+Total: 45
+Tick added.</logEntry><logEntry dateTime="2013-04-03 20:16:06" summary="Cha + Contact: Smuggling ring">
+D6 Rolls: 2 + 2 + 6 + 2
+Stat: Charisma=17
+Contact: Smuggling ring: 3+2 (+0)
+Adds:0
+Total: 34
+Tick added.</logEntry><logEntry dateTime="2013-04-11 20:46:07" summary="Per + Ambush/Stealth">
+D6 Rolls: 6 + 3
+Stat: Perception=28
+Ambush/Stealth: 2+3+2 (+0)
+Adds:0
+Total: 44
+Tick added.</logEntry><logEntry dateTime="2014-09-25 21:07:55" summary="Int + Bureaucracy">D6 Rolls: 5 + 3
+Stat: Intelligence=15
+Bureaucracy: 4+4 (+0)
+Adds:0
+Total: 31
+Tick added.</logEntry><logEntry dateTime="2013-04-11 21:07:33" summary="Cha + Bluff">
+D6 Rolls: 5 + 1
+Stat: Charisma=17
+Bluff: 4+2+4+4+4+1 (+0)
+Adds:0
+Total: 42
+Tick added.</logEntry><logEntry dateTime="2014-08-21 21:35:05" summary="Cha + ">D6 Rolls: 4 + 5
+Stat: Charisma=17
+
+Adds:0
+Total: 26</logEntry><logEntry dateTime="2014-10-23 21:43:30" summary="Con + ">D6 Rolls: 3 + 4
+Stat: Constitution=8
+
+Adds:0
+Total: 15</logEntry><logEntry dateTime="2014-07-09 21:07:58" summary="Per + Electronic countermeasures">D6 Rolls: 5 + 5 + 1 + 3
+Stat: Perception=28
+Electronic countermeasures: 4+3+1 (+0)
+Adds:0
+Total: 50
+Tick added.</logEntry><logEntry dateTime="2013-01-31 20:34:18" summary="Cha + Politics">
+D6 Rolls: 6 + 3
+Stat: Charisma=17
+Politics: 1+1+4+3+3 (+0)
+Adds:0
+Total: 38
+Tick added.</logEntry><logEntry dateTime="2014-10-30 20:12:57" summary="Con + ">D6 Rolls: 1 + 6
+Stat: Constitution=8
+
+Adds:0
+Total: 15</logEntry><logEntry dateTime="2014-07-31 21:39:19" summary="Int + Politics">D6 Rolls: 5 + 4
+Stat: Intelligence=15
+Politics: 3+2+2+3+1 (+0)
+Adds:0
+Total: 35
+Tick added.</logEntry><logEntry dateTime="2016-01-21 21:40:53" summary="Spe + ">D6 Rolls: 4 + 2
+Stat: Speed = 10
+
+ExtraD4s: 
+Adds: 0
+Total: 16</logEntry><logEntry dateTime="2016-01-26 20:38:54" summary="Dex + Track/Trail">D6 Rolls: 6 + 5
+Stat: Dexterity = 8
+Track/Trail: 2 + 4 (+0)
+ExtraD4s: 3
+Adds: 0
+Total: 28
+Tick added.</logEntry><logEntry dateTime="2016-01-26 21:52:58" summary="Con + ">D6 Rolls: 1 + 2
+Stat: Constitution = 8
+
+ExtraD4s: 2
+Adds: 0
+Total: 0</logEntry><logEntry dateTime="2016-02-04 21:45:41" summary="Per + Contact: Fortean journalist">D6 Rolls: 4 + 1
+Stat: Perception = 28
+Contact: Fortean journalist: 2 (+0)
+ExtraD4s: 1
+Adds: 0
+Total: 36
+Tick added.</logEntry><logEntry dateTime="2013-02-07 20:47:02" summary="Per + Observation">
+D6 Rolls: 5 + 6
+Stat: Perception=28
+Observation: 2+4+3+3 (+0)
+Adds:0
+Total: 51
+Tick added.</logEntry><logEntry dateTime="2013-02-07 20:13:54" summary="Per + Contact: KGB">
+D6 Rolls: 1 + 3
+Stat: Perception=28
+Contact: KGB: 1+3+3+4 (+0)
+Adds:0
+Total: 43
+Tick added.</logEntry><logEntry dateTime="2013-03-07 20:48:41" summary="Lck + Contact: KGB">
+D6 Rolls: 2 + 3
+Stat: Luck=12
+Contact: KGB: 1+1+2+2 (+0)
+Adds:0
+Total: 23
+Tick added.</logEntry><logEntry dateTime="2014-06-19 21:58:17" summary="Per + ES: Urban">D6 Rolls: 4 + 1
+Stat: Perception=28
+ES: Urban: 2+2+4 (+0)
+Adds:0
+Total: 41
+Tick added.</logEntry><logEntry dateTime="2016-02-16 21:53:58" summary="Cha + ">D6 Rolls: 4 + 6
+Stat: Charisma = 17
+
+ExtraD4s: 3
+Adds: 0
+Total: 30</logEntry><logEntry dateTime="2014-07-09 21:05:42" summary="Per + Observation">D6 Rolls: 5 + 4
+Stat: Perception=28
+Observation: 1+2+2+2 (+0)
+Adds:0
+Total: 44
+Tick added.</logEntry><logEntry dateTime="2013-02-21 21:41:30" summary="Dex + Drive">
+D6 Rolls: 2 + 2 + 1 + 3
+Stat: Dexterity=8
+Drive: 1+2 (+0)
+Adds:0
+Total: 19
+Tick added.</logEntry><logEntry dateTime="2013-03-07 20:23:56" summary="Spe + ">
+D6 Rolls: 3 + 2
+Stat: Speed=10
+
+Adds:0
+Total: 15</logEntry><logEntry dateTime="2014-07-31 21:59:26" summary="Int + Bureaucracy">D6 Rolls: 4 + 4 + 2 + 6
+Stat: Intelligence=15
+Bureaucracy: 2+1 (+0)
+Adds:0
+Total: 34
+Tick added.</logEntry><logEntry dateTime="2013-03-07 20:28:12" summary="Spe + ">
+D6 Rolls: 4 + 4 + 5 + 2
+Stat: Speed=10
+
+Adds:0
+Total: 25</logEntry><logEntry dateTime="2014-07-31 21:19:59" summary="Per + Observation">D6 Rolls: 6 + 3
+Stat: Perception=28
+Observation: 4+2+2+3 (+0)
+Adds:0
+Total: 48
+Tick added.</logEntry><logEntry dateTime="2013-01-17 21:03:04" summary="Per + ES: Urban">
+D6 Rolls: 2 + 1
+Stat: Perception=28
+ES: Urban: 4+3+3 (+0)
+Adds:0
+Total: 0
+Tick added.</logEntry><logEntry dateTime="2013-01-24 21:23:13" summary="Int + Politics">
+D6 Rolls: 3 + 5
+Stat: Intelligence=13
+Politics: 1+1+4+4+1 (+0)
+Adds:0
+Total: 32
+Tick added.</logEntry><logEntry dateTime="2013-02-13 21:15:44" summary="Cha + Bluff">
+D6 Rolls: 6 + 2
+Stat: Charisma=17
+Bluff: 2+4+2+2+1+3 (+0)
+Adds:0
+Total: 39
+Tick added.</logEntry><logEntry dateTime="2014-09-11 20:32:47" summary="Int + Bureaucracy">D6 Rolls: 6 + 4
+Stat: Intelligence=15
+Bureaucracy: 4+4 (+0)
+Adds:0
+Total: 33
+Tick added.</logEntry><logEntry dateTime="2013-04-11 21:17:40" summary="Per + ">
+D6 Rolls: 3 + 4
+Stat: Perception=28
+
+Adds:0
+Total: 35</logEntry><logEntry dateTime="2014-09-04 21:47:37" summary="Lck + Contact: Hobbit community">D6 Rolls: 6 + 4
+Stat: Luck=12
+Contact: Hobbit community: 2 (+0)
+Adds:0
+Total: 24
+Tick added.</logEntry><logEntry dateTime="2014-07-31 20:57:45" summary="Per + Leadership">D6 Rolls: 3 + 2
+Stat: Perception=28
+Leadership: 3+4+4+2+2 (+0)
+Adds:0
+Total: 48
+Tick added.</logEntry><logEntry dateTime="2014-07-17 23:02:37" summary="Int + Confidence">D6 Rolls: 6 + 6 + 1 + 4
+Stat: Intelligence=15
+Confidence: 2+1+2+3 (+0)
+Adds:0
+Total: 40
+Tick added.</logEntry><logEntry dateTime="2016-01-07 16:25:50" summary="&lt;No stat&gt; + Track/Trail">D6 Rolls: 4 + 6
+Stat: None
+Track/Trail: 4 + 2 (+0)
+ExtraD4s: 1
+Adds: 2
+Total: 19</logEntry><logEntry dateTime="2013-01-31 19:52:34" summary="Int + Contact: Hacker">
+D6 Rolls: 2 + 3
+Stat: Intelligence=13
+Contact: Hacker: 1+4 (+0)
+Adds:0
+Total: 23
+Tick added.</logEntry><logEntry dateTime="2014-09-04 21:21:51" summary="Int + Bureaucracy">D6 Rolls: 3 + 3 + 1 + 2
+Stat: Intelligence=15
+Bureaucracy: 4+3 (+0)
+Adds:0
+Total: 31
+Tick added.</logEntry><logEntry dateTime="2013-11-14 20:45:54" summary="Lck + Contact: KGB">D6 Rolls: 4 + 6
+Stat: Luck=12
+Contact: KGB: 1+4+2+3 (+0)
+Adds:0
+Total: 32
+Tick added.</logEntry><logEntry dateTime="2013-01-24 20:50:32" summary="Per + Observation">
+D6 Rolls: 4 + 5
+Stat: Perception=28
+Observation: 3+3+2+3 (+0)
+Adds:0
+Total: 48
+Tick added.</logEntry><logEntry dateTime="2014-09-25 21:10:42" summary="Int + ">D6 Rolls: 4 + 4 + 5 + 6
+Stat: Intelligence=15
+
+Adds:0
+Total: 34</logEntry><logEntry dateTime="2014-09-18 21:36:10" summary="Cha + Chic">D6 Rolls: 4 + 1
+Stat: Charisma=17
+Chic: 3+3+1 (+0)
+Adds:0
+Total: 29
+Tick added.</logEntry><logEntry dateTime="2013-11-14 21:09:16" summary="Per + Electronic countermeasures">D6 Rolls: 1 + 4
+Stat: Perception=28
+Electronic countermeasures: 1+4+4 (+0)
+Adds:0
+Total: 42
+Tick added.</logEntry><logEntry dateTime="2013-01-31 21:00:41" summary="Lck + ">
+D6 Rolls: 3 + 4
+Stat: Luck=12
+
+Adds:0
+Total: 19</logEntry><logEntry dateTime="2016-01-21 20:41:12" summary="Per + Track/Trail">D6 Rolls: 1 + 6
+Stat: Perception = 28
+Track/Trail: 2 + 3 (+0)
+ExtraD4s: 4
+Adds: 0
+Total: 44
+Tick added.</logEntry><logEntry dateTime="2016-01-21 22:15:01" summary="Cha + ">D6 Rolls: 3 + 4
+Stat: Charisma = 17
+
+ExtraD4s: 
+Adds: 0
+Total: 24</logEntry><logEntry dateTime="2016-01-26 20:40:07" summary="Str + ">D6 Rolls: 1 + 2
+Stat: Strength = 7
+
+ExtraD4s: 4
+Adds: 0
+Total: 0</logEntry><logEntry dateTime="2016-01-26 22:06:46" summary="Per + ">D6 Rolls: 4 + 2
+Stat: Perception = 28
+
+ExtraD4s: 1
+Adds: 0
+Total: 35</logEntry><logEntry dateTime="2013-02-21 21:49:16" summary="Spe + ">
+D6 Rolls: 5 + 4
+Stat: Speed=10
+
+Adds:0
+Total: 19</logEntry><logEntry dateTime="2013-01-24 21:24:07" summary="Con + ">
+D6 Rolls: 4 + 1
+Stat: Constitution=8
+
+Adds:0
+Total: 13</logEntry><logEntry dateTime="2014-09-04 20:44:42" summary="Lck + Bureaucracy">D6 Rolls: 1 + 1 + 4 + 6
+Stat: Luck=12
+Bureaucracy: 1+2 (+0)
+Adds:0
+Total: 27
+Tick added.</logEntry><logEntry dateTime="2014-07-17 21:13:51" summary="Per + Observation">D6 Rolls: 2 + 6
+Stat: Perception=28
+Observation: 3+3+1+3 (+0)
+Adds:0
+Total: 46
+Tick added.</logEntry><logEntry dateTime="2014-06-19 21:57:59" summary="Per + Observation">D6 Rolls: 3 + 4
+Stat: Perception=28
+Observation: 2+2+3+3 (+0)
+Adds:0
+Total: 45
+Tick added.</logEntry><logEntry dateTime="2016-02-05 01:43:02" summary="Per + Bureaucracy">D6 Rolls: 5 + 4
+Stat: Perception = 28
+Bureaucracy: 2 (+0)
+ExtraD4s: 1
+Adds: 0
+Total: 40
+Tick added.</logEntry><logEntry dateTime="2016-02-16 21:55:37" summary="Per + Photography">D6 Rolls: 1 + 4
+Stat: Perception = 28
+Photography: 2 (+0)
+ExtraD4s: 4
+Adds: 0
+Total: 39
+Tick added.</logEntry><logEntry dateTime="2014-06-12 22:06:24" summary="Per + Observation">D6 Rolls: 2 + 2 + 2 + 3
+Stat: Perception=28
+Observation: 3+2+1+4 (+0)
+Adds:0
+Total: 47
+Tick added.</logEntry><logEntry dateTime="2014-01-09 21:29:58" summary="Int + Bureaucracy">D6 Rolls: 5 + 5 + 4 + 6
+Stat: Intelligence=15
+Bureaucracy: 2+3 (+0)
+Adds:0
+Total: 40
+Tick added.</logEntry><logEntry dateTime="2013-02-21 20:55:58" summary="Dex + Drive">
+D6 Rolls: 4 + 2
+Stat: Dexterity=8
+Drive: 2+3 (+0)
+Adds:0
+Total: 19
+Tick added.</logEntry><logEntry dateTime="2014-01-09 20:50:18" summary="Per + Politics">D6 Rolls: 2 + 3
+Stat: Perception=28
+Politics: 3+4+3+4+3 (+0)
+Adds:0
+Total: 50
+Tick added.</logEntry><logEntry dateTime="2014-07-04 08:35:13" summary="Cha + Bluff">D6 Rolls: 2 + 2 + 6 + 3
+Stat: Charisma=17
+Bluff: 3+1+3+1+2+3 (+0)
+Adds:0
+Total: 43
+Tick added.</logEntry><logEntry dateTime="2013-11-21 20:10:05" summary="Per + Observation">D6 Rolls: 1 + 1 + 2 + 6
+Stat: Perception=28
+Observation: 2+3+1+2 (+0)
+Adds:0
+Total: 46
+Tick added.</logEntry><logEntry dateTime="2014-07-24 22:36:49" summary="Cha + Ambush/Stealth">D6 Rolls: 1 + 4
+Stat: Charisma=17
+Ambush/Stealth: 4+4+4 (+0)
+Adds:0
+Total: 34
+Tick added.</logEntry><logEntry dateTime="2014-07-31 22:14:53" summary="Cha + Bureaucracy">D6 Rolls: 3 + 3 + 1 + 2
+Stat: Charisma=17
+Bureaucracy: 2+3 (+0)
+Adds:0
+Total: 31
+Tick added.</logEntry><logEntry dateTime="2013-03-07 20:42:09" summary="Int + Ambush/Stealth">
+D6 Rolls: 2 + 2 + 3 + 5
+Stat: Intelligence=13
+Ambush/Stealth: 2+1+2 (+0)
+Adds:0
+Total: 30
+Tick added.</logEntry><logEntry dateTime="2013-11-21 19:46:08" summary="Int + Contact: KGB">D6 Rolls: 6 + 2
+Stat: Intelligence=15
+Contact: KGB: 1+1+4+4 (+0)
+Adds:0
+Total: 33
+Tick added.</logEntry><logEntry dateTime="2016-01-07 20:39:52" summary="Per + Observation">D6 Rolls: 6 + 4
+Stat: Perception = 28
+Observation: 1 + 3 + 1 + 4 (+0)
+ExtraD4s: 1
+Adds: 0
+Total: 48
+Tick added.</logEntry><logEntry dateTime="2014-07-24 22:42:55" summary="Cha + ">D6 Rolls: 2 + 5
+Stat: Charisma=17
+
+Adds:0
+Total: 24</logEntry><logEntry dateTime="2013-04-17 19:55:46" summary="Int + ">
+D6 Rolls: 3 + 5
+Stat: Intelligence=13
+
+Adds:0
+Total: 21</logEntry><logEntry dateTime="2013-02-07 20:45:40" summary="Int + Contact: Financial journalist">
+D6 Rolls: 6 + 4
+Stat: Intelligence=13
+Contact: Financial journalist: 1+3 (+0)
+Adds:0
+Total: 27
+Tick added.</logEntry><logEntry dateTime="2014-09-11 20:07:16" summary="Lck + Confidence">D6 Rolls: 6 + 4
+Stat: Luck=12
+Confidence: 4+2+2+2 (+0)
+Adds:0
+Total: 32
+Tick added.</logEntry><logEntry dateTime="2013-01-24 20:03:00" summary="Cha + Contact: Hacker">
+D6 Rolls: 6 + 2
+Stat: Charisma=17
+Contact: Hacker: 2+2 (+0)
+Adds:0
+Total: 29
+Tick added.</logEntry><logEntry dateTime="2016-01-07 20:45:52" summary="Int + Bureaucracy">D6 Rolls: 3 + 2
+Stat: Intelligence = 15
+Bureaucracy: 2 (+0)
+ExtraD4s: 4
+Adds: 0
+Total: 26
+Tick added.</logEntry><logEntry dateTime="2013-01-24 20:26:07" summary="Int + Chic">
+D6 Rolls: 2 + 2 + 4 + 6
+Stat: Intelligence=13
+Chic: 3+4+3 (+0)
+Adds:0
+Total: 37
+Tick added.</logEntry><logEntry dateTime="2013-02-13 19:58:02" summary="Per + Bureaucracy">
+D6 Rolls: 3 + 4
+Stat: Perception=28
+Bureaucracy: 1+3 (+0)
+Adds:0
+Total: 39
+Tick added.</logEntry><logEntry dateTime="2014-09-18 21:41:22" summary="Cha + Leadership">D6 Rolls: 2 + 1
+Stat: Charisma=17
+Leadership: 1+2+3+4+2 (+0)
+Adds:0
+Total: 0
+Tick added.</logEntry><logEntry dateTime="2013-12-12 21:02:18" summary="Int + Electronic countermeasures">D6 Rolls: 5 + 3
+Stat: Intelligence=15
+Electronic countermeasures: 1+4+1 (+0)
+Adds:0
+Total: 29
+Tick added.</logEntry><logEntry dateTime="2014-09-11 20:38:44" summary="Cha + Contact: Fortean journalist">D6 Rolls: 6 + 6 + 5 + 4
+Stat: Charisma=17
+Contact: Fortean journalist: 2+4 (+0)
+Adds:0
+Total: 44
+Tick added.</logEntry><logEntry dateTime="2014-10-23 20:31:26" summary="Spe + ">D6 Rolls: 6 + 1
+Stat: Speed=10
+
+Adds:0
+Total: 17</logEntry><logEntry dateTime="2014-06-12 22:03:18" summary="Cha + Contact: KGB">D6 Rolls: 3 + 5
+Stat: Charisma=17
+Contact: KGB: 2+2+3+4 (+0)
+Adds:0
+Total: 36
+Tick added.</logEntry><logEntry dateTime="2013-04-03 19:40:00" summary="Cha + Contact: Smuggling ring">
+D6 Rolls: 1 + 2
+Stat: Charisma=17
+Contact: Smuggling ring: 1+4 (+0)
+Adds:0
+Total: 0
+Tick added.</logEntry><logEntry dateTime="2016-01-21 21:27:18" summary="Per + Track/Trail">D6 Rolls: 6 + 2
+Stat: Perception = 28
+Track/Trail: 3 + 1 (+0)
+ExtraD4s: 1
+Adds: 0
+Total: 41
+Tick added.</logEntry><logEntry dateTime="2016-01-26 20:44:28" summary="Con + Martial Arts">D6 Rolls: 2 + 3
+Stat: Constitution = 8
+Martial Arts: 2 (+0)
+ExtraD4s: 1
+Adds: 0
+Total: 16
+Tick added.</logEntry><logEntry dateTime="2016-02-04 21:19:09" summary="Per + Track/Trail">D6 Rolls: 4 + 3
+Stat: Perception = 28
+Track/Trail: 4 + 3 (+0)
+ExtraD4s: 1
+Adds: 0
+Total: 43
+Tick added.</logEntry><logEntry dateTime="2016-02-16 20:37:26" summary="Cha + Chic">D6 Rolls: 5 + 2
+Stat: Charisma = 17
+Chic: 4 + 2 (+0)
+ExtraD4s: 4
+Adds: 0
+Total: 34
+Tick added.</logEntry><logEntry dateTime="2014-06-19 21:09:19" summary="Cha + Bluff">D6 Rolls: 2 + 1
+Stat: Charisma=17
+Bluff: 4+3+4+4+4+1 (+0)
+Adds:0
+Total: 0
+Tick added.</logEntry><logEntry dateTime="2014-10-30 20:00:18" summary="Con + ">D6 Rolls: 5 + 2
+Stat: Constitution=8
+
+Adds:0
+Total: 15</logEntry><logEntry dateTime="2013-12-12 19:58:15" summary="Per + ">D6 Rolls: 3 + 6
+Stat: Perception=28
+
+Adds:0
+Total: 37</logEntry><logEntry dateTime="2013-02-21 21:50:45" summary="Dex + Drive">
+D6 Rolls: 6 + 1
+Stat: Dexterity=8
+Drive: 3+3 (+0)
+Adds:0
+Total: 21
+Tick added.</logEntry><logEntry dateTime="2014-07-17 20:54:36" summary="Per + Observation">D6 Rolls: 1 + 4
+Stat: Perception=28
+Observation: 4+3+4+2 (+0)
+Adds:0
+Total: 46
+Tick added.</logEntry><logEntry dateTime="2016-02-23 22:18:22" summary="Cha + ">D6 Rolls: 3 + 1
+Stat: Charisma = 17
+
+ExtraD4s: 
+Adds: 0
+Total: 21</logEntry><logEntry dateTime="2013-04-11 21:38:05" summary="Per + Bureaucracy">
+D6 Rolls: 3 + 4
+Stat: Perception=28
+Bureaucracy: 4+1 (+0)
+Adds:0
+Total: 40
+Tick added.</logEntry><logEntry dateTime="2013-11-14 21:25:02" summary="Per + Observation">D6 Rolls: 6 + 4
+Stat: Perception=28
+Observation: 2+2+2+4 (+0)
+Adds:0
+Total: 48
+Tick added.</logEntry><logEntry dateTime="2014-07-24 22:20:52" summary="Per + Observation">D6 Rolls: 4 + 5
+Stat: Perception=28
+Observation: 3+2+4+2 (+0)
+Adds:0
+Total: 48
+Tick added.</logEntry><logEntry dateTime="2013-12-12 21:26:15" summary="Lck + ">D6 Rolls: 6 + 5
+Stat: Luck=12
+
+Adds:0
+Total: 23</logEntry><logEntry dateTime="2014-10-16 21:54:14" summary="Cha + Martial Arts">D6 Rolls: 1 + 1 + 3 + 5
+Stat: Charisma=17
+Martial Arts: 4+2 (+0)
+Adds:0
+Total: 33
+Tick added.</logEntry><logEntry dateTime="2013-02-13 21:45:28" summary="Per + Confidence">
+D6 Rolls: 6 + 2
+Stat: Perception=28
+Confidence: 1+4+2+1 (+0)
+Adds:0
+Total: 44
+Tick added.</logEntry><logEntry dateTime="2014-07-09 20:28:31" summary="Lck + Bureaucracy">D6 Rolls: 1 + 3
+Stat: Luck=12
+Bureaucracy: 2+1 (+0)
+Adds:0
+Total: 19
+Tick added.</logEntry><logEntry dateTime="2013-03-07 21:17:30" summary="Per + ">
+D6 Rolls: 4 + 6
+Stat: Perception=28
+
+Adds:0
+Total: 38</logEntry><logEntry dateTime="2013-01-17 21:22:35" summary="Per + Contact: Fortean journalist">
+D6 Rolls: 3 + 1
+Stat: Perception=28
+Contact: Fortean journalist: 2+1 (+0)
+Adds:0
+Total: 35
+Tick added.</logEntry><logEntry dateTime="2013-03-07 20:14:05" summary="Spe + ">
+D6 Rolls: 6 + 2
+Stat: Speed=10
+
+Adds:0
+Total: 18</logEntry><logEntry dateTime="2013-02-07 20:53:02" summary="Int + Track/Trail">
+D6 Rolls: 6 + 6 + 4 + 2
+Stat: Intelligence=13
+Track/Trail: 4+1+1 (+0)
+Adds:0
+Total: 37
+Tick added.</logEntry><logEntry dateTime="2014-06-12 20:34:32" summary="Per + Bureaucracy">D6 Rolls: 2 + 2 + 3 + 3 + 4 + 6
+Stat: Perception=28
+Bureaucracy: 1+1 (+0)
+Adds:0
+Total: 50
+Tick added.</logEntry><logEntry dateTime="2014-10-23 20:34:04" summary="Lck + ">D6 Rolls: 5 + 2
+Stat: Luck=12
+
+Adds:0
+Total: 19</logEntry><logEntry dateTime="2016-01-07 17:59:33" summary="Spe + Pistol">D6 Rolls: 2 + 6
+Stat: Speed = 10
+Pistol: 3 (+0)
+ExtraD4s: 4
+Adds: 0
+Total: 25</logEntry></logs><skills><skill name="Pistol" value="1" ticks="3"><specialties/></skill><skill name="Observation" value="4" ticks="1"><specialties/></skill><skill name="Track/Trail" value="2" ticks="15"><specialties/></skill><skill name="Bureaucracy" value="1" ticks="17"><specialties/></skill><skill name="ES: Urban" value="2" ticks="11"><specialties/></skill><skill name="ES: Mountain" value="1" ticks="0"><specialties/></skill><skill name="Leadership" value="4" ticks="2"><specialties/></skill><skill name="Politics" value="4" ticks="7"><specialties/></skill><skill name="Confidence" value="3" ticks="5"><specialties/></skill><skill name="Chic" value="2" ticks="11"><specialties/></skill><skill name="Bluff" value="5" ticks="12"><specialties/></skill><skill name="Drive" value="1" ticks="7"><specialties/></skill><skill name="Ambush/Stealth" value="2" ticks="6"><specialties/></skill><skill name="Electronic countermeasures" value="2" ticks="15"><specialties/></skill><skill name="Photography" value="1" ticks="6"><specialties/></skill><skill name="Cook" value="1" ticks="0"><specialties/></skill><skill name="Contact: KGB" value="3" ticks="5"><specialties/></skill><skill name="Contact: Smuggling ring" value="2" ticks="3"><specialties/></skill><skill name="Contact: Hacker" value="1" ticks="12"><specialties/></skill><skill name="Contact: Hobbit community" value="0" ticks="1"><specialties/></skill><skill name="Contact: Fortean journalist" value="1" ticks="5"><specialties/></skill><skill name="Contact: Financial journalist" value="1" ticks="4"><specialties/></skill><skill name="Russian" value="4" ticks="0"><specialties/></skill><skill name="German" value="3" ticks="0"><specialties/></skill><skill name="Dutch" value="3" ticks="0"><specialties/></skill><skill name="English" value="2" ticks="0"><specialties/></skill><skill name="Martial Arts" value="1" ticks="2"><specialties><specialty name="Tai-Chi" value="1"/></specialties></skill></skills><xp_gains><xpEntry amount="750" reason="Adventure: TGRI"/><xpEntry amount="250" reason="Identifying the Rat King."/><xpEntry amount="850" reason="Adventure: Rat King"/><xpEntry amount="800" reason="Adventure: Crackhead Zombies"/><xpEntry amount="450" reason="Adventure: Wyrm Hunt?"/><xpEntry amount="350" reason="Adventure: Pyromancer"/><xpEntry amount="500" reason="Adventure: Car Prototype"/><xpEntry amount="1300" reason="Adventure: Hannah Montana Kidnap"/><xpEntry amount="850" reason="Adventure: Ork Boyz"/><xpEntry amount="250" reason="Hitman comment"/><xpEntry amount="1000" reason="Adventure: Dragon to Shangri-La"/><xpEntry amount="1800" reason="Adventure: Barbarossa Virus"/><xpEntry amount="1200" reason="Adventure: MI6 Witchsmeller"/><xpEntry amount="200" reason="Burma-shave reference"/><xpEntry amount="3000" reason="Adventure: Coyote church child"/></xp_gains><notes>Erich has a cave in Shangri-La as an office, and is working with the spider gods.
+However, he has refused to allow the Spider Clan to install spider monitors in his house.
+</notes></charSheet></xml>
